@@ -96,6 +96,7 @@ $(document).ready(function() {
 
       function constructTimeEntry(entry) {
         var timeEntry = document.createElement("div");
+        timeEntry.className = "timeEntry";
         var positionLabel = constructPositionLabel(entry);
         var field = constructTimeEntryField(entry);
         positionLabel.insertAdjacentElement('beforeEnd', field);
@@ -103,11 +104,19 @@ $(document).ready(function() {
         return timeEntry;
       }
 
+      function constructTimeEntries(dayEntries) {
+        var timeEntriesWrapper = document.createElement("div");
+        timeEntriesWrapper.className = "timeEntries";
+        timeEntriesWrapper.style.display = 'none';
+        dayEntries.forEach(function(entry) {
+          timeEntriesWrapper.insertAdjacentElement('beforeend', constructTimeEntry(entry));
+        });
+        return timeEntriesWrapper;
+      }
+
       var dayElement = constructDayWrapper();
       dayElement.insertAdjacentElement('afterbegin', constructDayHeader(date));
-      dayEntries.forEach(function(entry) {
-        dayElement.insertAdjacentElement('beforeend', constructTimeEntry(entry));
-      });
+      dayElement.insertAdjacentElement('beforeend', constructTimeEntries(dayEntries));
       return dayElement;
     }
 
