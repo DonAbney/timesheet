@@ -3,11 +3,10 @@ $(document).ready(function() {
 
   function fetchTimesheetInfo() {
     $.ajax({
-      // Update IP
+      // Update with prod URL
       url: "http://private-dbebc-timesheet9.apiary-mock.com/timesheets",
       crossDomain: true
     }).then(function(data) {
-      // var timesheetInfo = $.parseJSON(data);
       displayTimesheetInfo(data);
     });
   }
