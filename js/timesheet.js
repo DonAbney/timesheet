@@ -74,9 +74,13 @@ $(document).ready(function() {
         return dayElement;
       }
 
+      function formatDate(date) {
+        return date.split("T")[0];
+      }
+
       function constructDayHeader(date) {
         var dayHeader = document.createElement("h2");
-        dayHeader.innerHTML = date + " (<span class='dayTotal'>0</span> hrs)";
+        dayHeader.innerHTML = formatDate(date) + " (<span class='dayTotal'>0</span> hrs)";
         dayHeader.setAttribute('onclick', '$(this).siblings(".timeEntries").toggle()');
         return dayHeader;
       }
