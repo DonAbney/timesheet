@@ -12,8 +12,15 @@ $(document).ready(function() {
   }
 
   function displayTimesheetInfo(timesheetInfo) {
+    // TODO replace with actual user's name instead of ID
+    var username = timesheetInfo.timesheetInstance.employee.id;
+    updateUsername(username);
     var daysEntries = collateDays(timesheetInfo.timeEntryPositionMapByDate);
     displayDays(daysEntries);
+  }
+
+  function updateUsername(name) {
+    $(".username").text(name);
   }
 
   function collateDays(timeEntryProjectInfo) {
