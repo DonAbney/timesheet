@@ -22,7 +22,9 @@ $(document).ready(function() {
     timeEntryProjectInfo.forEach(function(projectInfo) {
       var projectName = projectInfo.position.name;
       var projectNote = projectInfo.position.note;
-      
+      projectInfo.timeEntries.forEach(function(timeEntry) {
+        console.log(timeEntry.id);
+      });
     });
   }
 
