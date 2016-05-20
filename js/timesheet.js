@@ -81,6 +81,8 @@ $(document).ready(function() {
 
       function constructTimeEntryField(entry) {
         var field = document.createElement("input");
+        field.id = entry.id;
+        field.setAttribute('type', 'number');
         return field;
       }
 
