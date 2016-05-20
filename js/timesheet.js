@@ -60,7 +60,7 @@ $(document).ready(function() {
       return dates;
     }
 
-    function constructDayElement(daysEntry, date) {
+    function constructDayElement(dayEntries, date) {
       function constructDayWrapper() {
         var dayElement = document.createElement("div");
         dayElement.className = "day";
@@ -73,8 +73,31 @@ $(document).ready(function() {
         return dayHeader;
       }
 
+      function constructPositionLabel(entry) {
+        var positionLabel = document.createElement("label");
+        positionLabel.innerHTML = entry.positionName;
+        return positionLabel;
+      }
+
+      function constructTimeEntryField(entry) {
+        var field = document.createElement("input");
+        return field;
+      }
+
+      function constructTimeEntry(entry) {
+        var timeEntry = document.createElement("div");
+        var positionLabel = constructPositionLabel(entry);
+        var field = constructTimeEntryField(entry);
+        positionLabel.insertAdjacentElement('beforeEnd', field);
+        timeEntry.insertAdjacentElement('afterbegin', positionLabel);
+        return timeEntry;
+      }
+
       var dayElement = constructDayWrapper();
       dayElement.insertAdjacentElement('afterbegin', constructDayHeader(date));
+      dayEntries.forEach(function(entry) {
+        dayElement.insertAdjacentElement('beforeend', constructTimeEntry(entry));
+      });
       return dayElement;
     }
 
