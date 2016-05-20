@@ -82,7 +82,8 @@ $(document).ready(function() {
 
       function constructPositionLabel(entry) {
         var positionLabel = document.createElement("label");
-        positionLabel.innerHTML = entry.positionName;
+        var note = entry.positionNote ? ": " + entry.positionNote.trim() : "";
+        positionLabel.innerHTML = entry.positionName.trim() + note;
         return positionLabel;
       }
 
