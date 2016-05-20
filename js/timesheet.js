@@ -13,11 +13,24 @@ $(document).ready(function() {
   }
 
   function displayTimesheetInfo(timesheetInfo) {
-    displayDays(timesheetInfo.timeEntryPositionMapByDate);
+    var daysEntries = collateDays(timesheetInfo.timeEntryPositionMapByDate);
+    displayDays(daysEntries);
   }
 
-  function displayDays(timeEntryProjectInformation) {
+  function collateDays(timeEntryProjectInfo) {
+    var daysEntries = {};
+    timeEntryProjectInfo.forEach(function(projectInfo) {
+      var projectName = projectInfo.position.name;
+      var projectNote = projectInfo.position.note;
+      
+    });
+  }
+
+  function displayDays(daysEntries) {
     var daysElement = $(".days");
+    $.each(function(daysEntries) {
+
+    });
     var dayElement = document.createElement("div");
     dayElement.className = "day";
     daysElement.append(dayElement);
