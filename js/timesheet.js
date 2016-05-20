@@ -49,14 +49,31 @@ $(document).ready(function() {
     return daysEntries;
   }
 
-  function displayDays(daysEntries) {
-    var daysElement = $(".days");
-    console.log(daysEntries);
-    $.each(function(daysEntries) {
-
-    });
+  function constructDayElement(daysEntry) {
     var dayElement = document.createElement("div");
     dayElement.className = "day";
-    daysElement.append(dayElement);
+    return dayElement;
+  }
+
+  function displayDays(daysEntries) {
+    function sortDaysEntryDates(daysEntries) {
+      var dates = [];
+      for (date in daysEntries) {
+        if (daysEntries.hasOwnProperty(date)) {
+          dates.push(date);
+        }
+      }
+      dates.sort();
+      return dates;
+    }
+
+    var daysElement = $(".days");
+    console.log(daysEntries);
+
+    var sortedDates = sortDaysEntryDates(daysEntries);
+    console.log(sortedDates);
+    sortedDates.forEach(function(date) {
+      daysElement.append(constructDayElement(daysEntries[date]));
+    });
   }
 });
