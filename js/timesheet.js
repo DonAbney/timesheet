@@ -48,12 +48,6 @@ $(document).ready(function() {
     return daysEntries;
   }
 
-  function constructDayElement(daysEntry) {
-    var dayElement = document.createElement("div");
-    dayElement.className = "day";
-    return dayElement;
-  }
-
   function displayDays(daysEntries) {
     function sortDaysEntryDates(daysEntries) {
       var dates = [];
@@ -66,13 +60,28 @@ $(document).ready(function() {
       return dates;
     }
 
-    var daysElement = $(".days");
-    console.log(daysEntries);
+    function constructDayElement(daysEntry, date) {
+      function constructDayWrapper() {
+        var dayElement = document.createElement("div");
+        dayElement.className = "day";
+        return dayElement;
+      }
 
+      function constructDayHeader(date) {
+        var dayHeader = document.createElement("h2");
+        dayHeader.innerHTML = date;
+        return dayHeader;
+      }
+
+      var dayElement = constructDayWrapper();
+      dayElement.insertAdjacentElement('afterbegin', constructDayHeader(date));
+      return dayElement;
+    }
+
+    var daysElement = $(".days");
     var sortedDates = sortDaysEntryDates(daysEntries);
-    console.log(sortedDates);
     sortedDates.forEach(function(date) {
-      daysElement.append(constructDayElement(daysEntries[date]));
+      daysElement.append(constructDayElement(daysEntries[date], date));
     });
   }
 });
