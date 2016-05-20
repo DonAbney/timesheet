@@ -5,3 +5,7 @@ label {
 button {
   margin: 25px;
 }
+
+.day h2 {
+  cursor: pointer;
+}
