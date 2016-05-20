@@ -1,33 +1,19 @@
 $(document).ready(function() {
-  setInterval(refreshRace, 1000);
+  fetchTimesheetInfo();
 
-  function refreshRace() {
+  function fetchTimesheetInfo() {
     $.ajax({
       // Update IP
-      url: "http://localhost:8081/status",
+      url: "http://private-dbebc-timesheet9.apiary-mock.com/timesheets",
       crossDomain: true
     }).then(function(data) {
-      var leaders = [];
-      var leaderWidth = 0;
-
-      var racers = $.parseJSON(data);
-      $.each(racers, function(index, racer) {
-	var percComplete = racer.percentage;
-	var percWidth = parseInt(racer.percentage);
-
-	if (percWidth < 18) {
-	  percWidth = 18;
-	}
-
-  if (typeof percComplete == 'undefined') {
-    percComplete = 0;
+      // var timesheetInfo = $.parseJSON(data);
+      displayTimesheetInfo(data);
+    });
   }
 
-  racer_number = index.slice(-1);
-	$("#" + index).text(racer.screenName + ' ' + percComplete + '%');
-  $("#lane" + racer_number).css("background-position", percWidth + '% center');
-      });
-
-    });
+  function displayTimesheetInfo(timesheetInfo) {
+    console.log(timesheetInfo);
+    
   }
 });
