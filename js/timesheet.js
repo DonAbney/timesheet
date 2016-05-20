@@ -30,12 +30,20 @@ $(document).ready(function() {
     }
 
     timeEntryProjectInfo.forEach(function(projectInfo) {
-      var projectName = projectInfo.position.name;
-      var projectNote = projectInfo.position.note;
+      var positionName = projectInfo.position.name;
+      var positionNote = projectInfo.position.note;
       projectInfo.timeEntries.forEach(function(timeEntry) {
         var date = timeEntry.date;
         var dayEntry = fetchDayEntry(date);
-        dayEntry.push(timeEntry);
+        dayEntry.push({
+          id: timeEntry.id,
+          date: date,
+          hours: timeEntry.hours,
+          projectedHours: timeEntry.projectedHours,
+          positionName: positionName,
+          positionNote: positionNote,
+          positionId: timeEntry.position.id
+        });
       });
     });
     return daysEntries;
