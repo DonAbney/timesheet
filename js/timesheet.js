@@ -76,7 +76,7 @@ $(document).ready(function() {
 
       function constructDayHeader(date) {
         var dayHeader = document.createElement("h2");
-        dayHeader.innerHTML = date;
+        dayHeader.innerHTML = date + " (<span class='dayTotal'>0</span> hrs)";
         return dayHeader;
       }
 
