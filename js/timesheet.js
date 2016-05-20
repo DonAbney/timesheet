@@ -13,7 +13,13 @@ $(document).ready(function() {
   }
 
   function displayTimesheetInfo(timesheetInfo) {
-    console.log(timesheetInfo);
-    
+    displayDays(timesheetInfo.timeEntryPositionMapByDate);
+  }
+
+  function displayDays(timeEntryProjectInformation) {
+    var daysElement = $(".days");
+    var dayElement = document.createElement("div");
+    dayElement.className = "day";
+    daysElement.append(dayElement);
   }
 });
