@@ -19,17 +19,31 @@ $(document).ready(function() {
 
   function collateDays(timeEntryProjectInfo) {
     var daysEntries = {};
+
+    function fetchDayEntry(date) {
+      var dayEntry = daysEntries[date];
+      if (!dayEntry) {
+        dayEntry = [];
+        daysEntries[date] = dayEntry;
+      }
+      return dayEntry;
+    }
+
     timeEntryProjectInfo.forEach(function(projectInfo) {
       var projectName = projectInfo.position.name;
       var projectNote = projectInfo.position.note;
       projectInfo.timeEntries.forEach(function(timeEntry) {
-        console.log(timeEntry.id);
+        var date = timeEntry.date;
+        var dayEntry = fetchDayEntry(date);
+        dayEntry.push(timeEntry);
       });
     });
+    return daysEntries;
   }
 
   function displayDays(daysEntries) {
     var daysElement = $(".days");
+    console.log(daysEntries);
     $.each(function(daysEntries) {
 
     });
