@@ -44,5 +44,9 @@ var TimesheetUtil = (function() {
     return dates;
   }
 
+  self.formatDate = function(dateString) {
+    return dateString.split("T")[0];
+  }
+
   return self;
 })();
