@@ -29,7 +29,13 @@ var TimesheetView = (function() {
   function setupRecalculationTrigger(element) {
     $(element).blur(function() {
       var aggregatedTimes = TimesheetUtil.aggregateTime(self.collectEnteredTime());
-      $(".weekTotal").text(aggregatedTimes.totalTime);
+      TimesheetUtil.mapKeys(aggregatedTimes).forEach(function(key) {
+        if (key === "totalTime") {
+          $(".weekTotal").text(aggregatedTimes.totalTime);
+        } else {
+          $(".dayTotal[data-date='" + key + "']").text(aggregatedTimes[key]);
+        }
+      });
     });
   }
 
@@ -42,7 +48,7 @@ var TimesheetView = (function() {
 
   function constructDayHeader(date) {
     var dayHeader = document.createElement("h2");
-    dayHeader.innerHTML = TimesheetUtil.formatDate(date) + " (<span class='dayTotal'>0</span> hrs)";
+    dayHeader.innerHTML = TimesheetUtil.formatDate(date) + " (<span class='dayTotal' data-date='" + date + "'>0</span> hrs)";
     dayHeader.setAttribute('onclick', '$(this).siblings(".timeEntries").toggle()');
     return dayHeader;
   }

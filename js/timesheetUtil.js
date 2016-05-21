@@ -34,7 +34,7 @@ var TimesheetUtil = (function() {
   };
 
   self.sortDaysEntryDates = function(daysEntries) {
-    var dates = mapKeys(daysEntries);
+    var dates = self.mapKeys(daysEntries);
     dates.sort();
     return dates;
   };
@@ -46,7 +46,7 @@ var TimesheetUtil = (function() {
   self.aggregateTime = function(enteredTimes) {
     var aggregatedTimes = {};
     var totalTime = 0.0;
-    mapKeys(enteredTimes).forEach(function(key) {
+    self.mapKeys(enteredTimes).forEach(function(key) {
       var entry = enteredTimes[key];
       var aggregatedTime = aggregatedTimes[entry.date] ? aggregatedTimes[entry.date] : 0.0;
       aggregatedTime += entry.hours;
@@ -57,7 +57,7 @@ var TimesheetUtil = (function() {
     return aggregatedTimes;
   };
 
-  function mapKeys(map) {
+  self.mapKeys = function(map) {
     var keys = [];
     for (key in map) {
       if (map.hasOwnProperty(key)) {
