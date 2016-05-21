@@ -13,6 +13,19 @@ var TimesheetView = (function() {
     $(".username").text(name);
   }
 
+  self.collectEnteredTime = function() {
+    var collectedEnteredTime = {};
+    $(".timeEntryField").each(function(index, element) {
+      var enteredHours = $(element).val();
+      collectedEnteredTime[element.id] = {
+        id: element.id,
+        date: element.getAttribute('data-date'),
+        hours: enteredHours ? parseFloat(enteredHours) : 0.0
+      };
+    });
+    return collectedEnteredTime;
+  }
+
   function constructDayWrapper() {
     var dayElement = document.createElement("div");
     dayElement.className = "day";
@@ -36,6 +49,8 @@ var TimesheetView = (function() {
   function constructTimeEntryField(entry) {
     var field = document.createElement("input");
     field.id = entry.id;
+    field.className = "timeEntryField";
+    field.setAttribute('data-date', entry.date);
     field.setAttribute('type', 'number');
     return field;
   }
