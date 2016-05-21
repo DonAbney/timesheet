@@ -39,8 +39,11 @@ var TimesheetUtil = (function() {
     return dates;
   };
 
+  var daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
   self.formatDate = function(dateString) {
-    return dateString.split("T")[0];
+    var date = new Date(dateString);
+    return daysOfWeek[date.getDay()] + " " + (date.getMonth() + 1) + "/" + date.getDate();
   };
 
   self.aggregateTime = function(enteredTimes) {
