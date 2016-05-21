@@ -26,9 +26,10 @@ var TimesheetView = (function() {
     return collectedEnteredTime;
   }
 
-  function constructDayWrapper() {
+  function constructDayWrapper(date) {
     var dayElement = document.createElement("div");
     dayElement.className = "day";
+    dayElement.setAttribute('data-date', date);
     return dayElement;
   }
 
@@ -76,7 +77,7 @@ var TimesheetView = (function() {
   }
 
   function constructDayElement(dayEntries, date) {
-    var dayElement = constructDayWrapper();
+    var dayElement = constructDayWrapper(date);
     dayElement.insertAdjacentElement('afterbegin', constructDayHeader(date));
     dayElement.insertAdjacentElement('beforeend', constructTimeEntries(dayEntries));
     return dayElement;
