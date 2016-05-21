@@ -7,11 +7,11 @@ var TimesheetView = (function() {
     self.updateUsername(username);
     var daysEntries = TimesheetUtil.collateDays(timesheetInfo.timeEntryPositionMapByDate);
     displayDays(daysEntries);
-  }
+  };
 
   self.updateUsername = function(name) {
     $(".username").text(name);
-  }
+  };
 
   self.collectEnteredTime = function() {
     var collectedEnteredTime = {};
@@ -24,7 +24,7 @@ var TimesheetView = (function() {
       };
     });
     return collectedEnteredTime;
-  }
+  };
 
   function constructDayWrapper(date) {
     var dayElement = document.createElement("div");

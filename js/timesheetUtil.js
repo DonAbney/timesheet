@@ -31,7 +31,7 @@ var TimesheetUtil = (function() {
       });
     });
     return daysEntries;
-  }
+  };
 
   self.sortDaysEntryDates = function(daysEntries) {
     var dates = [];
@@ -42,11 +42,17 @@ var TimesheetUtil = (function() {
     }
     dates.sort();
     return dates;
-  }
+  };
 
   self.formatDate = function(dateString) {
     return dateString.split("T")[0];
-  }
+  };
+
+  self.aggregateTime = function(enteredTimes) {
+    var aggregatedTime = {};
+
+    return aggregatedTime;
+  };
 
   return self;
 })();

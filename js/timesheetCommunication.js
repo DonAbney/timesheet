@@ -11,7 +11,7 @@ var TimesheetCommunication = (function() {
     }).then(function(data) {
       TimesheetView.displayTimesheetInfo(data);
     });
-  }
+  };
 
   return self;
 })();
