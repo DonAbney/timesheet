@@ -26,6 +26,13 @@ var TimesheetView = (function() {
     return collectedEnteredTime;
   };
 
+  function setupRecalculationTrigger(element) {
+    $(element).blur(function() {
+      var aggregatedTimes = TimesheetUtil.aggregateTime(self.collectEnteredTime());
+      $(".weekTotal").text(aggregatedTimes.totalTime);
+    });
+  }
+
   function constructDayWrapper(date) {
     var dayElement = document.createElement("div");
     dayElement.className = "day";
@@ -53,6 +60,7 @@ var TimesheetView = (function() {
     field.className = "timeEntryField";
     field.setAttribute('data-date', entry.date);
     field.setAttribute('type', 'number');
+    setupRecalculationTrigger(field);
     return field;
   }
 
