@@ -95,5 +95,15 @@ describe('TimesheetUtil', function() {
 
       expect(TimesheetUtil.formatDate(targetDate)).toEqual("Tuesday 5/24");
     });
+
+    it('should map to the names of the days of the week correctly', function() {
+      expect(TimesheetUtil.formatDate("2016-05-22T04:00:00Z")).toEqual("Sunday 5/22");
+      expect(TimesheetUtil.formatDate("2016-05-23T04:00:00Z")).toEqual("Monday 5/23");
+      expect(TimesheetUtil.formatDate("2016-05-24T04:00:00Z")).toEqual("Tuesday 5/24");
+      expect(TimesheetUtil.formatDate("2016-05-25T04:00:00Z")).toEqual("Wednesday 5/25");
+      expect(TimesheetUtil.formatDate("2016-05-26T04:00:00Z")).toEqual("Thursday 5/26");
+      expect(TimesheetUtil.formatDate("2016-05-27T04:00:00Z")).toEqual("Friday 5/27");
+      expect(TimesheetUtil.formatDate("2016-05-28T04:00:00Z")).toEqual("Saturday 5/28");
+    });
   });
 });
