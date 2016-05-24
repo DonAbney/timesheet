@@ -1,7 +1,7 @@
 var TimesheetCommunication = (function() {
   var self = {
     // Update with prod URL
-    url_getTimesheetForUser: "http://private-dbebc-timesheet9.apiary-mock.com/timesheets"
+    url_getTimesheetForUser: "http://private-696ecf-ddaugherfba.apiary-mock.com/api/timesheet/tjones/2016-05-20"
   };
 
   self.fetchTimesheetInfo = function() {
