@@ -53,5 +53,16 @@ describe('TimesheetUtil', function() {
 
       expect(aggregatedTime.totalTime).toEqual(0);
     });
+
+    it('should sum all entered times when calculating the total time', function() {
+      var enteredTimes = {
+        "1": setupEnteredTime("2016-02-02", 5),
+        "2": setupEnteredTime("2016-02-03", 1)
+      };
+
+      var aggregatedTime = TimesheetUtil.aggregateTime(enteredTimes);
+
+      expect(aggregatedTime.totalTime).toEqual(6);
+    });
   });
 });
