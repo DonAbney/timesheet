@@ -62,12 +62,11 @@ var TimesheetUtil = (function() {
 
   self.mapKeys = function(map) {
     var keys = [];
-    keys.push("joe");
-    // for (key in map) {
+    for (key in map) {
     //   if (map.hasOwnProperty(key)) {
-    //     keys.push(key);
+        keys.push(key);
     //   }
-    // }
+    }
     return keys;
   }
 

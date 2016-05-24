@@ -10,5 +10,17 @@ describe('TimesheetUtil', function() {
 
       expect(keys).toContain("joe");
     });
+
+    it('should return all keys specified in the map', function() {
+      var targetMap = {
+        "joe": 123,
+        "sam": 234
+      };
+
+      var keys = TimesheetUtil.mapKeys(targetMap);
+
+      expect(keys).toContain("joe");
+      expect(keys).toContain("sam");
+    });
   });
 });
