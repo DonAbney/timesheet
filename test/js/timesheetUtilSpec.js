@@ -76,5 +76,16 @@ describe('TimesheetUtil', function() {
       expect(aggregatedTime["2016-02-02"]).toEqual(5);
       expect(aggregatedTime["2016-02-03"]).toEqual(1);
     });
+
+    it('should sum times for each date in the entered times and aggregate under that date', function() {
+      var enteredTimes = {
+        "1": setupEnteredTime("2016-02-02", 5),
+        "2": setupEnteredTime("2016-02-02", 1)
+      };
+
+      var aggregatedTime = TimesheetUtil.aggregateTime(enteredTimes);
+
+      expect(aggregatedTime["2016-02-02"]).toEqual(6);
+    });
   });
 });
