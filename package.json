@@ -1,0 +1,29 @@
+{
+  "name": "timesheet",
+  "version": "1.0.0",
+  "description": "Alternative UI for timesheet entry for FBA",
+  "main": "timesheetApp.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "jasmine-core": "^2.4.1",
+    "karma-chrome-launcher": "^1.0.1",
+    "karma": "^0.13.22",
+    "karma-jasmine": "^1.0.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "karma start test.conf.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DonAbney/timesheet.git"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/DonAbney/timesheet/issues"
+  },
+  "homepage": "https://github.com/DonAbney/timesheet"
+}
