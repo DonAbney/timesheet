@@ -54,14 +54,6 @@ var TimesheetUtil = (function() {
       aggregatedTimes[entry.date] = (aggregatedTimes[entry.date] ? aggregatedTimes[entry.date] : 0.0) + entry.hours;
       totalTime += entry.hours;
     });
-
-    // self.mapKeys(enteredTimes).forEach(function(key) {
-    //   var entry = enteredTimes[key];
-    //   var aggregatedTime = aggregatedTimes[entry.date] ? aggregatedTimes[entry.date] : 0.0;
-    //   aggregatedTime += entry.hours;
-    //   totalTime += entry.hours;
-    //   aggregatedTimes[entry.date] = aggregatedTime;
-    // });
     aggregatedTimes.totalTime = totalTime;
     return aggregatedTimes;
   };
