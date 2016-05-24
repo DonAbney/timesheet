@@ -88,4 +88,12 @@ describe('TimesheetUtil', function() {
       expect(aggregatedTime["2016-02-02"]).toEqual(6);
     });
   });
+
+  describe('formatDate()', function() {
+    it('should reformat a string date into <weekday> MM/DD', function() {
+      var targetDate = "2016-05-24T04:00:00Z";
+
+      expect(TimesheetUtil.formatDate(targetDate)).toEqual("Tuesday 5/24");
+    });
+  });
 });
