@@ -51,7 +51,8 @@ var TimesheetUtil = (function() {
     var totalTime = 0.0;
     self.mapKeys(enteredTimes).forEach(function(key) {
       var entry = enteredTimes[key];
-      aggregatedTimes[entry.date] = (aggregatedTimes[entry.date] ? aggregatedTimes[entry.date] : 0.0) + entry.hours;
+      var aggregatedTime = aggregatedTimes[entry.date] ? aggregatedTimes[entry.date] : 0.0;
+      aggregatedTimes[entry.date] = aggregatedTime + entry.hours;
       totalTime += entry.hours;
     });
     aggregatedTimes.totalTime = totalTime;
