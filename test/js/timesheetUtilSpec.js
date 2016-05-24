@@ -22,5 +22,18 @@ describe('TimesheetUtil', function() {
       expect(keys).toContain("joe");
       expect(keys).toContain("sam");
     });
+
+    it('should not contain any inherited keys', function() {
+      var inheritedMap = {
+        "tom": 999
+      };
+      var targetMap = Object.create(inheritedMap);
+      targetMap["joe"] = 123;
+      targetMap["sam"] = 234;
+
+      var keys = TimesheetUtil.mapKeys(targetMap);
+
+      expect(keys.length).toEqual(2);
+    });
   });
 });
