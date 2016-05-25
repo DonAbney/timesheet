@@ -11,7 +11,8 @@ var TimesheetUtil = (function() {
           positionNote: infoEntry.position.note,
           date: timeEntry.date,
           id: timeEntry.id,
-          hours: timeEntry.hours
+          hours: timeEntry.hours,
+          projectedHours: timeEntry.projectedHours
         }];
       });
     });
