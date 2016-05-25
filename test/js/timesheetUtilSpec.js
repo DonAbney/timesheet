@@ -178,5 +178,26 @@ describe('TimesheetUtil', function() {
 
       expect(TimesheetUtil.mapKeys(collatedInfo).length).toEqual(0);
     });
+
+    it('should return a time entry for a day if one is provided in the position info', function() {
+      var targetPositionInfo = [
+        {
+          "position": {},
+          "timeEntries": [
+            {
+              "date": "2016-06-22T04:00:00Z"
+            }
+          ]
+        },
+        {
+          "position": {},
+          "timeEntries": []
+        }
+      ];
+
+      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo);
+
+      expect(TimesheetUtil.mapKeys(collatedInfo)).toContain("2016-06-22T04:00:00Z");
+    });
   });
 });
