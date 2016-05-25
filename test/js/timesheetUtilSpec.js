@@ -199,5 +199,35 @@ describe('TimesheetUtil', function() {
 
       expect(TimesheetUtil.mapKeys(collatedInfo)).toContain("2016-06-22T04:00:00Z");
     });
+
+    it('should return time entries for each day provided in any position info', function() {
+      var targetPositionInfo = [
+        {
+          "position": {},
+          "timeEntries": [
+            {
+              "date": "2016-06-22T04:00:00Z"
+            }
+          ]
+        },
+        {
+          "position": {},
+          "timeEntries": [
+            {
+              "date": "2016-05-22T04:00:00Z"
+            },
+            {
+              "date": "2016-04-22T04:00:00Z"
+            }
+          ]
+        }
+      ];
+
+      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo);
+
+      expect(TimesheetUtil.mapKeys(collatedInfo)).toContain("2016-06-22T04:00:00Z");
+      expect(TimesheetUtil.mapKeys(collatedInfo)).toContain("2016-05-22T04:00:00Z");
+      expect(TimesheetUtil.mapKeys(collatedInfo)).toContain("2016-04-22T04:00:00Z");
+    });
   });
 });

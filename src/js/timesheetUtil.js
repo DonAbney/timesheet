@@ -4,9 +4,11 @@ var TimesheetUtil = (function() {
   self.collateDays = function(timeEntryPositionInfo) {
     var daysEntries = {};
 
-    if ((timeEntryPositionInfo.length > 0) && (timeEntryPositionInfo[0].timeEntries.length > 0)) {
-      daysEntries[timeEntryPositionInfo[0].timeEntries[0].date] = {};
-    }
+    timeEntryPositionInfo.forEach(function(infoEntry) {
+      infoEntry.timeEntries.forEach(function(timeEntry) {
+        daysEntries[timeEntry.date] = [];
+      });
+    });
 
 
     //
