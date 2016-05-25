@@ -152,4 +152,14 @@ describe('TimesheetUtil', function() {
       expect(sortedDates[3]).toEqual("2016-06-22T04:00:00Z");
     });
   });
+
+  describe('collateDays()', function() {
+    it('should return an empty collation if there is no position info', function() {
+      var targetPositionInfo = {};
+
+      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo);
+
+      expect(TimesheetUtil.mapKeys(collatedInfo).length).toEqual(0);
+    });
+  });
 });
