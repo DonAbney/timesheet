@@ -10,7 +10,8 @@ var TimesheetUtil = (function() {
           positionName: infoEntry.position.name,
           positionNote: infoEntry.position.note,
           date: timeEntry.date,
-          id: timeEntry.id
+          id: timeEntry.id,
+          hours: timeEntry.hours
         }];
       });
     });

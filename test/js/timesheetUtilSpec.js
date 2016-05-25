@@ -302,5 +302,23 @@ describe('TimesheetUtil', function() {
 
       expect(collatedInfo["2016-06-22T04:00:00Z"][0].id).toEqual(123);
     });
+
+    it('should include the number of hours in the collated info', function() {
+      var targetPositionInfo = [
+        {
+          "position": {},
+          "timeEntries": [
+            {
+              "date": "2016-06-22T04:00:00Z",
+              "hours": 5
+            }
+          ]
+        }
+      ];
+
+      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo);
+
+      expect(collatedInfo["2016-06-22T04:00:00Z"][0].hours).toEqual(5);
+    });
   });
 });
