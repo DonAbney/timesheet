@@ -9,7 +9,8 @@ var TimesheetUtil = (function() {
         daysEntries[timeEntry.date] = [{
           positionName: infoEntry.position.name,
           positionNote: infoEntry.position.note,
-          date: timeEntry.date
+          date: timeEntry.date,
+          id: timeEntry.id
         }];
       });
     });

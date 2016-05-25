@@ -284,5 +284,23 @@ describe('TimesheetUtil', function() {
 
       expect(collatedInfo["2016-06-22T04:00:00Z"][0].date).toEqual("2016-06-22T04:00:00Z");
     });
+
+    it('should include the time entry id in the collated info', function() {
+      var targetPositionInfo = [
+        {
+          "position": {},
+          "timeEntries": [
+            {
+              "date": "2016-06-22T04:00:00Z",
+              "id": 123
+            }
+          ]
+        }
+      ];
+
+      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo);
+
+      expect(collatedInfo["2016-06-22T04:00:00Z"][0].id).toEqual(123);
+    });
   });
 });
