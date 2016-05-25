@@ -155,7 +155,24 @@ describe('TimesheetUtil', function() {
 
   describe('collateDays()', function() {
     it('should return an empty collation if there is no position info', function() {
-      var targetPositionInfo = {};
+      var targetPositionInfo = [];
+
+      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo);
+
+      expect(TimesheetUtil.mapKeys(collatedInfo).length).toEqual(0);
+    });
+
+    it('should return an empty collation if there is position info with no time entry info', function() {
+      var targetPositionInfo = [
+        {
+          "position": {},
+          "timeEntries": []
+        },
+        {
+          "position": {},
+          "timeEntries": []
+        }
+      ];
 
       var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo);
 
