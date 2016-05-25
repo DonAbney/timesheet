@@ -248,5 +248,24 @@ describe('TimesheetUtil', function() {
 
       expect(collatedInfo["2016-06-22T04:00:00Z"][0].positionName).toEqual("some position name");
     });
+
+    it('should include the position note in the collated info', function() {
+      var targetPositionInfo = [
+        {
+          "position": {
+            "note": "some position note"
+          },
+          "timeEntries": [
+            {
+              "date": "2016-06-22T04:00:00Z"
+            }
+          ]
+        }
+      ];
+
+      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo);
+
+      expect(collatedInfo["2016-06-22T04:00:00Z"][0].positionNote).toEqual("some position note");
+    });
   });
 });
