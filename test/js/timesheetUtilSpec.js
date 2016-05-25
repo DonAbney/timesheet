@@ -229,5 +229,24 @@ describe('TimesheetUtil', function() {
       expect(TimesheetUtil.mapKeys(collatedInfo)).toContain("2016-05-22T04:00:00Z");
       expect(TimesheetUtil.mapKeys(collatedInfo)).toContain("2016-04-22T04:00:00Z");
     });
+
+    it('should include the position name in the collated info', function() {
+      var targetPositionInfo = [
+        {
+          "position": {
+            "name": "some position name"
+          },
+          "timeEntries": [
+            {
+              "date": "2016-06-22T04:00:00Z"
+            }
+          ]
+        }
+      ];
+
+      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo);
+
+      expect(collatedInfo["2016-06-22T04:00:00Z"][0].positionName).toEqual("some position name");
+    });
   });
 });
