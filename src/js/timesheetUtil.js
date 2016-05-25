@@ -7,13 +7,13 @@ var TimesheetUtil = (function() {
     timeEntryPositionInfo.forEach(function(infoEntry) {
       infoEntry.timeEntries.forEach(function(timeEntry) {
         daysEntries[timeEntry.date] = [{
-          positionName: infoEntry.position.name,
-          positionNote: infoEntry.position.note,
           date: timeEntry.date,
           id: timeEntry.id,
           hours: timeEntry.hours,
           projectedHours: timeEntry.projectedHours,
-          positionId: infoEntry.position.id
+          positionId: infoEntry.position.id,
+          positionName: infoEntry.position.name,
+          positionNote: infoEntry.position.note
         }];
       });
     });
