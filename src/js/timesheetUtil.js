@@ -8,7 +8,8 @@ var TimesheetUtil = (function() {
       infoEntry.timeEntries.forEach(function(timeEntry) {
         daysEntries[timeEntry.date] = [{
           positionName: infoEntry.position.name,
-          positionNote: infoEntry.position.note
+          positionNote: infoEntry.position.note,
+          date: timeEntry.date
         }];
       });
     });
