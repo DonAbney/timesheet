@@ -12,7 +12,8 @@ var TimesheetUtil = (function() {
           date: timeEntry.date,
           id: timeEntry.id,
           hours: timeEntry.hours,
-          projectedHours: timeEntry.projectedHours
+          projectedHours: timeEntry.projectedHours,
+          positionId: infoEntry.position.id
         }];
       });
     });
