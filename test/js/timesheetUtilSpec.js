@@ -106,4 +106,50 @@ describe('TimesheetUtil', function() {
       expect(TimesheetUtil.formatDate("2016-05-28T04:00:00Z")).toEqual("Saturday 5/28");
     });
   });
+
+  describe('sortDaysEntryDates()', function() {
+    it('should not contain any inherited keys', function() {
+      var inheritedMap = {
+        "2016-05-22T04:00:00Z": {"junk":123}
+      };
+      var targetMap = Object.create(inheritedMap);
+      targetMap["2016-02-22T04:00:00Z"] = {"junk":123};
+      targetMap["2016-06-22T04:00:00Z"] = {"junk":123};
+
+      expect(TimesheetUtil.sortDaysEntryDates(targetMap)).not.toContain("2016-05-22T04:00:00Z");
+    });
+
+    it('should return an empty array if there were no keys inherent to the map (not inherited)', function() {
+      expect(TimesheetUtil.sortDaysEntryDates({})).toEqual([]);
+    });
+
+    it('should contain all keys inherent to the map (not inherited)', function() {
+      var targetMap = {
+        "2016-05-22T04:00:00Z": {"junk":123},
+        "2015-05-22T04:00:00Z": {"junk":123}
+      };
+
+      var sortedDates = TimesheetUtil.sortDaysEntryDates(targetMap);
+
+      expect(sortedDates).toContain("2016-05-22T04:00:00Z");
+      expect(sortedDates).toContain("2015-05-22T04:00:00Z");
+      expect(sortedDates.length).toEqual(2);
+    });
+
+    it('should sort the keys inherent to the map (not inherited)', function() {
+      var targetMap = {
+        "2016-05-22T04:00:00Z": {"junk":123},
+        "2016-02-22T04:00:00Z": {"junk":123},
+        "2016-06-22T04:00:00Z": {"junk":123},
+        "2015-05-22T04:00:00Z": {"junk":123}
+      };
+
+      var sortedDates = TimesheetUtil.sortDaysEntryDates(targetMap);
+
+      expect(sortedDates[0]).toEqual("2015-05-22T04:00:00Z");
+      expect(sortedDates[1]).toEqual("2016-02-22T04:00:00Z");
+      expect(sortedDates[2]).toEqual("2016-05-22T04:00:00Z");
+      expect(sortedDates[3]).toEqual("2016-06-22T04:00:00Z");
+    });
+  });
 });
