@@ -4,9 +4,19 @@ var TimesheetUtil = (function() {
   self.collateDays = function(timeEntryPositionInfo) {
     var daysEntries = {};
 
+    function fetchDayEntry(date) {
+      var dayEntry = daysEntries[date];
+      if (dayEntry === undefined) {
+        dayEntry = [];
+        daysEntries[date] = dayEntry;
+      }
+      return dayEntry;
+    }
+
     timeEntryPositionInfo.forEach(function(infoEntry) {
       infoEntry.timeEntries.forEach(function(timeEntry) {
-        daysEntries[timeEntry.date] = [{
+        var dayEntry = fetchDayEntry(timeEntry.date);
+        dayEntry.push({
           id: timeEntry.id,
           date: timeEntry.date,
           hours: timeEntry.hours,
@@ -14,38 +24,9 @@ var TimesheetUtil = (function() {
           positionId: infoEntry.position.id,
           positionName: infoEntry.position.name,
           positionNote: infoEntry.position.note
-        }];
+        });
       });
     });
-
-
-    //
-    // function fetchDayEntry(date) {
-    //   var dayEntry = daysEntries[date];
-    //   if (!dayEntry) {
-    //     dayEntry = [];
-    //     daysEntries[date] = dayEntry;
-    //   }
-    //   return dayEntry;
-    // }
-    //
-    // timeEntryProjectInfo.forEach(function(projectInfo) {
-    //   var positionName = projectInfo.position.name;
-    //   var positionNote = projectInfo.position.note;
-    //   projectInfo.timeEntries.forEach(function(timeEntry) {
-    //     var date = timeEntry.date;
-    //     var dayEntry = fetchDayEntry(date);
-    //     dayEntry.push({
-    //       id: timeEntry.id,
-    //       date: date,
-    //       hours: timeEntry.hours,
-    //       projectedHours: timeEntry.projectedHours,
-    //       positionName: positionName,
-    //       positionNote: positionNote,
-    //       positionId: timeEntry.position.id
-    //     });
-    //   });
-    // });
     return daysEntries;
   };
 

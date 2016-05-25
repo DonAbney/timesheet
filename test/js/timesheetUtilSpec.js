@@ -357,5 +357,38 @@ describe('TimesheetUtil', function() {
 
       expect(collatedInfo["2016-06-22T04:00:00Z"][0].positionId).toEqual(32);
     });
+
+    it('should accumulate all time entries for a given date across positions', function() {
+      var targetPositionInfo = [
+        {
+          "position": {
+            "id": 32
+          },
+          "timeEntries": [
+            {
+              "date": "2016-06-22T04:00:00Z",
+              "id": 12
+            }
+          ]
+        },
+        {
+          "position": {
+            "id": 11
+          },
+          "timeEntries": [
+            {
+              "date": "2016-06-22T04:00:00Z",
+              "id": 21
+            }
+          ]
+        }
+      ];
+
+      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo);
+
+      expect(collatedInfo["2016-06-22T04:00:00Z"].length).toEqual(2);
+      expect(collatedInfo["2016-06-22T04:00:00Z"]).toContain(jasmine.objectContaining({positionId: 32, id: 12}));
+      expect(collatedInfo["2016-06-22T04:00:00Z"]).toContain(jasmine.objectContaining({positionId: 11, id: 21}));
+    });
   });
 });
