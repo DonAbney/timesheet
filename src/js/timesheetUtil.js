@@ -7,8 +7,8 @@ var TimesheetUtil = (function() {
     timeEntryPositionInfo.forEach(function(infoEntry) {
       infoEntry.timeEntries.forEach(function(timeEntry) {
         daysEntries[timeEntry.date] = [{
-          date: timeEntry.date,
           id: timeEntry.id,
+          date: timeEntry.date,
           hours: timeEntry.hours,
           projectedHours: timeEntry.projectedHours,
           positionId: infoEntry.position.id,
