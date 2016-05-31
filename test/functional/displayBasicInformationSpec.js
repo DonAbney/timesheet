@@ -89,6 +89,19 @@ describe('Displaying basic information', function() {
 
         expect($('.wrapper-generatedView').children().length).toEqual(1);
       });
+
+      it('should generate a day entry for each day represented in the timesheet information', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z"}, "te2": {date: "2016-05-30T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo(timesheetInfo);
+
+        expect($('.wrapper-generatedView').children().length).toEqual(2);
+      });
     });
   });
 });
