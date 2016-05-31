@@ -59,7 +59,7 @@ describe('Displaying basic information', function() {
         TimesheetUtil.mapKeys(timeEntryInfo).forEach(function(key) {
           var entry = {
             "id": key,
-            "date": timeEntryInfo[key].date ? timeEntryInfo[key].date : "2015-05-03T04:00:00Z"
+            "date": timeEntryInfo[key].hasOwnProperty("date") ? timeEntryInfo[key].date : "2015-05-03T04:00:00Z"
           };
           entries.push(entry);
         });
@@ -68,9 +68,9 @@ describe('Displaying basic information', function() {
 
       return {
         "position": {
-          "id": positionInfo.id ? positionInfo.id : "001",
-          "name": positionInfo.name ? positionInfo.name : "someName",
-          "note": positionInfo.note ? positionInfo.note : "someNote"
+          "id": positionInfo.hasOwnProperty("id") ? positionInfo.id : "001",
+          "name": positionInfo.hasOwnProperty("name") ? positionInfo.name : "someName",
+          "note": positionInfo.hasOwnProperty("note") ? positionInfo.note : "someNote"
         },
         "timeEntries": generateTimeEntries(timeEntryInfo)
       }
@@ -88,6 +88,32 @@ describe('Displaying basic information', function() {
         TimesheetView.displayTimesheetInfo(timesheetInfo);
 
         expect($('.wrapper-generatedView').children().length).toEqual(1);
+      });
+
+      it('should generate a time entry within the day for the position with name and no note when no note is present', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1", "name": "targetName", "note": null}, {"te1": {date: "2016-05-31T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo(timesheetInfo);
+
+        expect($('.wrapper-generatedView .day:first .timeEntries .timeEntry:first label').text()).toEqual("targetName");
+      });
+
+      it('should generate a time entry within the day for the position with name and note', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1", "name": "targetName", "note": "targetNote"}, {"te1": {date: "2016-05-31T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo(timesheetInfo);
+
+        expect($('.wrapper-generatedView .day:first .timeEntries .timeEntry:first label').text()).toEqual("targetName: targetNote");
       });
 
       it('should generate a day entry for each day represented in the timesheet information', function() {
