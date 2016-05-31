@@ -34,4 +34,61 @@ describe('Displaying basic information', function() {
       });
     });
   });
+
+  describe('for the days', function() {
+    beforeEach(function() {
+      var fixture = "<div id='fixture' class='days wrapper-generatedView'></div>";
+      document.body.insertAdjacentHTML('afterbegin', fixture);
+    });
+
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('fixture'));
+    });
+
+    function generateBasicTimesheetInstanceData() {
+      return {
+        "employee": {
+          "id": 23
+        }
+      };
+    };
+
+    function generatePositionAndTimeEntryInfo(positionInfo, timeEntryInfo) {
+      function generateTimeEntries(timeEntryInfo) {
+        var entries = [];
+        TimesheetUtil.mapKeys(timeEntryInfo).forEach(function(key) {
+          var entry = {
+            "id": key,
+            "date": timeEntryInfo[key].date ? timeEntryInfo[key].date : "2015-05-03T04:00:00Z"
+          };
+          entries.push(entry);
+        });
+        return entries;
+      };
+
+      return {
+        "position": {
+          "id": positionInfo.id ? positionInfo.id : "001",
+          "name": positionInfo.name ? positionInfo.name : "someName",
+          "note": positionInfo.note ? positionInfo.note : "someNote"
+        },
+        "timeEntries": generateTimeEntries(timeEntryInfo)
+      }
+    };
+
+    describe('via displayTimesheetInfo()', function() {
+      it('should generate a day entry for a day represented in the timesheet information', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo(timesheetInfo);
+
+        expect($('.wrapper-generatedView').children().length).toEqual(1);
+      });
+    });
+  });
 });
