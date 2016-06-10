@@ -142,6 +142,32 @@ describe('Displaying basic information', function() {
 
         expect($('.wrapper-generatedView .day:first .timeEntries').children().length).toEqual(2);
       });
+
+      it('should generate a total sum of hours worked element for the day', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo(timesheetInfo);
+
+        expect($('.wrapper-generatedView .day:first .dayTotal').length).not.toEqual(0);
+      });
+
+      it('should generate a total sum of hours worked element for other days', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z"}, "te2": {date: "2016-06-01T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo(timesheetInfo);
+
+        expect($('.wrapper-generatedView .day:eq(1) .dayTotal').length).not.toEqual(0);
+      });
     });
   });
 });
