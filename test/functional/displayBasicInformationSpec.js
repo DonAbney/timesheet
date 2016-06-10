@@ -128,6 +128,20 @@ describe('Displaying basic information', function() {
 
         expect($('.wrapper-generatedView').children().length).toEqual(2);
       });
+
+      it('should generate time entries for each position and its time entry for a day represented in the timesheet information', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z"}}),
+            generatePositionAndTimeEntryInfo({"id": "p2"}, {"te2": {date: "2016-05-31T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo(timesheetInfo);
+
+        expect($('.wrapper-generatedView .day:first .timeEntries').children().length).toEqual(2);
+      });
     });
   });
 });
