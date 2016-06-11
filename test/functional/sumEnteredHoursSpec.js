@@ -2,6 +2,8 @@ describe('Summing entered hours', function() {
   beforeEach(function() {
     var fixture = "<div id='fixture'><span class='weekTotal'>unmodified</span><div class='days wrapper-generatedView'></div></div>";
     document.body.insertAdjacentHTML('afterbegin', fixture);
+
+    TimesheetView.displayTimesheetInfo(generateTimesheetInfo());
   });
 
   afterEach(function() {
@@ -18,16 +20,12 @@ describe('Summing entered hours', function() {
     };
   };
 
+  function enterHours(timeEntryId, numHours) {
+    $('#' + timeEntryId).val("" + numHours);
+    $('#' + timeEntryId).blur();
+  };
+
   describe('for the timesheet total', function() {
-    beforeEach(function() {
-      TimesheetView.displayTimesheetInfo(generateTimesheetInfo());
-    });
-
-    function enterHours(timeEntryId, numHours) {
-      $('#' + timeEntryId).val("" + numHours);
-      $('#' + timeEntryId).blur();
-    };
-
     it('should reflect the hours entered for a time entry', function() {
       enterHours('te1', 2);
 
@@ -48,6 +46,21 @@ describe('Summing entered hours', function() {
       enterHours('te4', 12);
 
       expect($('.weekTotal').text()).toEqual("27");
+    });
+  });
+
+  describe('for the daily total', function() {
+    it('should reflect the hours entered for a time entry', function() {
+      enterHours('te1', 2);
+
+      expect($(".dayTotal[data-date='2016-05-31T04:00:00Z']").text()).toEqual("2");
+    });
+
+    it('should reflect the sum of all hours entered for all time entries for a day', function() {
+      enterHours('te2', 6);
+      enterHours('te4', 13);
+
+      expect($(".dayTotal[data-date='2016-05-30T04:00:00Z']").text()).toEqual("19");
     });
   });
 });
