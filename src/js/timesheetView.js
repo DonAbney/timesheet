@@ -1,9 +1,7 @@
 var TimesheetView = (function() {
   var self = {};
 
-  self.displayTimesheetInfo = function(timesheetInfo) {
-    // TODO replace with actual user's name instead of ID
-    var username = timesheetInfo.timesheetInstance.employee.id;
+  self.displayTimesheetInfo = function(username, timesheetInfo) {
     self.updateUsername(username);
     var daysEntries = TimesheetUtil.collateDays(timesheetInfo.timeEntryPositionMapByDate);
     displayDays(daysEntries);

@@ -18,7 +18,7 @@ describe('Displaying basic information', function() {
     });
 
     describe('via displayTimesheetInfo()', function() {
-      it('should update the username to the user id specified in the timesheet info', function() {
+      it('should update the username to the provided user name', function() {
         var timesheetInfo = {
           "timesheetInstance": {
             "employee": {
@@ -28,9 +28,9 @@ describe('Displaying basic information', function() {
           "timeEntryPositionMapByDate": []
         };
 
-        TimesheetView.displayTimesheetInfo(timesheetInfo);
+        TimesheetView.displayTimesheetInfo("tjones", timesheetInfo);
 
-        expect($('.username').text()).toEqual("23");
+        expect($('.username').text()).toEqual("tjones");
       });
     });
   });
@@ -54,7 +54,7 @@ describe('Displaying basic information', function() {
           ]
         };
 
-        TimesheetView.displayTimesheetInfo(timesheetInfo);
+        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
 
         expect($('.wrapper-generatedView').children().length).toEqual(1);
       });
@@ -67,7 +67,7 @@ describe('Displaying basic information', function() {
           ]
         };
 
-        TimesheetView.displayTimesheetInfo(timesheetInfo);
+        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
 
         expect($('.wrapper-generatedView .day:first .timeEntries .timeEntry:first label').text()).toEqual("targetName");
       });
@@ -80,7 +80,7 @@ describe('Displaying basic information', function() {
           ]
         };
 
-        TimesheetView.displayTimesheetInfo(timesheetInfo);
+        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
 
         expect($('.wrapper-generatedView .day:first .timeEntries .timeEntry:first label').text()).toEqual("targetName: targetNote");
       });
@@ -93,7 +93,7 @@ describe('Displaying basic information', function() {
           ]
         };
 
-        TimesheetView.displayTimesheetInfo(timesheetInfo);
+        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
 
         expect($('.wrapper-generatedView').children().length).toEqual(2);
       });
@@ -107,7 +107,7 @@ describe('Displaying basic information', function() {
           ]
         };
 
-        TimesheetView.displayTimesheetInfo(timesheetInfo);
+        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
 
         expect($('.wrapper-generatedView .day:first .timeEntries').children().length).toEqual(2);
       });
@@ -120,7 +120,7 @@ describe('Displaying basic information', function() {
           ]
         };
 
-        TimesheetView.displayTimesheetInfo(timesheetInfo);
+        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
 
         expect($('.wrapper-generatedView .day:first .dayTotal').length).not.toEqual(0);
       });
@@ -133,7 +133,7 @@ describe('Displaying basic information', function() {
           ]
         };
 
-        TimesheetView.displayTimesheetInfo(timesheetInfo);
+        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
 
         expect($('.wrapper-generatedView .day:eq(1) .dayTotal').length).not.toEqual(0);
       });

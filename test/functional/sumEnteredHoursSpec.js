@@ -3,7 +3,7 @@ describe('Summing entered hours', function() {
     var fixture = "<div id='fixture'><span class='weekTotal'>unmodified</span><div class='days wrapper-generatedView'></div></div>";
     document.body.insertAdjacentHTML('afterbegin', fixture);
 
-    TimesheetView.displayTimesheetInfo(generateTimesheetInfo());
+    TimesheetView.displayTimesheetInfo('tjones', generateTimesheetInfo());
   });
 
   afterEach(function() {

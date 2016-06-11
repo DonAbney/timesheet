@@ -9,7 +9,7 @@ var TimesheetCommunication = (function() {
       url: self.url_getTimesheetForUser + '/' + username + '/' + TimesheetUtil.formatDateYYYYMMDD(date),
       crossDomain: true
     }).then(function(data) {
-      TimesheetView.displayTimesheetInfo(data);
+      TimesheetView.displayTimesheetInfo(username, data);
     });
   };
 
