@@ -5,6 +5,7 @@ var TimesheetView = (function() {
     self.updateUsername(username);
     var daysEntries = TimesheetUtil.collateDays(timesheetInfo.timeEntryPositionMapByDate);
     displayDays(daysEntries);
+    recalculateTotals();
   };
 
   self.updateUsername = function(name) {
@@ -24,17 +25,19 @@ var TimesheetView = (function() {
     return collectedEnteredTime;
   };
 
-  function setupRecalculationTrigger(element) {
-    $(element).blur(function() {
-      var aggregatedTimes = TimesheetUtil.aggregateTime(self.collectEnteredTime());
-      TimesheetUtil.mapKeys(aggregatedTimes).forEach(function(key) {
-        if (key === "totalTime") {
-          $(".weekTotal").text(aggregatedTimes.totalTime);
-        } else {
-          $(".dayTotal[data-date='" + key + "']").text(aggregatedTimes[key]);
-        }
-      });
+  function recalculateTotals() {
+    var aggregatedTimes = TimesheetUtil.aggregateTime(self.collectEnteredTime());
+    TimesheetUtil.mapKeys(aggregatedTimes).forEach(function(key) {
+      if (key === "totalTime") {
+        $(".weekTotal").text(aggregatedTimes.totalTime);
+      } else {
+        $(".dayTotal[data-date='" + key + "']").text(aggregatedTimes[key]);
+      }
     });
+  }
+
+  function setupRecalculationTrigger(element) {
+    $(element).blur(recalculateTotals);
   }
 
   function constructDayWrapper(date) {
@@ -64,6 +67,7 @@ var TimesheetView = (function() {
     field.className = "timeEntryField";
     field.setAttribute('data-date', entry.date);
     field.setAttribute('type', 'number');
+    field.value = entry.hours;
     setupRecalculationTrigger(field);
     return field;
   }

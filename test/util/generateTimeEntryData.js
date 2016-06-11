@@ -12,7 +12,8 @@ function generatePositionAndTimeEntryInfo(positionInfo, timeEntryInfo) {
     TimesheetUtil.mapKeys(timeEntryInfo).forEach(function(key) {
       var entry = {
         "id": key,
-        "date": timeEntryInfo[key].hasOwnProperty("date") ? timeEntryInfo[key].date : "2015-05-03T04:00:00Z"
+        "date": timeEntryInfo[key].hasOwnProperty("date") ? timeEntryInfo[key].date : "2015-05-03T04:00:00Z",
+        "hours": timeEntryInfo[key].hasOwnProperty("hours") ? timeEntryInfo[key].hours : 0
       };
       entries.push(entry);
     });

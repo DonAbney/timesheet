@@ -112,6 +112,10 @@ describe('Displaying basic information', function() {
         expect($('.wrapper-generatedView .day:first .timeEntries').children().length).toEqual(2);
       });
 
+      function doesElementExist(selector) {
+        return $(selector).length !== 0
+      }
+
       it('should generate a total sum of hours worked element for the day', function() {
         var timesheetInfo = {
           "timesheetInstance": generateBasicTimesheetInstanceData(),
@@ -122,7 +126,7 @@ describe('Displaying basic information', function() {
 
         TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
 
-        expect($('.wrapper-generatedView .day:first .dayTotal').length).not.toEqual(0);
+        expect(doesElementExist('.wrapper-generatedView .day:first .dayTotal')).toEqual(true);
       });
 
       it('should generate a total sum of hours worked element for other days', function() {
@@ -135,7 +139,24 @@ describe('Displaying basic information', function() {
 
         TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
 
-        expect($('.wrapper-generatedView .day:eq(1) .dayTotal').length).not.toEqual(0);
+        expect(doesElementExist('.wrapper-generatedView .day:eq(1) .dayTotal')).toEqual(true);
+      });
+
+      it('should populate any pre-existing hours already entered for a time entry', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z", hours: 1}, "te2": {date: "2016-05-30T04:00:00Z", hours: 2}}),
+            generatePositionAndTimeEntryInfo({"id": "p2"}, {"te3": {date: "2016-05-31T04:00:00Z", hours: 3}, "te4": {date: "2016-05-30T04:00:00Z", hours: 5}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+
+        expect($('#te1').val()).toEqual('1');
+        expect($('#te2').val()).toEqual('2');
+        expect($('#te3').val()).toEqual('3');
+        expect($('#te4').val()).toEqual('5');
       });
     });
   });
