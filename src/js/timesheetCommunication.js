@@ -1,12 +1,12 @@
 var TimesheetCommunication = (function() {
   var self = {
     // Update with prod URL
-    url_getTimesheetForUser: "http://private-696ecf-ddaugherfba.apiary-mock.com/api/timesheet/tjones/2016-05-20"
+    url_getTimesheetForUser: "http://private-696ecf-ddaugherfba.apiary-mock.com/api/timesheet"
   };
 
-  self.fetchTimesheetInfo = function() {
+  self.fetchTimesheetInfo = function(username, date) {
     $.ajax({
-      url: self.url_getTimesheetForUser,
+      url: self.url_getTimesheetForUser + '/' + username + '/' + date,
       crossDomain: true
     }).then(function(data) {
       TimesheetView.displayTimesheetInfo(data);
