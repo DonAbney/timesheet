@@ -43,6 +43,11 @@ var TimesheetUtil = (function() {
     return daysOfWeek[date.getDay()] + " " + (date.getMonth() + 1) + "/" + date.getDate();
   };
 
+  self.formatDateYYYYMMDD = function(date) {
+    var date = new Date(date);
+    return date.toJSON().split("T")[0];
+  }
+
   self.aggregateTime = function(enteredTimes) {
     var aggregatedTimes = {};
     var totalTime = 0.0;

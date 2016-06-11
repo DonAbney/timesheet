@@ -107,6 +107,20 @@ describe('TimesheetUtil', function() {
     });
   });
 
+  describe('formatDateYYYYMMDD()', function() {
+    it('should reformat a string date into YYYY-MM-DD', function() {
+      var targetDate = '05/22/2016';
+
+      expect(TimesheetUtil.formatDateYYYYMMDD(targetDate)).toEqual("2016-05-22");
+    });
+
+    it('should work even if a date object is passed in', function() {
+      var targetDate = new Date(2016, 4, 22);
+
+      expect(TimesheetUtil.formatDateYYYYMMDD(targetDate)).toEqual("2016-05-22");
+    });
+  });
+
   describe('sortDaysEntryDates()', function() {
     it('should not contain any inherited keys', function() {
       var inheritedMap = {
