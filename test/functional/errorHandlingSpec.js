@@ -1,6 +1,6 @@
-describe('Showing and hiding response areas', function() {
+describe('Error handling', function() {
   beforeEach(function() {
-    var fixture = "<div id='fixture'><div id='errorResponse'></div><div id='successfulResponse'></div></div>";
+    var fixture = "<div id='fixture'><div id='errorResponse'><div class='statusCode'>unchanged</div><div class='statusMessage'>unchanged</div></div><div id='successfulResponse'></div></div>";
     document.body.insertAdjacentHTML('afterbegin', fixture);
   });
 
@@ -8,95 +8,113 @@ describe('Showing and hiding response areas', function() {
     document.body.removeChild(document.getElementById('fixture'));
   });
 
-  function setupErrorResponseAreaVisible() {
-    $('#errorResponse').show();
-  };
+  describe('for showing and hiding response areas', function() {
+    function setupErrorResponseAreaVisible() {
+      $('#errorResponse').show();
+    };
 
-  function setupErrorResponseAreaNotVisible() {
-    $('#errorResponse').hide();
-  };
+    function setupErrorResponseAreaNotVisible() {
+      $('#errorResponse').hide();
+    };
 
-  function setupSuccessResponseAreaVisible() {
-    $('#successfulResponse').show();
-  };
+    function setupSuccessResponseAreaVisible() {
+      $('#successfulResponse').show();
+    };
 
-  function setupSuccessResponseAreaNotVisible() {
-    $('#successfulResponse').hide();
-  };
+    function setupSuccessResponseAreaNotVisible() {
+      $('#successfulResponse').hide();
+    };
 
-  function isErrorResponseAreaVisible() {
-    return $('#errorResponse').is(":visible");
-  };
+    function isErrorResponseAreaVisible() {
+      return $('#errorResponse').is(":visible");
+    };
 
-  function isSuccessResponseAreaVisible() {
-    return $('#successfulResponse').is(":visible");
-  };
+    function isSuccessResponseAreaVisible() {
+      return $('#successfulResponse').is(":visible");
+    };
 
-  describe('makeErrorResponseVisible()', function() {
-    it('should make sure the error response area is visible if it was previously not visible', function() {
-      setupErrorResponseAreaNotVisible();
+    describe('via makeErrorResponseVisible()', function() {
+      it('should make sure the error response area is visible if it was previously not visible', function() {
+        setupErrorResponseAreaNotVisible();
 
-      ErrorHandling.makeErrorResponseVisible();
+        ErrorHandling.makeErrorResponseVisible();
 
-      expect(isErrorResponseAreaVisible()).toEqual(true);
+        expect(isErrorResponseAreaVisible()).toEqual(true);
+      });
+
+      it('should make sure the error response area remains visible if it was previously visible', function() {
+        setupErrorResponseAreaVisible();
+
+        ErrorHandling.makeErrorResponseVisible();
+
+        expect(isErrorResponseAreaVisible()).toEqual(true);
+      });
+
+      it('should make sure the success response area is not visible if it was previously visible', function() {
+        setupSuccessResponseAreaVisible();
+
+        ErrorHandling.makeErrorResponseVisible();
+
+        expect(isSuccessResponseAreaVisible()).toEqual(false);
+      });
+
+      it('should make sure the success response area remains not visible if it was previously not visible', function() {
+        setupSuccessResponseAreaNotVisible();
+
+        ErrorHandling.makeErrorResponseVisible();
+
+        expect(isSuccessResponseAreaVisible()).toEqual(false);
+      });
     });
 
-    it('should make sure the error response area remains visible if it was previously visible', function() {
-      setupErrorResponseAreaVisible();
+    describe('via makeSuccessResponseVisible()', function() {
+      it('should make sure the success response area is visible if it was previously not visible', function() {
+        setupSuccessResponseAreaNotVisible();
 
-      ErrorHandling.makeErrorResponseVisible();
+        ErrorHandling.makeSuccessResponseVisible();
 
-      expect(isErrorResponseAreaVisible()).toEqual(true);
-    });
+        expect(isSuccessResponseAreaVisible()).toEqual(true);
+      });
 
-    it('should make sure the success response area is not visible if it was previously visible', function() {
-      setupSuccessResponseAreaVisible();
+      it('should make sure the success response area remains visible if it was previously visible', function() {
+        setupSuccessResponseAreaVisible();
 
-      ErrorHandling.makeErrorResponseVisible();
+        ErrorHandling.makeSuccessResponseVisible();
 
-      expect(isSuccessResponseAreaVisible()).toEqual(false);
-    });
+        expect(isSuccessResponseAreaVisible()).toEqual(true);
+      });
 
-    it('should make sure the success response area remains not visible if it was previously not visible', function() {
-      setupSuccessResponseAreaNotVisible();
+      it('should make sure the error response area is not visible if it was previously visible', function() {
+        setupErrorResponseAreaVisible();
 
-      ErrorHandling.makeErrorResponseVisible();
+        ErrorHandling.makeSuccessResponseVisible();
 
-      expect(isSuccessResponseAreaVisible()).toEqual(false);
+        expect(isErrorResponseAreaVisible()).toEqual(false);
+      });
+
+      it('should make sure the error response area remains not visible if it was previously not visible', function() {
+        setupErrorResponseAreaNotVisible();
+
+        ErrorHandling.makeSuccessResponseVisible();
+
+        expect(isErrorResponseAreaVisible()).toEqual(false);
+      });
     });
   });
 
-  describe('makeSuccessResponseVisible()', function() {
-    it('should make sure the success response area is visible if it was previously not visible', function() {
-      setupSuccessResponseAreaNotVisible();
+  describe('for showing error response information', function() {
+    describe('via displayError()', function() {
+      it('should set the status code to the provided status code', function() {
+        ErrorHandling.displayError("302", "request was lost during testing");
 
-      ErrorHandling.makeSuccessResponseVisible();
+        expect($('.statusCode').text()).toEqual("302");
+      });
 
-      expect(isSuccessResponseAreaVisible()).toEqual(true);
-    });
+      it('should set the status message to the provided message', function() {
+        ErrorHandling.displayError("302", "request was lost during testing");
 
-    it('should make sure the success response area remains visible if it was previously visible', function() {
-      setupSuccessResponseAreaVisible();
-
-      ErrorHandling.makeSuccessResponseVisible();
-
-      expect(isSuccessResponseAreaVisible()).toEqual(true);
-    });
-
-    it('should make sure the error response area is not visible if it was previously visible', function() {
-      setupErrorResponseAreaVisible();
-
-      ErrorHandling.makeSuccessResponseVisible();
-
-      expect(isErrorResponseAreaVisible()).toEqual(false);
-    });
-
-    it('should make sure the error response area remains not visible if it was previously not visible', function() {
-      setupErrorResponseAreaNotVisible();
-
-      ErrorHandling.makeSuccessResponseVisible();
-
-      expect(isErrorResponseAreaVisible()).toEqual(false);
+        expect($('.statusMessage').text()).toEqual("request was lost during testing");
+      });
     });
   });
 });

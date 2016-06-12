@@ -11,5 +11,10 @@ var ErrorHandling = (function() {
     $('#errorResponse').hide();
   };
 
+  self.displayError = function(statusCode, message) {
+    $('.statusCode').text("" + statusCode);
+    $('.statusMessage').text("" + message);
+  };
+
   return self;
 })();
