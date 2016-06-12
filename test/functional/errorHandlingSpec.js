@@ -104,14 +104,20 @@ describe('Error handling', function() {
 
   describe('for showing error response information', function() {
     describe('via displayError()', function() {
-      it('should set the status code to the provided status code', function() {
-        ErrorHandling.displayError("302", "request was lost during testing");
+      var jqXHR = {
+        status: 302,
+        statusText: "standard status code message",
+        responseText: '{ "status": 302, "message": "request was lost during testing"}'
+      };
 
-        expect($('.statusCode').text()).toEqual("302");
+      it('should set the status code to the provided status code', function() {
+        ErrorHandling.displayError(jqXHR);
+
+        expect($('.statusCode').text()).toEqual("[302] standard status code message");
       });
 
       it('should set the status message to the provided message', function() {
-        ErrorHandling.displayError("302", "request was lost during testing");
+        ErrorHandling.displayError(jqXHR);
 
         expect($('.statusMessage').text()).toEqual("request was lost during testing");
       });

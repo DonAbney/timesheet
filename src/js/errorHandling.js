@@ -11,9 +11,9 @@ var ErrorHandling = (function() {
     $('#errorResponse').hide();
   };
 
-  self.displayError = function(statusCode, message) {
-    $('.statusCode').text("" + statusCode);
-    $('.statusMessage').text("" + message);
+  self.displayError = function(jqXHR) {
+    $('.statusCode').text("[" + jqXHR.status + "] " + jqXHR.statusText);
+    $('.statusMessage').text(JSON.parse(jqXHR.responseText).message);
   };
 
   return self;

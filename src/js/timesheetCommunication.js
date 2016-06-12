@@ -16,9 +16,9 @@ var TimesheetCommunication = (function() {
     }).done(function(data) {
       ErrorHandling.makeSuccessResponseVisible();
       TimesheetView.displayTimesheetInfo(username, data);
-    }).fail(function(jqXHR, statusText, errorThrown) {
+    }).fail(function(jqXHR) {
       ErrorHandling.makeErrorResponseVisible();
-      ErrorHandling.displayError("[" + jqXHR.status + "] " + jqXHR.statusText, JSON.parse(jqXHR.responseText).message);
+      ErrorHandling.displayError(jqXHR);
     });
   };
 
