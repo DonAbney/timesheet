@@ -69,7 +69,7 @@ describe('Displaying basic information', function() {
 
         TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
 
-        expect($('.wrapper-generatedView .day:first .timeEntries .timeEntry:first label').text()).toEqual("targetName");
+        expect($('.wrapper-generatedView .timeEntry[data-date="2016-05-31T04:00:00Z"]:first label').text()).toEqual("targetName");
       });
 
       it('should generate a time entry within the day for the position with name and note', function() {
@@ -82,7 +82,7 @@ describe('Displaying basic information', function() {
 
         TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
 
-        expect($('.wrapper-generatedView .day:first .timeEntries .timeEntry:first label').text()).toEqual("targetName: targetNote");
+        expect($('.wrapper-generatedView .timeEntry[data-date="2016-05-31T04:00:00Z"]:first label').text()).toEqual("targetName: targetNote");
       });
 
       it('should generate a day entry for each day represented in the timesheet information', function() {
@@ -109,7 +109,7 @@ describe('Displaying basic information', function() {
 
         TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
 
-        expect($('.wrapper-generatedView .day:first .timeEntries').children().length).toEqual(2);
+        expect($('.wrapper-generatedView .timeEntries[data-date="2016-05-31T04:00:00Z"]').children().length).toEqual(2);
       });
 
       function doesElementExist(selector) {
@@ -126,7 +126,7 @@ describe('Displaying basic information', function() {
 
         TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
 
-        expect(doesElementExist('.wrapper-generatedView .day:first .dayTotal')).toEqual(true);
+        expect(doesElementExist('.wrapper-generatedView .dayTotal[data-date="2016-05-31T04:00:00Z"]')).toEqual(true);
       });
 
       it('should generate a total sum of hours worked element for other days', function() {
@@ -139,7 +139,7 @@ describe('Displaying basic information', function() {
 
         TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
 
-        expect(doesElementExist('.wrapper-generatedView .day:eq(1) .dayTotal')).toEqual(true);
+        expect(doesElementExist('.wrapper-generatedView .dayTotal[data-date="2016-06-01T04:00:00Z"]')).toEqual(true);
       });
 
       it('should populate any pre-existing hours already entered for a time entry', function() {

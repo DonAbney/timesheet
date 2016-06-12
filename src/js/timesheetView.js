@@ -75,6 +75,7 @@ var TimesheetView = (function() {
   function constructTimeEntry(entry) {
     var timeEntry = document.createElement("div");
     timeEntry.className = "timeEntry";
+    timeEntry.setAttribute('data-date', entry.date);
     var positionLabel = constructPositionLabel(entry);
     var field = constructTimeEntryField(entry);
     positionLabel.insertAdjacentElement('beforeEnd', field);
@@ -82,9 +83,10 @@ var TimesheetView = (function() {
     return timeEntry;
   }
 
-  function constructTimeEntries(dayEntries) {
+  function constructTimeEntries(dayEntries, date) {
     var timeEntriesWrapper = document.createElement("div");
     timeEntriesWrapper.className = "timeEntries";
+    timeEntriesWrapper.setAttribute('data-date', date);
     timeEntriesWrapper.style.display = 'none';
     dayEntries.forEach(function(entry) {
       timeEntriesWrapper.insertAdjacentElement('beforeend', constructTimeEntry(entry));
@@ -95,7 +97,7 @@ var TimesheetView = (function() {
   function constructDayElement(dayEntries, date) {
     var dayElement = constructDayWrapper(date);
     dayElement.insertAdjacentElement('afterbegin', constructDayHeader(date));
-    dayElement.insertAdjacentElement('beforeend', constructTimeEntries(dayEntries));
+    dayElement.insertAdjacentElement('beforeend', constructTimeEntries(dayEntries, date));
     return dayElement;
   }
 
