@@ -23,11 +23,11 @@ var TimesheetCommunication = (function() {
       crossDomain: true,
       headers: self.requestHeaders
     }).done(function(data) {
-      ErrorHandling.makeSuccessResponseVisible();
+      ResponseHandling.makeSuccessResponseVisible();
       TimesheetView.displayTimesheetInfo(username, data);
     }).fail(function(jqXHR) {
-      ErrorHandling.makeErrorResponseVisible();
-      ErrorHandling.displayError(jqXHR);
+      ResponseHandling.makeErrorResponseVisible();
+      ResponseHandling.displayError(jqXHR);
     });
   };
 

@@ -37,7 +37,7 @@ describe('Error handling', function() {
       it('should make sure the error response area is visible if it was previously not visible', function() {
         setupErrorResponseAreaNotVisible();
 
-        ErrorHandling.makeErrorResponseVisible();
+        ResponseHandling.makeErrorResponseVisible();
 
         expect(isErrorResponseAreaVisible()).toEqual(true);
       });
@@ -45,7 +45,7 @@ describe('Error handling', function() {
       it('should make sure the error response area remains visible if it was previously visible', function() {
         setupErrorResponseAreaVisible();
 
-        ErrorHandling.makeErrorResponseVisible();
+        ResponseHandling.makeErrorResponseVisible();
 
         expect(isErrorResponseAreaVisible()).toEqual(true);
       });
@@ -53,7 +53,7 @@ describe('Error handling', function() {
       it('should make sure the success response area is not visible if it was previously visible', function() {
         setupSuccessResponseAreaVisible();
 
-        ErrorHandling.makeErrorResponseVisible();
+        ResponseHandling.makeErrorResponseVisible();
 
         expect(isSuccessResponseAreaVisible()).toEqual(false);
       });
@@ -61,7 +61,7 @@ describe('Error handling', function() {
       it('should make sure the success response area remains not visible if it was previously not visible', function() {
         setupSuccessResponseAreaNotVisible();
 
-        ErrorHandling.makeErrorResponseVisible();
+        ResponseHandling.makeErrorResponseVisible();
 
         expect(isSuccessResponseAreaVisible()).toEqual(false);
       });
@@ -71,7 +71,7 @@ describe('Error handling', function() {
       it('should make sure the success response area is visible if it was previously not visible', function() {
         setupSuccessResponseAreaNotVisible();
 
-        ErrorHandling.makeSuccessResponseVisible();
+        ResponseHandling.makeSuccessResponseVisible();
 
         expect(isSuccessResponseAreaVisible()).toEqual(true);
       });
@@ -79,7 +79,7 @@ describe('Error handling', function() {
       it('should make sure the success response area remains visible if it was previously visible', function() {
         setupSuccessResponseAreaVisible();
 
-        ErrorHandling.makeSuccessResponseVisible();
+        ResponseHandling.makeSuccessResponseVisible();
 
         expect(isSuccessResponseAreaVisible()).toEqual(true);
       });
@@ -87,7 +87,7 @@ describe('Error handling', function() {
       it('should make sure the error response area is not visible if it was previously visible', function() {
         setupErrorResponseAreaVisible();
 
-        ErrorHandling.makeSuccessResponseVisible();
+        ResponseHandling.makeSuccessResponseVisible();
 
         expect(isErrorResponseAreaVisible()).toEqual(false);
       });
@@ -95,7 +95,7 @@ describe('Error handling', function() {
       it('should make sure the error response area remains not visible if it was previously not visible', function() {
         setupErrorResponseAreaNotVisible();
 
-        ErrorHandling.makeSuccessResponseVisible();
+        ResponseHandling.makeSuccessResponseVisible();
 
         expect(isErrorResponseAreaVisible()).toEqual(false);
       });
@@ -111,13 +111,13 @@ describe('Error handling', function() {
       };
 
       it('should set the status code to the provided status code', function() {
-        ErrorHandling.displayError(jqXHR);
+        ResponseHandling.displayError(jqXHR);
 
         expect($('.statusCode').text()).toEqual("[302] standard status code message");
       });
 
       it('should set the status message to the provided message', function() {
-        ErrorHandling.displayError(jqXHR);
+        ResponseHandling.displayError(jqXHR);
 
         expect($('.statusMessage').text()).toEqual("request was lost during testing");
       });

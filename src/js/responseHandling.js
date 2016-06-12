@@ -1,4 +1,4 @@
-var ErrorHandling = (function() {
+var ResponseHandling = (function() {
   var self = {};
 
   self.makeErrorResponseVisible = function() {
