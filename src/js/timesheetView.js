@@ -5,7 +5,7 @@ var TimesheetView = (function() {
     self.updateUsername(username);
     var daysEntries = TimesheetUtil.collateDays(timesheetInfo.timeEntryPositionMapByDate);
     displayDays(daysEntries);
-    recalculateTotals();
+    updatePageOnStateChange();
   };
 
   self.updateUsername = function(name) {
@@ -25,8 +25,13 @@ var TimesheetView = (function() {
     return collectedEnteredTime;
   };
 
-  function recalculateTotals() {
-    var aggregatedTimes = TimesheetUtil.aggregateTime(self.collectEnteredTime());
+  function updatePageOnStateChange() {
+    var collectedEnteredTime = self.collectEnteredTime();
+    recalculateTotals(collectedEnteredTime);
+  };
+
+  function recalculateTotals(collectedEnteredTime) {
+    var aggregatedTimes = TimesheetUtil.aggregateTime(collectedEnteredTime);
     TimesheetUtil.mapKeys(aggregatedTimes).forEach(function(key) {
       if (key === "totalTime") {
         $(".weekTotal").text(aggregatedTimes.totalTime);
@@ -36,8 +41,8 @@ var TimesheetView = (function() {
     });
   }
 
-  function setupRecalculationTrigger(element) {
-    $(element).blur(recalculateTotals);
+  function setupUpdatePageOnStateChangeTrigger(element) {
+    $(element).blur(updatePageOnStateChange);
   }
 
   function constructDayWrapper(date) {
@@ -69,7 +74,7 @@ var TimesheetView = (function() {
     field.setAttribute('data-last-saved-value', entry.hours);
     field.setAttribute('type', 'number');
     field.value = entry.hours;
-    setupRecalculationTrigger(field);
+    setupUpdatePageOnStateChangeTrigger(field);
     return field;
   }
 
