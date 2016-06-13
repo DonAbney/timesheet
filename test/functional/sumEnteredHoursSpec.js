@@ -8,31 +8,6 @@ describe('Summing entered hours', function() {
     document.body.removeChild(document.getElementById('fixture'));
   });
 
-  function generateTimesheetInfo() {
-    return {
-      "timesheetInstance": generateBasicTimesheetInstanceData(),
-      "timeEntryPositionMapByDate": [
-        generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z"}, "te2": {date: "2016-05-30T04:00:00Z"}}),
-        generatePositionAndTimeEntryInfo({"id": "p2"}, {"te3": {date: "2016-05-31T04:00:00Z"}, "te4": {date: "2016-05-30T04:00:00Z"}})
-      ]
-    };
-  };
-
-  function generateTimesheetInfoWithExistingHours() {
-    return {
-      "timesheetInstance": generateBasicTimesheetInstanceData(),
-      "timeEntryPositionMapByDate": [
-        generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z", hours: 1}, "te2": {date: "2016-05-30T04:00:00Z", hours: 2}}),
-        generatePositionAndTimeEntryInfo({"id": "p2"}, {"te3": {date: "2016-05-31T04:00:00Z", hours: 3}, "te4": {date: "2016-05-30T04:00:00Z", hours: 5}})
-      ]
-    };
-  };
-
-  function enterHours(timeEntryId, numHours) {
-    $('#' + timeEntryId).val("" + numHours);
-    $('#' + timeEntryId).blur();
-  };
-
   describe('for the timesheet total', function() {
     it('should reflect the hours entered for a time entry', function() {
       TimesheetView.displayTimesheetInfo('tjones', generateTimesheetInfo());

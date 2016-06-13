@@ -16,9 +16,11 @@ var TimesheetView = (function() {
     var collectedEnteredTime = {};
     $(".timeEntryField").each(function(index, element) {
       var enteredHours = $(element).val();
+      var lastSavedHours = element.getAttribute('data-last-saved-value');
       collectedEnteredTime[element.id] = {
         id: element.id,
         date: element.getAttribute('data-date'),
+        'last-saved-hours': lastSavedHours ? parseFloat(lastSavedHours) : 0.0,
         hours: enteredHours ? parseFloat(enteredHours) : 0.0
       };
     });
