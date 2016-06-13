@@ -89,6 +89,46 @@ describe('TimesheetUtil', function() {
     });
   });
 
+  describe('hasEnteredTimeChanged()', function() {
+    function setupEnteredTime(hours, lastSavedHours) {
+      return {
+        "hours": hours,
+        "last-saved-hours": lastSavedHours
+      }
+    }
+
+    it('should return false if no time entry information was provided', function() {
+      expect(TimesheetUtil.hasEnteredTimeChanged({})).toEqual(false);
+    });
+
+    it('should return false if no time entry information has changed', function() {
+      var enteredTimes = {
+        "1": setupEnteredTime(2, 2),
+        "2": setupEnteredTime(5, 5)
+      };
+
+      expect(TimesheetUtil.hasEnteredTimeChanged(enteredTimes)).toEqual(false);
+    });
+
+    it('should return true if time entred for an entry has changed', function() {
+      var enteredTimes = {
+        "1": setupEnteredTime(3, 5),
+        "2": setupEnteredTime(2, 2)
+      };
+
+      expect(TimesheetUtil.hasEnteredTimeChanged(enteredTimes)).toEqual(true);
+    });
+
+    it('should return true if time entred for multiple entries has changed', function() {
+      var enteredTimes = {
+        "1": setupEnteredTime(3, 5),
+        "2": setupEnteredTime(1, 4)
+      };
+
+      expect(TimesheetUtil.hasEnteredTimeChanged(enteredTimes)).toEqual(true);
+    });
+  });
+
   describe('formatDate()', function() {
     it('should reformat a string date into <weekday> MM/DD', function() {
       var targetDate = "2016-05-24T04:00:00Z";

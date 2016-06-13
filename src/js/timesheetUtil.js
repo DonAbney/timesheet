@@ -61,6 +61,17 @@ var TimesheetUtil = (function() {
     return aggregatedTimes;
   };
 
+  self.hasEnteredTimeChanged = function(enteredTimes) {
+    var hasChanged = false;
+    self.mapKeys(enteredTimes).forEach(function(key) {
+      var entry = enteredTimes[key];
+      if (entry.hours !== entry['last-saved-hours']) {
+        hasChanged = true;
+      }
+    });
+    return hasChanged;
+  }
+
   self.mapKeys = function(map) {
     var keys = [];
     for (key in map) {
