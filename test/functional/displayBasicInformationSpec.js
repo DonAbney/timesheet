@@ -158,6 +158,23 @@ describe('Displaying basic information', function() {
         expect($('#te3').val()).toEqual('3');
         expect($('#te4').val()).toEqual('5');
       });
+
+      it('should mark the last-saved hours for each time entry', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z", hours: 1}, "te2": {date: "2016-05-30T04:00:00Z", hours: 2}}),
+            generatePositionAndTimeEntryInfo({"id": "p2"}, {"te3": {date: "2016-05-31T04:00:00Z", hours: 3}, "te4": {date: "2016-05-30T04:00:00Z", hours: 5}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+
+        expect($('#te1').attr('data-last-saved-value')).toEqual('1');
+        expect($('#te2').attr('data-last-saved-value')).toEqual('2');
+        expect($('#te3').attr('data-last-saved-value')).toEqual('3');
+        expect($('#te4').attr('data-last-saved-value')).toEqual('5');
+      });
     });
   });
 });

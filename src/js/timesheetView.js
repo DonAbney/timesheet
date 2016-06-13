@@ -66,6 +66,7 @@ var TimesheetView = (function() {
     field.id = entry.id;
     field.className = "timeEntryField";
     field.setAttribute('data-date', entry.date);
+    field.setAttribute('data-last-saved-value', entry.hours);
     field.setAttribute('type', 'number');
     field.value = entry.hours;
     setupRecalculationTrigger(field);
