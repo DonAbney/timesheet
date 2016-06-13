@@ -1,6 +1,6 @@
 describe('On a time entry hours change', function() {
   beforeEach(function() {
-    var fixture = "<div id='fixture'><span class='weekTotal'>unmodified</span><div class='days wrapper-generatedView'></div></div>";
+    var fixture = "<div id='fixture'><span class='weekTotal'>unmodified</span><span class='stateChangeIndicator'>*</span><div class='days wrapper-generatedView'></div></div>";
     document.body.insertAdjacentHTML('afterbegin', fixture);
   });
 
@@ -66,6 +66,56 @@ describe('On a time entry hours change', function() {
       TimesheetView.displayTimesheetInfo('tjones', generateTimesheetInfoWithExistingHours());
 
       expect($(".dayTotal[data-date='2016-05-31T04:00:00Z']").text()).toEqual("4");
+    });
+  });
+
+  describe('for making visible a detected state change', function() {
+    function isStateChangeIndicatorVisible() {
+      return $('.stateChangeIndicator').is(':visible');
+    }
+
+    function setupStateChangeIndicatorVisible() {
+      $('.stateChangeIndicator').show();
+    }
+
+    function setupStateChangeIndicatorNotVisible() {
+      $('.stateChangeIndicator').hide();
+    }
+
+    it('should hide the state change indicator if there are no changes from the last-saved state and the state change indicator was currently visible', function() {
+      TimesheetView.displayTimesheetInfo('tjones', generateTimesheetInfoWithExistingHours());
+      setupStateChangeIndicatorVisible();
+
+      enterHours('te1', 1);
+
+      expect(isStateChangeIndicatorVisible()).toEqual(false);
+    });
+
+    it('should continue to hide the state change indicator if there are no changes from the last-saved state and the state change indicator was currently hidden', function() {
+      TimesheetView.displayTimesheetInfo('tjones', generateTimesheetInfoWithExistingHours());
+      setupStateChangeIndicatorNotVisible();
+
+      enterHours('te1', 1);
+
+      expect(isStateChangeIndicatorVisible()).toEqual(false);
+    });
+
+    it('should show the state change indicator if there are detected changes from the last-saved state and the state change indicator was currently hidden', function() {
+      TimesheetView.displayTimesheetInfo('tjones', generateTimesheetInfoWithExistingHours());
+      setupStateChangeIndicatorNotVisible();
+
+      enterHours('te3', 1);
+
+      expect(isStateChangeIndicatorVisible()).toEqual(true);
+    });
+
+    it('should continue to show the state change indicator if there are detected chnages from the last-saved state and the state change indicator was currently visible', function() {
+      TimesheetView.displayTimesheetInfo('tjones', generateTimesheetInfoWithExistingHours());
+      setupStateChangeIndicatorVisible();
+
+      enterHours('te3', 1);
+
+      expect(isStateChangeIndicatorVisible()).toEqual(true);
     });
   });
 });

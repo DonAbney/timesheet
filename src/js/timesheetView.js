@@ -30,6 +30,7 @@ var TimesheetView = (function() {
   function updatePageOnStateChange() {
     var collectedEnteredTime = self.collectEnteredTime();
     recalculateTotals(collectedEnteredTime);
+    adjustStateChangeIndicator(collectedEnteredTime);
   };
 
   function recalculateTotals(collectedEnteredTime) {
@@ -41,6 +42,14 @@ var TimesheetView = (function() {
         $(".dayTotal[data-date='" + key + "']").text(aggregatedTimes[key]);
       }
     });
+  }
+
+  function adjustStateChangeIndicator(collectedEnteredTime) {
+    if (TimesheetUtil.hasEnteredTimeChanged(collectedEnteredTime)) {
+      $('.stateChangeIndicator').show();
+    } else {
+      $('.stateChangeIndicator').hide();
+    }
   }
 
   function setupUpdatePageOnStateChangeTrigger(element) {
