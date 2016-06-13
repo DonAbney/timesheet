@@ -1,4 +1,4 @@
-describe('Summing entered hours', function() {
+describe('On a time entry hours change', function() {
   beforeEach(function() {
     var fixture = "<div id='fixture'><span class='weekTotal'>unmodified</span><div class='days wrapper-generatedView'></div></div>";
     document.body.insertAdjacentHTML('afterbegin', fixture);
