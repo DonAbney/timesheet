@@ -73,6 +73,7 @@ var TimesheetView = (function() {
   function constructPositionLabel(entry) {
     var positionLabel = document.createElement("label");
     var note = entry.positionNote ? ": " + entry.positionNote.trim() : "";
+    positionLabel.setAttribute('for', entry.id);
     positionLabel.innerHTML = entry.positionName.trim() + note;
     return positionLabel;
   }
@@ -95,8 +96,8 @@ var TimesheetView = (function() {
     timeEntry.setAttribute('data-date', entry.date);
     var positionLabel = constructPositionLabel(entry);
     var field = constructTimeEntryField(entry);
-    positionLabel.insertAdjacentElement('beforeend', field);
     timeEntry.insertAdjacentElement('afterbegin', positionLabel);
+    timeEntry.insertAdjacentElement('beforeend', field);
     return timeEntry;
   }
 
