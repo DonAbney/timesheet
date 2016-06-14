@@ -30,7 +30,10 @@ var TimesheetView = (function() {
   function updatePageOnStateChange() {
     var collectedEnteredTime = self.collectEnteredTime();
     recalculateTotals(collectedEnteredTime);
-    adjustStateChangeIndicator(collectedEnteredTime);
+    var hasEnteredTimeChanged = TimesheetUtil.hasEnteredTimeChanged(collectedEnteredTime);
+    adjustStateChangeIndicator(hasEnteredTimeChanged);
+    adjustSaveChangesButton(hasEnteredTimeChanged);
+    adjustValidateTimesheetButton(hasEnteredTimeChanged);
   };
 
   function recalculateTotals(collectedEnteredTime) {
@@ -44,11 +47,27 @@ var TimesheetView = (function() {
     });
   }
 
-  function adjustStateChangeIndicator(collectedEnteredTime) {
-    if (TimesheetUtil.hasEnteredTimeChanged(collectedEnteredTime)) {
+  function adjustStateChangeIndicator(hasEnteredTimeChanged) {
+    if (hasEnteredTimeChanged) {
       $('.stateChangeIndicator').show();
     } else {
       $('.stateChangeIndicator').hide();
+    }
+  }
+
+  function adjustSaveChangesButton(hasEnteredTimeChanged) {
+    if (hasEnteredTimeChanged) {
+      $('.saveChanges').show();
+    } else {
+      $('.saveChanges').hide();
+    }
+  }
+
+  function adjustValidateTimesheetButton(hasEnteredTimeChanged) {
+    if (hasEnteredTimeChanged) {
+      $('.validateTimesheet').hide();
+    } else {
+      $('.validateTimesheet').show();
     }
   }
 

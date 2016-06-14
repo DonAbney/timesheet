@@ -1,6 +1,6 @@
 describe('On a time entry hours change', function() {
   beforeEach(function() {
-    var fixture = "<div id='fixture'><span class='weekTotal'>unmodified</span><span class='stateChangeIndicator'>*</span><div class='days wrapper-generatedView'></div></div>";
+    var fixture = "<div id='fixture'><span class='weekTotal'>unmodified</span><span class='stateChangeIndicator'>*</span><div class='days wrapper-generatedView'></div><div class='saveChanges'></div><div class='validateTimesheet'></div></div>";
     document.body.insertAdjacentHTML('afterbegin', fixture);
   });
 
@@ -116,6 +116,104 @@ describe('On a time entry hours change', function() {
       enterHours('te3', 1);
 
       expect(isStateChangeIndicatorVisible()).toEqual(true);
+    });
+  });
+
+  describe('for adjusting visibility of action buttons', function() {
+    function isSaveChangesButtonVisible() {
+      return $('.saveChanges').is(':visible');
+    }
+
+    function setupSaveChangesButtonVisible() {
+      $('.saveChanges').show();
+    }
+
+    function setupSaveChangesButtonNotVisible() {
+      $('.saveChanges').hide();
+    }
+
+    function isValidateTimesheetButtonVisible() {
+      return $('.validateTimesheet').is(':visible');
+    }
+
+    function setupValidateTimesheetButtonVisible() {
+      $('.validateTimesheet').show();
+    }
+
+    function setupValidateTimesheetButtonNotVisible() {
+      $('.validateTimesheet').hide();
+    }
+
+    it('should hide the save changes button if there are no changes from the last-saved state and the save changes button was currently visible', function() {
+      TimesheetView.displayTimesheetInfo('tjones', generateTimesheetInfoWithExistingHours());
+      setupSaveChangesButtonVisible();
+
+      enterHours('te1', 1);
+
+      expect(isSaveChangesButtonVisible()).toEqual(false);
+    });
+
+    it('should continue to hide the save changes button if there are no changes from the last-saved state and the save changes buton was currently hidden', function() {
+      TimesheetView.displayTimesheetInfo('tjones', generateTimesheetInfoWithExistingHours());
+      setupSaveChangesButtonNotVisible();
+
+      enterHours('te1', 1);
+
+      expect(isSaveChangesButtonVisible()).toEqual(false);
+    });
+
+    it('should show the save changes button if there are changes from the last-saved state and the save changes button was currently hidden', function() {
+      TimesheetView.displayTimesheetInfo('tjones', generateTimesheetInfoWithExistingHours());
+      setupSaveChangesButtonNotVisible();
+
+      enterHours('te3', 1);
+
+      expect(isSaveChangesButtonVisible()).toEqual(true);
+    });
+
+    it('should continue to show the save changes button if there are changes from the last-saved state and the save changes button was currently visible', function() {
+      TimesheetView.displayTimesheetInfo('tjones', generateTimesheetInfoWithExistingHours());
+      setupSaveChangesButtonVisible();
+
+      enterHours('te3', 1);
+
+      expect(isSaveChangesButtonVisible()).toEqual(true);
+    });
+
+    it('should hide the validate timesheet button if there are changes from the last-saved state and the validate timesheet button was currently visible', function() {
+      TimesheetView.displayTimesheetInfo('tjones', generateTimesheetInfoWithExistingHours());
+      setupValidateTimesheetButtonVisible();
+
+      enterHours('te3', 1);
+
+      expect(isValidateTimesheetButtonVisible()).toEqual(false);
+    });
+
+    it('should continue to hide the validate timesheet button if there are changes from the last-saved state and the validate timesheet button was currently hidden', function() {
+      TimesheetView.displayTimesheetInfo('tjones', generateTimesheetInfoWithExistingHours());
+      setupValidateTimesheetButtonNotVisible();
+
+      enterHours('te3', 1);
+
+      expect(isValidateTimesheetButtonVisible()).toEqual(false);
+    });
+
+    it('should show the validate timesheet button if there are no changes from the last-saved state and the validate timesheet button was currently hidden', function() {
+      TimesheetView.displayTimesheetInfo('tjones', generateTimesheetInfoWithExistingHours());
+      setupValidateTimesheetButtonNotVisible();
+
+      enterHours('te1', 1);
+
+      expect(isValidateTimesheetButtonVisible()).toEqual(true);
+    });
+
+    it('should continue to show the validate timesheet button if there are no changes from the last-saved state and the validate timesheet button was currently visible', function() {
+      TimesheetView.displayTimesheetInfo('tjones', generateTimesheetInfoWithExistingHours());
+      setupValidateTimesheetButtonVisible();
+
+      enterHours('te1', 1);
+
+      expect(isValidateTimesheetButtonVisible()).toEqual(true);
     });
   });
 });
