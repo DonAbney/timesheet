@@ -12,7 +12,7 @@ var TimesheetCommunication = (function() {
     }
   };
 
-  self.requestHeaders.Prefer = "status=404"  // This is for mocked error responses with apiary to assist with manual testing
+  // self.requestHeaders.Prefer = "status=404"  // This is for mocked error responses with apiary to assist with manual testing
 
   function replaceAll(targetString, replacementMapping){
       var regex = new RegExp(Object.keys(replacementMapping).join("|"), "g");
