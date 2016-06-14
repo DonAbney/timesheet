@@ -95,7 +95,7 @@ var TimesheetView = (function() {
     timeEntry.setAttribute('data-date', entry.date);
     var positionLabel = constructPositionLabel(entry);
     var field = constructTimeEntryField(entry);
-    positionLabel.insertAdjacentElement('beforeEnd', field);
+    positionLabel.insertAdjacentElement('beforeend', field);
     timeEntry.insertAdjacentElement('afterbegin', positionLabel);
     return timeEntry;
   }

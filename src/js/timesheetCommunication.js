@@ -12,7 +12,7 @@ var TimesheetCommunication = (function() {
     }
   };
 
-  // self.requestHeaders.Prefer = "status=404"  // This is for mocked error responses with apiary to assist with manual testing
+  self.requestHeaders.Prefer = "status=404"  // This is for mocked error responses with apiary to assist with manual testing
 
   function replaceAll(targetString, replacementMapping){
       var regex = new RegExp(Object.keys(replacementMapping).join("|"), "g");
@@ -41,7 +41,7 @@ var TimesheetCommunication = (function() {
       TimesheetView.displayTimesheetInfo(username, data);
     }).fail(function(jqXHR) {
       ResponseHandling.makeErrorResponseVisible();
-      ResponseHandling.displayError(jqXHR);
+      ResponseHandling.displayError(jqXHR, valueMap);
     });
   };
 
@@ -59,7 +59,8 @@ var TimesheetCommunication = (function() {
       // do something
     }).fail(function(jqXHR) {
       ResponseHandling.makeErrorResponseVisible();
-      ResponseHandling.displayError(jqXHR);
+      valueMap["{requestBody}"] = hoursForTimesheetEntries;
+      ResponseHandling.displayError(jqXHR, valueMap);
     });
 
     self.validateTimesheet = function(timesheetId) {
@@ -76,7 +77,7 @@ var TimesheetCommunication = (function() {
         // do something
       }).fail(function(jqXHR) {
         ResponseHandling.makeErrorResponseVisible();
-        ResponseHandling.displayError(jqXHR);
+        ResponseHandling.displayError(jqXHR, valueMap);
       });
     };
   }

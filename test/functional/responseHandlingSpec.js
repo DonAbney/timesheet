@@ -1,6 +1,6 @@
 describe('Error handling', function() {
   beforeEach(function() {
-    var fixture = "<div id='fixture'><div id='errorResponse'><div class='statusCode'>unchanged</div><div class='statusMessage'>unchanged</div></div><div id='successfulResponse'></div></div>";
+    var fixture = "<div id='fixture'><div id='errorResponse'><div class='wrapper-generatedErrorInfo'></div></div><div id='successfulResponse'></div></div>";
     document.body.insertAdjacentHTML('afterbegin', fixture);
   });
 
@@ -110,16 +110,30 @@ describe('Error handling', function() {
         responseText: '{ "status": 302, "message": "request was lost during testing"}'
       };
 
-      it('should set the status code to the provided status code', function() {
-        ResponseHandling.displayError(jqXHR);
+      var requestInfo = {
+        value1: "some value",
+        value2: "another value"
+      };
 
-        expect($('.statusCode').text()).toEqual("[302] standard status code message");
+      it('should set the status code to the provided status code', function() {
+        ResponseHandling.displayError(jqXHR, requestInfo);
+
+        expect($('.wrapper-generatedErrorInfo .statusCode').text()).toEqual("[302] standard status code message");
       });
 
       it('should set the status message to the provided message', function() {
-        ResponseHandling.displayError(jqXHR);
+        ResponseHandling.displayError(jqXHR, requestInfo);
 
-        expect($('.statusMessage').text()).toEqual("request was lost during testing");
+        expect($('.wrapper-generatedErrorInfo .statusMessage').text()).toEqual("request was lost during testing");
+      });
+
+      it('should display the provided request information', function() {
+        ResponseHandling.displayError(jqXHR, requestInfo);
+
+        expect($('.wrapper-generatedErrorInfo .requestInfo-key:eq(0)').text()).toEqual("value1");
+        expect($('.wrapper-generatedErrorInfo .requestInfo-value:eq(0)').text()).toEqual("some value");
+        expect($('.wrapper-generatedErrorInfo .requestInfo-key:eq(1)').text()).toEqual("value2");
+        expect($('.wrapper-generatedErrorInfo .requestInfo-value:eq(1)').text()).toEqual("another value");
       });
     });
   });
