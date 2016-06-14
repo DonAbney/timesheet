@@ -35,6 +35,30 @@ describe('Displaying basic information', function() {
     });
   });
 
+  describe('before adding new time entry information', function() {
+    beforeEach(function() {
+      var fixture = "<div id='fixture' class='days wrapper-generatedView'><div id='unwanted-old-element'>old junk</div></div>";
+      document.body.insertAdjacentHTML('afterbegin', fixture);
+    });
+
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('fixture'));
+    });
+
+    it('should remove any existing information in the wrapper for the generated view', function() {
+      var timesheetInfo = {
+        "timesheetInstance": generateBasicTimesheetInstanceData(),
+        "timeEntryPositionMapByDate": [
+          generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z"}})
+        ]
+      };
+
+      TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+
+      expect($('#unwanted-old-element').length === 0).toEqual(true);
+    });
+  });
+
   describe('for the days', function() {
     beforeEach(function() {
       var fixture = "<div id='fixture' class='days wrapper-generatedView'></div>";

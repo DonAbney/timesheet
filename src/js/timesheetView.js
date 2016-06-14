@@ -120,6 +120,7 @@ var TimesheetView = (function() {
 
   function displayDays(daysEntries) {
     var daysElement = $(".days");
+    daysElement.empty();
     var sortedDates = TimesheetUtil.sortDaysEntryDates(daysEntries);
     sortedDates.forEach(function(date) {
       daysElement.append(constructDayElement(daysEntries[date], date));
