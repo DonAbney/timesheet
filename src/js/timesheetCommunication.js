@@ -89,8 +89,7 @@ var TimesheetCommunication = (function() {
   };
 
   self.sendValidateTimesheet = function() {
-    var timesheetId = null;
-    validateTimesheet(timesheetId);
+    validateTimesheet(TimesheetView.collectTimesheetId());
   };
 
   return self;
