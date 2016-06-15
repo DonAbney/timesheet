@@ -36,7 +36,10 @@ var TimesheetCommunication = (function() {
       url: generateURL(self.api.saveTimesheet, valueMap),
       method: 'POST',
       crossDomain: true,
-      headers: self.requestHeaders
+      headers: self.requestHeaders,
+      contentType: 'application/json',
+      processData: false,
+      data: JSON.stringify(hoursForTimesheetEntries)
     }).done(function(data) {
       // do something
       deferred.resolve();
@@ -98,7 +101,7 @@ var TimesheetCommunication = (function() {
   };
 
   self.sendSaveTimesheet = function() {
-    var hoursForTimesheetEntries = null;
+    var hoursForTimesheetEntries = TimesheetUtil.convertToTimeEntries(TimesheetView.collectEnteredTime());
     var timesheetInfo = TimesheetView.collectTimesheetInfo();
     saveTimesheet(timesheetInfo.id, hoursForTimesheetEntries).done(function() {
       self.fetchTimesheetInfo(timesheetInfo.username, TimesheetUtil.formatDateYYYYMMDD(timesheetInfo.startDate));

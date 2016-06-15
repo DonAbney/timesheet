@@ -445,4 +445,83 @@ describe('TimesheetUtil', function() {
       expect(collatedInfo["2016-06-22T04:00:00Z"]).toContain(jasmine.objectContaining({positionId: 11, id: 21}));
     });
   });
+
+  describe('convertToTimeEntries()', function() {
+    it('should contain a single time entry when only one entered hours information was provided', function() {
+      var enteredHours = {
+        "123": {
+          id: 123,
+          date: "2016-06-22T04:00:00Z",
+          'last-saved-hours': 5,
+          hours: 6
+        }
+      };
+
+      var timeEntries = TimesheetUtil.convertToTimeEntries(enteredHours);
+
+      expect(timeEntries.length).toEqual(1);
+    });
+
+    it('should contain a time entry for each entered hours information provided', function() {
+      var enteredHours = {
+        "123": {
+          id: 123,
+          date: "2016-06-22T04:00:00Z",
+          'last-saved-hours': 5,
+          hours: 6
+        },
+        "456": {
+          id: 456,
+          date: "2016-06-23T04:00:00Z",
+          'last-saved-hours': 2,
+          hours: 2
+        }
+      };
+
+      var timeEntries = TimesheetUtil.convertToTimeEntries(enteredHours);
+
+      expect(timeEntries.length).toEqual(2);
+    });
+
+    it('should contain the id and hours for the time entry for the entered hours information provided', function() {
+      var enteredHours = {
+        "123": {
+          id: 123,
+          date: "2016-06-22T04:00:00Z",
+          'last-saved-hours': 5,
+          hours: 6
+        },
+        "456": {
+          id: 456,
+          date: "2016-06-23T04:00:00Z",
+          'last-saved-hours': 2,
+          hours: 2
+        }
+      };
+
+      var timeEntries = TimesheetUtil.convertToTimeEntries(enteredHours);
+
+      var timeEntriesIds = [];
+      timeEntries.forEach(function(value) {
+        timeEntriesIds.push(value.id);
+      });
+      expect(timeEntriesIds).toContain(123);
+      expect(timeEntriesIds).toContain(456);
+    });
+
+    it('should contain the hours for the time entry for the entered hours information provided', function() {
+      var enteredHours = {
+        "123": {
+          id: 123,
+          date: "2016-06-22T04:00:00Z",
+          'last-saved-hours': 5,
+          hours: 6
+        }
+      };
+
+      var timeEntries = TimesheetUtil.convertToTimeEntries(enteredHours);
+
+      expect(timeEntries[0].hours).toEqual(6);
+    });
+  });
 });

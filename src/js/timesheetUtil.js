@@ -72,6 +72,17 @@ var TimesheetUtil = (function() {
     return hasChanged;
   }
 
+  self.convertToTimeEntries = function(enteredTimes) {
+    var timeEntries = [];
+    self.mapKeys(enteredTimes).forEach(function(key) {
+      timeEntries.push({
+        id: parseFloat(key),
+        hours: enteredTimes[key].hours
+      });
+    });
+    return timeEntries;
+  };
+
   self.mapKeys = function(map) {
     var keys = [];
     for (key in map) {
