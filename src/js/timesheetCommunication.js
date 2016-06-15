@@ -26,6 +26,43 @@ var TimesheetCommunication = (function() {
     return self.protocol + "://" + self.host + replaceAll(api, valueMap);
   };
 
+  function saveTimesheet(timesheetId, hoursForTimesheetEntries) {
+    var valueMap = {
+      "{id}": timesheetId
+    };
+
+    $.ajax({
+      url: generateURL(self.api.saveTimesheet, valueMap),
+      method: 'POST',
+      crossDomain: true,
+      headers: self.requestHeaders
+    }).done(function(data) {
+      // do something
+    }).fail(function(jqXHR) {
+      ResponseHandling.makeErrorResponseVisible();
+      valueMap["{requestBody}"] = hoursForTimesheetEntries;
+      ResponseHandling.displayError(jqXHR, valueMap);
+    });
+  };
+
+  function validateTimesheet(timesheetId) {
+    var valueMap = {
+      "{id}": timesheetId
+    };
+
+    $.ajax({
+      url: generateURL(self.api.validateTimesheet, valueMap),
+      method: 'POST',
+      crossDomain: true,
+      headers: self.requestHeaders
+    }).done(function(data) {
+      // do something
+    }).fail(function(jqXHR) {
+      ResponseHandling.makeErrorResponseVisible();
+      ResponseHandling.displayError(jqXHR, valueMap);
+    });
+  };
+
   self.fetchTimesheetInfo = function(username, date) {
     var valueMap = {
       "{email_shortname}": username,
@@ -45,42 +82,16 @@ var TimesheetCommunication = (function() {
     });
   };
 
-  self.saveTimesheet = function(timesheetId, hoursForTimesheetEntries) {
-    var valueMap = {
-      "{id}": timesheetId
-    };
+  self.sendSaveTimesheet = function() {
+    var timesheetId = null;
+    var hoursForTimesheetEntries = null;
+    saveTimesheet(timesheetId, hoursForTimesheetEntries);
+  };
 
-    $.ajax({
-      url: generateURL(self.url.saveTimesheet, valueMap),
-      method: 'POST',
-      crossDomain: true,
-      headers: self.requestHeaders
-    }).done(function(data) {
-      // do something
-    }).fail(function(jqXHR) {
-      ResponseHandling.makeErrorResponseVisible();
-      valueMap["{requestBody}"] = hoursForTimesheetEntries;
-      ResponseHandling.displayError(jqXHR, valueMap);
-    });
-
-    self.validateTimesheet = function(timesheetId) {
-      var valueMap = {
-        "{id}": timesheetId
-      };
-
-      $.ajax({
-        url: generateURL(self.url.validateTimesheet, valueMap),
-        method: 'POST',
-        crossDomain: true,
-        headers: self.requestHeaders
-      }).done(function(data) {
-        // do something
-      }).fail(function(jqXHR) {
-        ResponseHandling.makeErrorResponseVisible();
-        ResponseHandling.displayError(jqXHR, valueMap);
-      });
-    };
-  }
+  self.sendValidateTimesheet = function() {
+    var timesheetId = null;
+    validateTimesheet(timesheetId);
+  };
 
   return self;
 })();

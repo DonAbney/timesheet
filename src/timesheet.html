@@ -23,7 +23,7 @@
     <h1>
       <span class="username">Loading... please wait</span> (<span class="weekTotal">0</span> hrs)<span class='stateChangeIndicator' style='display:none'>*</span>
     </h1>
-    <div class="days wrapper-generatedView"></div>
+    <div class="wrapper-generatedView"></div>
     <button class="saveChanges" type="button" style="display:none;">Save Changes</button>
     <button class="validateTimesheet" type="button" style="display:none;">Validate Timesheet</button>
   </div>
@@ -31,6 +31,8 @@
 
   <script type="text/javascript">
     $(document).ready(function() {
+      $('.saveChanges').click(TimesheetCommunication.sendSaveTimesheet);
+      $('.validateTimesheet').click(TimesheetCommunication.sendValidateTimesheet);
       TimesheetCommunication.fetchTimesheetInfo('tjones', new Date());
     });
   </script>

@@ -138,13 +138,20 @@ var TimesheetView = (function() {
     return dayElement;
   }
 
-  function displayDays(daysEntries) {
-    var daysElement = $(".days");
-    daysElement.empty();
+  function constructDaysElement(daysEntries) {
+    var daysElement = document.createElement('div');
+    daysElement.className = "days";
     var sortedDates = TimesheetUtil.sortDaysEntryDates(daysEntries);
     sortedDates.forEach(function(date) {
-      daysElement.append(constructDayElement(daysEntries[date], date));
+      daysElement.insertAdjacentElement('beforeend', constructDayElement(daysEntries[date], date));
     });
+    return daysElement;
+  }
+
+  function displayDays(daysEntries) {
+    var generatedWrapper = $('.wrapper-generatedView');
+    generatedWrapper.empty();
+    generatedWrapper.append(constructDaysElement(daysEntries));
   }
 
   return self;

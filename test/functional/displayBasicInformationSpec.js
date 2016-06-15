@@ -37,7 +37,7 @@ describe('Displaying basic information', function() {
 
   describe('before adding new time entry information', function() {
     beforeEach(function() {
-      var fixture = "<div id='fixture' class='days wrapper-generatedView'><div id='unwanted-old-element'>old junk</div></div>";
+      var fixture = "<div id='fixture' class='wrapper-generatedView'><div id='unwanted-old-element'>old junk</div></div>";
       document.body.insertAdjacentHTML('afterbegin', fixture);
     });
 
@@ -61,7 +61,7 @@ describe('Displaying basic information', function() {
 
   describe('for the days', function() {
     beforeEach(function() {
-      var fixture = "<div id='fixture' class='days wrapper-generatedView'></div>";
+      var fixture = "<div id='fixture' class='wrapper-generatedView'></div>";
       document.body.insertAdjacentHTML('afterbegin', fixture);
     });
 
@@ -119,7 +119,7 @@ describe('Displaying basic information', function() {
 
         TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
 
-        expect($('.wrapper-generatedView').children().length).toEqual(2);
+        expect($('.wrapper-generatedView .days').children().length).toEqual(2);
       });
 
       it('should generate time entries for each position and its time entry for a day represented in the timesheet information', function() {
