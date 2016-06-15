@@ -29,6 +29,11 @@ var TimesheetView = (function() {
     return collectedEnteredTime;
   };
 
+  self.collectTimesheetId = function() {
+    var stringTimesheetId = $('.timesheetInfo').attr('data-timesheetId');
+    return stringTimesheetId ? parseFloat(stringTimesheetId) : 0.0;
+  }
+
   function updatePageOnStateChange() {
     var collectedEnteredTime = self.collectEnteredTime();
     recalculateTotals(collectedEnteredTime);
