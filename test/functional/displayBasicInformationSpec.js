@@ -83,6 +83,32 @@ describe('Displaying basic information', function() {
         expect($('.wrapper-generatedView .timesheetInfo').attr('data-timesheetId')).toEqual('789');
       });
 
+      it('should generate a timesheet element that contains the username', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+
+        expect($('.wrapper-generatedView .timesheetInfo').attr('data-username')).toEqual('tjones');
+      });
+
+      it('should generate a timesheet element that contains the start date for the timesheet', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+
+        expect($('.wrapper-generatedView .timesheetInfo').attr('data-startDate')).toEqual('2016-05-14T04:00:00Z');
+      });
+
       it('should generate a day entry for a day represented in the timesheet information', function() {
         var timesheetInfo = {
           "timesheetInstance": generateBasicTimesheetInstanceData(),

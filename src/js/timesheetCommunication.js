@@ -27,6 +27,7 @@ var TimesheetCommunication = (function() {
   };
 
   function saveTimesheet(timesheetId, hoursForTimesheetEntries) {
+    var deferred = $.Deferred();
     var valueMap = {
       "{id}": timesheetId
     };
@@ -38,14 +39,19 @@ var TimesheetCommunication = (function() {
       headers: self.requestHeaders
     }).done(function(data) {
       // do something
+      deferred.resolve();
     }).fail(function(jqXHR) {
       ResponseHandling.makeErrorResponseVisible();
       valueMap["{requestBody}"] = hoursForTimesheetEntries;
       ResponseHandling.displayError(jqXHR, valueMap);
+      deferred.reject();
     });
+
+    return deferred.promise();
   };
 
   function validateTimesheet(timesheetId) {
+    var deferred = $.Deferred();
     var valueMap = {
       "{id}": timesheetId
     };
@@ -57,13 +63,18 @@ var TimesheetCommunication = (function() {
       headers: self.requestHeaders
     }).done(function(data) {
       // do something
+      deferred.resolve();
     }).fail(function(jqXHR) {
       ResponseHandling.makeErrorResponseVisible();
       ResponseHandling.displayError(jqXHR, valueMap);
+      deferred.reject();
     });
+
+    return deferred.promise();
   };
 
   self.fetchTimesheetInfo = function(username, date) {
+    var deferred = $.Deferred();
     var valueMap = {
       "{email_shortname}": username,
       "{date}": TimesheetUtil.formatDateYYYYMMDD(date)
@@ -76,20 +87,29 @@ var TimesheetCommunication = (function() {
     }).done(function(data) {
       ResponseHandling.makeSuccessResponseVisible();
       TimesheetView.displayTimesheetInfo(username, data);
+      deferred.resolve();
     }).fail(function(jqXHR) {
       ResponseHandling.makeErrorResponseVisible();
       ResponseHandling.displayError(jqXHR, valueMap);
+      deferred.reject();
     });
+
+    return deferred.promise();
   };
 
   self.sendSaveTimesheet = function() {
-    var timesheetId = null;
     var hoursForTimesheetEntries = null;
-    saveTimesheet(timesheetId, hoursForTimesheetEntries);
+    var timesheetInfo = TimesheetView.collectTimesheetInfo();
+    saveTimesheet(timesheetInfo.id, hoursForTimesheetEntries).done(function() {
+      self.fetchTimesheetInfo(timesheetInfo.username, TimesheetUtil.formatDateYYYYMMDD(timesheetInfo.startDate));
+    });
   };
 
   self.sendValidateTimesheet = function() {
-    validateTimesheet(TimesheetView.collectTimesheetId());
+    var timesheetInfo = TimesheetView.collectTimesheetInfo();
+    validateTimesheet(timesheetInfo.id).done(function() {
+      self.fetchTimesheetInfo(timesheetInfo.username, TimesheetUtil.formatDateYYYYMMDD(timesheetInfo.startDate));
+    });
   };
 
   return self;

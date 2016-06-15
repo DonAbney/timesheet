@@ -4,7 +4,7 @@ var TimesheetView = (function() {
   self.displayTimesheetInfo = function(username, timesheetInfo) {
     clearOldInformation();
     self.updateUsername(username);
-    constructTimesheetInfoEntry(timesheetInfo.timesheetInstance);
+    constructTimesheetInfoEntry(username, timesheetInfo.timesheetInstance);
     var daysEntries = TimesheetUtil.collateDays(timesheetInfo.timeEntryPositionMapByDate);
     displayDays(daysEntries);
     updatePageOnStateChange();
@@ -29,9 +29,15 @@ var TimesheetView = (function() {
     return collectedEnteredTime;
   };
 
-  self.collectTimesheetId = function() {
+  self.collectTimesheetInfo = function() {
     var stringTimesheetId = $('.timesheetInfo').attr('data-timesheetId');
-    return stringTimesheetId ? parseFloat(stringTimesheetId) : 0.0;
+    var username = $('.timesheetInfo').attr('data-username');
+    var startDate = $('.timesheetInfo').attr('data-startDate');
+    return {
+      'id': stringTimesheetId ? parseFloat(stringTimesheetId) : 0.0,
+      'username': username ? username : "",
+      'startDate': startDate ? startDate : ""
+    };
   }
 
   function updatePageOnStateChange() {
@@ -160,11 +166,13 @@ var TimesheetView = (function() {
     generatedWrapper.append(constructDaysElement(daysEntries));
   }
 
-  function constructTimesheetInfoEntry(timesheetInstance) {
+  function constructTimesheetInfoEntry(username, timesheetInstance) {
     var generatedWrapper = $('.wrapper-generatedView');
     var timesheetInfoEntry = document.createElement('div');
     timesheetInfoEntry.className = 'timesheetInfo';
     timesheetInfoEntry.setAttribute('data-timesheetId', timesheetInstance.id);
+    timesheetInfoEntry.setAttribute('data-username', username);
+    timesheetInfoEntry.setAttribute('data-startDate', timesheetInstance.startDate);
     generatedWrapper.append(timesheetInfoEntry);
   }
 

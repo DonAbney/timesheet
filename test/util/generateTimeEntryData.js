@@ -1,6 +1,7 @@
 function generateBasicTimesheetInstanceData() {
   return {
     "id": 789,
+    "startDate": "2016-05-14T04:00:00Z",
     "employee": {
       "id": 23
     }
