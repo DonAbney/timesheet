@@ -70,6 +70,19 @@ describe('Displaying basic information', function() {
     });
 
     describe('via displayTimesheetInfo()', function() {
+      it('should generate a timesheet element that contains the timesheet id', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+
+        expect($('.wrapper-generatedView .timesheetInfo').attr('data-timesheetId')).toEqual('789');
+      });
+
       it('should generate a day entry for a day represented in the timesheet information', function() {
         var timesheetInfo = {
           "timesheetInstance": generateBasicTimesheetInstanceData(),
@@ -80,7 +93,7 @@ describe('Displaying basic information', function() {
 
         TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
 
-        expect($('.wrapper-generatedView').children().length).toEqual(1);
+        expect($('.wrapper-generatedView .day').length).toEqual(1);
       });
 
       it('should generate a time entry within the day for the position with name and no note when no note is present', function() {

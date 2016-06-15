@@ -2,7 +2,9 @@ var TimesheetView = (function() {
   var self = {};
 
   self.displayTimesheetInfo = function(username, timesheetInfo) {
+    clearOldInformation();
     self.updateUsername(username);
+    constructTimesheetInfoEntry(timesheetInfo.timesheetInstance);
     var daysEntries = TimesheetUtil.collateDays(timesheetInfo.timeEntryPositionMapByDate);
     displayDays(daysEntries);
     updatePageOnStateChange();
@@ -150,8 +152,20 @@ var TimesheetView = (function() {
 
   function displayDays(daysEntries) {
     var generatedWrapper = $('.wrapper-generatedView');
-    generatedWrapper.empty();
     generatedWrapper.append(constructDaysElement(daysEntries));
+  }
+
+  function constructTimesheetInfoEntry(timesheetInstance) {
+    var generatedWrapper = $('.wrapper-generatedView');
+    var timesheetInfoEntry = document.createElement('div');
+    timesheetInfoEntry.className = 'timesheetInfo';
+    timesheetInfoEntry.setAttribute('data-timesheetId', timesheetInstance.id);
+    generatedWrapper.append(timesheetInfoEntry);
+  }
+
+  function clearOldInformation() {
+    var generatedWrapper = $('.wrapper-generatedView');
+    generatedWrapper.empty();
   }
 
   return self;
