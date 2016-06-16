@@ -72,5 +72,5 @@ function generateTimesheetInfoWithOneTimeEntryAndExistingHours() {
 
 function enterHours(timeEntryId, numHours) {
   $('#' + timeEntryId).val("" + numHours);
-  $('#' + timeEntryId).blur();
+  $('#' + timeEntryId).change();
 };

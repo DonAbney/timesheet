@@ -85,7 +85,7 @@ var TimesheetView = (function() {
   }
 
   function setupUpdatePageOnStateChangeTrigger(element) {
-    $(element).blur(updatePageOnStateChange);
+    $(element).change(updatePageOnStateChange);
   }
 
   function constructDayWrapper(date) {
