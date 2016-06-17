@@ -44,8 +44,10 @@ var TimesheetView = (function() {
   function adjustValidatedIndicator(state) {
     if (state) {
       $('.validatedIndicator').show();
+      $('.timeEntryField').prop('disabled', true);
     } else {
       $('.validatedIndicator').hide();
+      $('.timeEntryField').prop('disabled', false);
     }
   }
 

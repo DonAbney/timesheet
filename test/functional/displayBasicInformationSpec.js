@@ -262,6 +262,34 @@ describe('Displaying basic information', function() {
         expect($('#te3').attr('data-last-saved-value')).toEqual('3');
         expect($('#te4').attr('data-last-saved-value')).toEqual('5');
       });
+
+      it('should disable the time entry field if the timesheet is already validated so that changes are not permitted', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicValidatedTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z", hours: 1}, "te2": {date: "2016-05-30T04:00:00Z", hours: 2}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+
+        expect($('#te1').prop('disabled')).toEqual(true);
+        expect($('#te2').prop('disabled')).toEqual(true);
+      });
+
+      it('should enable the time entry field if the timesheet is not yet validated so that changes are permitted', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z", hours: 1}, "te2": {date: "2016-05-30T04:00:00Z", hours: 2}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+
+        expect($('#te1').prop('disabled')).toEqual(false);
+        expect($('#te2').prop('disabled')).toEqual(false);
+      });
     });
   });
 });
