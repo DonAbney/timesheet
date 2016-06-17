@@ -45,9 +45,13 @@ var TimesheetView = (function() {
     if (state) {
       $('.validatedIndicator').show();
       $('.timeEntryField').prop('disabled', true);
+      $('.saveChanges').prop('disabled', true);
+      $('.validateTimesheet').prop('disabled', true);
     } else {
       $('.validatedIndicator').hide();
       $('.timeEntryField').prop('disabled', false);
+      $('.saveChanges').prop('disabled', false);
+      $('.validateTimesheet').prop('disabled', false);
     }
   }
 

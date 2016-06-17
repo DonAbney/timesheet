@@ -75,6 +75,51 @@ describe('Displaying basic information', function() {
     });
   });
 
+  describe('for the action buttons', function() {
+    beforeEach(function() {
+      var fixture = "<div id='fixture'><div class='wrapper-generatedView'></div><button class='saveChanges' type='button'></button><button class='validateTimesheet' type='button'></button></div>";
+      document.body.insertAdjacentHTML('afterbegin', fixture);
+    });
+
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('fixture'));
+    });
+
+    describe('via displayTimesheetInfo()', function() {
+      it('should disable the save changes button if the timesheet has already been validated, so that additional changes cannot be attempted', function() {
+        var timesheetInfo = generateValidatedTimesheetInfo();
+
+        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+
+        expect($('.saveChanges').prop('disabled')).toEqual(true);
+      });
+
+      it('should enable the save changes button if the timesheet has not yet been validated, so that additional changes can be attempted', function() {
+        var timesheetInfo = generateTimesheetInfo();
+
+        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+
+        expect($('.saveChanges').prop('disabled')).toEqual(false);
+      });
+
+      it('should disable the validate timesheet button if the timesheet has already been validated, so that additional validation cannot be attempted', function() {
+        var timesheetInfo = generateValidatedTimesheetInfo();
+
+        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+
+        expect($('.validateTimesheet').prop('disabled')).toEqual(true);
+      });
+
+      it('should enable the validate timesheet button if the timesheet has not yet been validated, so that additional validation can be attempted', function() {
+        var timesheetInfo = generateTimesheetInfo();
+
+        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+
+        expect($('.validateTimesheet').prop('disabled')).toEqual(false);
+      });
+    });
+  });
+
   describe('for the days', function() {
     beforeEach(function() {
       var fixture = "<div id='fixture' class='wrapper-generatedView'></div>";
