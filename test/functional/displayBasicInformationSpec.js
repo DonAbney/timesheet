@@ -1,7 +1,7 @@
 describe('Displaying basic information', function() {
   describe('in the header', function() {
     beforeEach(function() {
-      var fixture = "<span id='fixture' class='username'>unmodified</span>";
+      var fixture = "<span id='fixture' class='username'>unmodified</span><span class='validatedIndicator'>*</span>";
       document.body.insertAdjacentHTML('afterbegin', fixture);
     });
 
@@ -31,6 +31,22 @@ describe('Displaying basic information', function() {
         TimesheetView.displayTimesheetInfo("tjones", timesheetInfo);
 
         expect($('.username').text()).toEqual("tjones");
+      });
+
+      it('should hide the validated state indicator if the timesheet is not in a validated state', function() {
+        var timesheetInfo = generateTimesheetInfo();
+
+        TimesheetView.displayTimesheetInfo("tjones", timesheetInfo);
+
+        expect($('.validatedIndicator').is(':visible')).toEqual(false);
+      });
+
+      it('should show the validated state indicator if the timesheet is in a validated state', function() {
+        var timesheetInfo = generateValidatedTimesheetInfo();
+
+        TimesheetView.displayTimesheetInfo("tjones", timesheetInfo);
+
+        expect($('.validatedIndicator').is(':visible')).toEqual(true);
       });
     });
   });
@@ -107,6 +123,14 @@ describe('Displaying basic information', function() {
         TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
 
         expect($('.wrapper-generatedView .timesheetInfo').attr('data-startDate')).toEqual('2016-05-14T04:00:00Z');
+      });
+
+      it('should generate a timesheet element that contains the validation state for the timesheet', function() {
+        var timesheetInfo = generateValidatedTimesheetInfo();
+
+        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+
+        expect($('.wrapper-generatedView .timesheetInfo').attr('data-validated')).toEqual('true');
       });
 
       it('should generate a day entry for a day represented in the timesheet information', function() {

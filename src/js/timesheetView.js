@@ -7,6 +7,7 @@ var TimesheetView = (function() {
     constructTimesheetInfoEntry(username, timesheetInfo.timesheetInstance);
     var daysEntries = TimesheetUtil.collateDays(timesheetInfo.timeEntryPositionMapByDate);
     displayDays(daysEntries);
+    adjustValidatedIndicator(timesheetInfo.timesheetInstance.validated);
     updatePageOnStateChange();
   };
 
@@ -38,6 +39,14 @@ var TimesheetView = (function() {
       'username': username ? username : "",
       'startDate': startDate ? startDate : ""
     };
+  }
+
+  function adjustValidatedIndicator(state) {
+    if (state) {
+      $('.validatedIndicator').show();
+    } else {
+      $('.validatedIndicator').hide();
+    }
   }
 
   function updatePageOnStateChange() {
@@ -173,6 +182,7 @@ var TimesheetView = (function() {
     timesheetInfoEntry.setAttribute('data-timesheetId', timesheetInstance.id);
     timesheetInfoEntry.setAttribute('data-username', username);
     timesheetInfoEntry.setAttribute('data-startDate', timesheetInstance.startDate);
+    timesheetInfoEntry.setAttribute('data-validated', timesheetInstance.validated);
     generatedWrapper.append(timesheetInfoEntry);
   }
 
