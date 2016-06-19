@@ -2,7 +2,6 @@
 
 var gulp = require('gulp');
 var uglify = require('gulp-uglify');
-var concatCss = require('gulp-concat-css');
 var concat = require('gulp-concat');
 var tap = require('gulp-tap');
 var util = require('gulp-util');
@@ -23,7 +22,7 @@ function minifyCss() {
       util.log(" - Processing " + file.path);
     }))
     .pipe(cleanCSS())
-    .pipe(concatCss('timesheet.min.css'))
+    .pipe(concat('timesheet.min.css'))
     .pipe(gulp.dest(DEST));
 };
 
