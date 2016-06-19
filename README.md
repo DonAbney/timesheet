@@ -24,6 +24,12 @@ Three artifacts should be created in the build folder:
 * `timesheet.min.js`
   * This is all the necessary javascript concatenated into a single file.  It is loaded from `timesheet.html` and should be served from the same directory on the prod server as `timesheet.html`.
 
+## Starting a Development "Server"
+The development "server" is handled by `browser-sync`.  To start it up, run:
+* `gulp serve`
+
+It will watch any changes to "source" css, js, or html files, will re-minify/etc. them, copy it to the build folder, and reload the view of the page in the browser.  The development "server" uses the files in the `build` folder, so that any issues with the concatenation or minification of css or js can be seen.
+
 ## Testing
 The karma test runner (installed via npm dependencies) is used to run the tests.  Simply run either:
 * `karma start test.conf.js` or
