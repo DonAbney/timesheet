@@ -1,6 +1,25 @@
 var TimesheetView = (function() {
   var self = {};
 
+  var construct = {
+    css: {
+      timesheetInfo: '',
+      days: '',
+      day: '',
+      dayHeader: '',
+      dayTotal: '',
+      timeEntries: '',
+      timeEntry: '',
+      positionLabel: '',
+      timeEntryField: ''
+    }
+  };
+
+  construct.css.classNamesForElement = function(elementName) {
+    var otherClassNames = construct.css[elementName] ? (' ' + construct.css[elementName]) : '';
+    return elementName + otherClassNames;
+  };
+
   self.displayTimesheetInfo = function(username, timesheetInfo) {
     clearOldInformation();
     self.updateUsername(username);
@@ -105,20 +124,22 @@ var TimesheetView = (function() {
 
   function constructDayWrapper(date) {
     var dayElement = document.createElement("div");
-    dayElement.className = "day";
+    dayElement.className = construct.css.classNamesForElement("day");
     dayElement.setAttribute('data-date', date);
     return dayElement;
   }
 
   function constructDayHeader(date) {
     var dayHeader = document.createElement("h2");
-    dayHeader.innerHTML = TimesheetUtil.formatDate(date) + " (<span class='dayTotal' data-date='" + date + "'>0</span> hrs)";
+    dayHeader.className = construct.css.classNamesForElement("dayHeader");
+    dayHeader.innerHTML = TimesheetUtil.formatDate(date) + " (<span class='" + construct.css.classNamesForElement('dayTotal') + "' data-date='" + date + "'>0</span> hrs)";
     dayHeader.setAttribute('onclick', '$(this).siblings(".timeEntries").toggle()');
     return dayHeader;
   }
 
   function constructPositionLabel(entry) {
     var positionLabel = document.createElement("label");
+    positionLabel.className = construct.css.classNamesForElement('positionLabel');
     var note = entry.positionNote ? ": " + entry.positionNote.trim() : "";
     positionLabel.setAttribute('for', entry.id);
     positionLabel.innerHTML = entry.positionName.trim() + note;
@@ -128,7 +149,7 @@ var TimesheetView = (function() {
   function constructTimeEntryField(entry) {
     var field = document.createElement("input");
     field.id = entry.id;
-    field.className = "timeEntryField";
+    field.className = construct.css.classNamesForElement("timeEntryField");
     field.setAttribute('data-date', entry.date);
     field.setAttribute('data-last-saved-value', entry.hours);
     field.setAttribute('type', 'number');
@@ -139,7 +160,7 @@ var TimesheetView = (function() {
 
   function constructTimeEntry(entry) {
     var timeEntry = document.createElement("div");
-    timeEntry.className = "timeEntry";
+    timeEntry.className = construct.css.classNamesForElement("timeEntry");
     timeEntry.setAttribute('data-date', entry.date);
     var positionLabel = constructPositionLabel(entry);
     var field = constructTimeEntryField(entry);
@@ -150,7 +171,7 @@ var TimesheetView = (function() {
 
   function constructTimeEntries(dayEntries, date) {
     var timeEntriesWrapper = document.createElement("div");
-    timeEntriesWrapper.className = "timeEntries";
+    timeEntriesWrapper.className = construct.css.classNamesForElement("timeEntries");
     timeEntriesWrapper.setAttribute('data-date', date);
     timeEntriesWrapper.style.display = 'none';
     dayEntries.forEach(function(entry) {
@@ -168,7 +189,7 @@ var TimesheetView = (function() {
 
   function constructDaysElement(daysEntries) {
     var daysElement = document.createElement('div');
-    daysElement.className = "days";
+    daysElement.className = construct.css.classNamesForElement("days");
     var sortedDates = TimesheetUtil.sortDaysEntryDates(daysEntries);
     sortedDates.forEach(function(date) {
       daysElement.insertAdjacentElement('beforeend', constructDayElement(daysEntries[date], date));
@@ -184,7 +205,7 @@ var TimesheetView = (function() {
   function constructTimesheetInfoEntry(username, timesheetInstance) {
     var generatedWrapper = $('.wrapper-generatedView');
     var timesheetInfoEntry = document.createElement('div');
-    timesheetInfoEntry.className = 'timesheetInfo';
+    timesheetInfoEntry.className = construct.css.classNamesForElement('timesheetInfo');
     timesheetInfoEntry.setAttribute('data-timesheetId', timesheetInstance.id);
     timesheetInfoEntry.setAttribute('data-username', username);
     timesheetInfoEntry.setAttribute('data-startDate', timesheetInstance.startDate);
