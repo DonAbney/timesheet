@@ -5,8 +5,8 @@ var TimesheetView = (function() {
     css: {
       classNames: {
         timesheetInfo: '',
-        days: '',
-        day: '',
+        days: 'row',
+        day: 'small-12 columns',
         dayHeader: '',
         dayTotal: '',
         timeEntries: '',
@@ -149,9 +149,9 @@ var TimesheetView = (function() {
   }
 
   function constructDayHeader(date) {
-    var dayHeader = document.createElement("h2");
+    var dayHeader = document.createElement("div");
     construct.configureElementStyle("dayHeader", dayHeader);
-    dayHeader.innerHTML = TimesheetUtil.formatDate(date) + " (<span class='" + construct.css.classNamesForElement('dayTotal') + "' data-date='" + date + "'>0</span> hrs)";
+    dayHeader.innerHTML = TimesheetUtil.formatDate(date) + "<span class='" + construct.css.classNamesForElement('dayTotal') + "' data-date='" + date + "'>0</span>";
     dayHeader.setAttribute('onclick', '$(this).siblings(".timeEntries").toggle()');
     return dayHeader;
   }
