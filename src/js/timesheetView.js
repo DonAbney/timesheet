@@ -5,8 +5,8 @@ var TimesheetView = (function() {
     css: {
       classNames: {
         timesheetInfo: '',
-        days: 'row',
-        day: 'small-12 columns',
+        days: 'row small-up-1 medium-up-1 large-up-7',
+        day: 'column',
         dayHeader: '',
         dayTotal: '',
         timeEntries: '',
