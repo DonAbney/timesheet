@@ -5,14 +5,17 @@ var TimesheetView = (function() {
     css: {
       classNames: {
         timesheetInfo: '',
-        days: 'row small-up-1 medium-up-1 large-up-7',
+        days: 'row small-up-1 medium-up-1 large-up-8',
+        positions: 'column',
+        position: '',
         day: 'column',
         dayHeader: '',
         dayTotal: '',
         timeEntries: '',
         timeEntry: '',
         positionLabel: '',
-        timeEntryField: ''
+        timeEntryField: '',
+        placeholderTimeEntryField: ''
       },
       styles: {
         timesheetInfo: {
@@ -43,8 +46,9 @@ var TimesheetView = (function() {
     clearOldInformation();
     self.updateUsername(username);
     constructTimesheetInfoEntry(username, timesheetInfo.timesheetInstance);
-    var daysEntries = TimesheetUtil.collateDays(timesheetInfo.timeEntryPositionMapByDate);
-    displayDays(daysEntries);
+    var positions = TimesheetUtil.collatePositions(timesheetInfo.timeEntryPositionMapByDate);
+    var daysEntries = TimesheetUtil.collateDays(timesheetInfo.timeEntryPositionMapByDate, positions);
+    displayDaysAndPositions(daysEntries, positions);
     adjustValidatedIndicator(timesheetInfo.timesheetInstance.validated);
     updatePageOnStateChange();
   };
@@ -159,16 +163,21 @@ var TimesheetView = (function() {
   function constructPositionLabel(entry) {
     var positionLabel = document.createElement("label");
     construct.configureElementStyle('positionLabel', positionLabel);
-    var note = entry.positionNote ? ": " + entry.positionNote.trim() : "";
+    var note = entry.position.note ? ": " + entry.position.note.trim() : "";
     positionLabel.setAttribute('for', entry.id);
-    positionLabel.innerHTML = entry.positionName.trim() + note;
+    positionLabel.innerHTML = entry.position.name.trim() + note;
     return positionLabel;
   }
 
   function constructTimeEntryField(entry) {
     var field = document.createElement("input");
     field.id = entry.id;
-    construct.configureElementStyle("timeEntryField", field);
+    if (!$.isNumeric(entry.id) && entry.id.startsWith('placeholder')) {
+      field.disabled = true;
+      construct.configureElementStyle('placeholderTimeEntryField', field);
+    } else {
+      construct.configureElementStyle("timeEntryField", field);
+    }
     field.setAttribute('data-date', entry.date);
     field.setAttribute('data-last-saved-value', entry.hours);
     field.setAttribute('type', 'number');
@@ -205,9 +214,27 @@ var TimesheetView = (function() {
     return dayElement;
   }
 
-  function constructDaysElement(daysEntries) {
+  function constructPositionElement(position) {
+    var positionElement = document.createElement('div');
+    construct.configureElementStyle('position', positionElement);
+    var note = position.note ? ": " + position.note.trim() : "";
+    positionElement.innerHTML = position.name.trim() + note;
+    return positionElement;
+  }
+
+  function constructPositionsElement(positions) {
+    var positionsElement = document.createElement('div');
+    construct.configureElementStyle("positions", positionsElement);
+    positions.forEach(function(position) {
+      positionsElement.insertAdjacentElement('beforeend', constructPositionElement(position));
+    });
+    return positionsElement;
+  }
+
+  function constructDaysElement(daysEntries, positions) {
     var daysElement = document.createElement('div');
     construct.configureElementStyle("days", daysElement);
+    daysElement.insertAdjacentElement('afterbegin', constructPositionsElement(positions));
     var sortedDates = TimesheetUtil.sortDaysEntryDates(daysEntries);
     sortedDates.forEach(function(date) {
       daysElement.insertAdjacentElement('beforeend', constructDayElement(daysEntries[date], date));
@@ -215,9 +242,9 @@ var TimesheetView = (function() {
     return daysElement;
   }
 
-  function displayDays(daysEntries) {
+  function displayDaysAndPositions(daysEntries, positions) {
     var generatedWrapper = $('.wrapper-generatedView');
-    generatedWrapper.append(constructDaysElement(daysEntries));
+    generatedWrapper.append(constructDaysElement(daysEntries, positions));
   }
 
   function constructTimesheetInfoEntry(username, timesheetInstance) {

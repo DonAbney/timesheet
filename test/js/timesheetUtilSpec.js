@@ -211,7 +211,7 @@ describe('TimesheetUtil', function() {
     it('should return an empty collation if there is no position info', function() {
       var targetPositionInfo = [];
 
-      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo);
+      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo, []);
 
       expect(TimesheetUtil.mapKeys(collatedInfo).length).toEqual(0);
     });
@@ -228,7 +228,7 @@ describe('TimesheetUtil', function() {
         }
       ];
 
-      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo);
+      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo, []);
 
       expect(TimesheetUtil.mapKeys(collatedInfo).length).toEqual(0);
     });
@@ -236,7 +236,9 @@ describe('TimesheetUtil', function() {
     it('should return a time entry for a day if one is provided in the position info', function() {
       var targetPositionInfo = [
         {
-          "position": {},
+          "position": {
+            id: 32
+          },
           "timeEntries": [
             {
               "date": "2016-06-22T04:00:00Z"
@@ -244,12 +246,18 @@ describe('TimesheetUtil', function() {
           ]
         },
         {
-          "position": {},
+          "position": {
+            id: 12
+          },
           "timeEntries": []
         }
       ];
+      var targetPositions = [
+        { id: 32 },
+        { id: 12 }
+      ];
 
-      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo);
+      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo, targetPositions);
 
       expect(TimesheetUtil.mapKeys(collatedInfo)).toContain("2016-06-22T04:00:00Z");
     });
@@ -257,7 +265,9 @@ describe('TimesheetUtil', function() {
     it('should return time entries for each day provided in any position info', function() {
       var targetPositionInfo = [
         {
-          "position": {},
+          "position": {
+            id: 32
+          },
           "timeEntries": [
             {
               "date": "2016-06-22T04:00:00Z"
@@ -265,7 +275,9 @@ describe('TimesheetUtil', function() {
           ]
         },
         {
-          "position": {},
+          "position": {
+            id: 12
+          },
           "timeEntries": [
             {
               "date": "2016-05-22T04:00:00Z"
@@ -276,8 +288,12 @@ describe('TimesheetUtil', function() {
           ]
         }
       ];
+      var targetPositions = [
+        { id: 32 },
+        { id: 12 }
+      ];
 
-      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo);
+      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo, targetPositions);
 
       expect(TimesheetUtil.mapKeys(collatedInfo)).toContain("2016-06-22T04:00:00Z");
       expect(TimesheetUtil.mapKeys(collatedInfo)).toContain("2016-05-22T04:00:00Z");
@@ -288,6 +304,7 @@ describe('TimesheetUtil', function() {
       var targetPositionInfo = [
         {
           "position": {
+            id: 32,
             "name": "some position name"
           },
           "timeEntries": [
@@ -297,16 +314,20 @@ describe('TimesheetUtil', function() {
           ]
         }
       ];
+      var targetPositions = [
+        { id: 32 }
+      ];
 
-      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo);
+      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo, targetPositions);
 
-      expect(collatedInfo["2016-06-22T04:00:00Z"][0].positionName).toEqual("some position name");
+      expect(collatedInfo["2016-06-22T04:00:00Z"][0].position.name).toEqual("some position name");
     });
 
     it('should include the position note in the collated info', function() {
       var targetPositionInfo = [
         {
           "position": {
+            id: 32,
             "note": "some position note"
           },
           "timeEntries": [
@@ -316,16 +337,21 @@ describe('TimesheetUtil', function() {
           ]
         }
       ];
+      var targetPositions = [
+        {id: 32 }
+      ];
 
-      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo);
+      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo, targetPositions);
 
-      expect(collatedInfo["2016-06-22T04:00:00Z"][0].positionNote).toEqual("some position note");
+      expect(collatedInfo["2016-06-22T04:00:00Z"][0].position.note).toEqual("some position note");
     });
 
     it('should include the date in the collated info', function() {
       var targetPositionInfo = [
         {
-          "position": {},
+          "position": {
+            id: 32
+          },
           "timeEntries": [
             {
               "date": "2016-06-22T04:00:00Z"
@@ -333,8 +359,11 @@ describe('TimesheetUtil', function() {
           ]
         }
       ];
+      var targetPositions = [
+        {id: 32 }
+      ];
 
-      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo);
+      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo, targetPositions);
 
       expect(collatedInfo["2016-06-22T04:00:00Z"][0].date).toEqual("2016-06-22T04:00:00Z");
     });
@@ -342,7 +371,9 @@ describe('TimesheetUtil', function() {
     it('should include the time entry id in the collated info', function() {
       var targetPositionInfo = [
         {
-          "position": {},
+          "position": {
+            id: 32
+          },
           "timeEntries": [
             {
               "date": "2016-06-22T04:00:00Z",
@@ -351,8 +382,11 @@ describe('TimesheetUtil', function() {
           ]
         }
       ];
+      var targetPositions = [
+        {id: 32 }
+      ];
 
-      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo);
+      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo, targetPositions);
 
       expect(collatedInfo["2016-06-22T04:00:00Z"][0].id).toEqual(123);
     });
@@ -360,7 +394,9 @@ describe('TimesheetUtil', function() {
     it('should include the number of hours in the collated info', function() {
       var targetPositionInfo = [
         {
-          "position": {},
+          "position": {
+            id: 32
+          },
           "timeEntries": [
             {
               "date": "2016-06-22T04:00:00Z",
@@ -369,8 +405,11 @@ describe('TimesheetUtil', function() {
           ]
         }
       ];
+      var targetPositions = [
+        {id: 32 }
+      ];
 
-      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo);
+      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo, targetPositions);
 
       expect(collatedInfo["2016-06-22T04:00:00Z"][0].hours).toEqual(5);
     });
@@ -378,7 +417,9 @@ describe('TimesheetUtil', function() {
     it('should include the number of projected hours in the collated info', function() {
       var targetPositionInfo = [
         {
-          "position": {},
+          "position": {
+            id: 32
+          },
           "timeEntries": [
             {
               "date": "2016-06-22T04:00:00Z",
@@ -387,8 +428,11 @@ describe('TimesheetUtil', function() {
           ]
         }
       ];
+      var targetPositions = [
+        {id: 32 }
+      ];
 
-      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo);
+      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo, targetPositions);
 
       expect(collatedInfo["2016-06-22T04:00:00Z"][0].projectedHours).toEqual(8.5);
     });
@@ -406,10 +450,13 @@ describe('TimesheetUtil', function() {
           ]
         }
       ];
+      var targetPositions = [
+        {id: 32 }
+      ];
 
-      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo);
+      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo, targetPositions);
 
-      expect(collatedInfo["2016-06-22T04:00:00Z"][0].positionId).toEqual(32);
+      expect(collatedInfo["2016-06-22T04:00:00Z"][0].position.id).toEqual(32);
     });
 
     it('should accumulate all time entries for a given date across positions', function() {
@@ -437,12 +484,173 @@ describe('TimesheetUtil', function() {
           ]
         }
       ];
+      var targetPositions = [
+        {id: 32 },
+        {id: 11 }
+      ];
 
-      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo);
+      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo, targetPositions);
 
       expect(collatedInfo["2016-06-22T04:00:00Z"].length).toEqual(2);
-      expect(collatedInfo["2016-06-22T04:00:00Z"]).toContain(jasmine.objectContaining({positionId: 32, id: 12}));
-      expect(collatedInfo["2016-06-22T04:00:00Z"]).toContain(jasmine.objectContaining({positionId: 11, id: 21}));
+      expect(collatedInfo["2016-06-22T04:00:00Z"]).toContain(jasmine.objectContaining({position: jasmine.objectContaining({id: 32}), id: 12}));
+      expect(collatedInfo["2016-06-22T04:00:00Z"]).toContain(jasmine.objectContaining({position: jasmine.objectContaining({id: 11}), id: 21}));
+    });
+
+    it('should arrange the time entries in the same order as the positions within the day', function() {
+      var targetPositionInfo = [
+        {
+          "position": {
+            "id": 32
+          },
+          "timeEntries": [
+            {
+              "date": "2016-06-22T04:00:00Z",
+              "id": 12
+            }
+          ]
+        },
+        {
+          "position": {
+            "id": 11
+          },
+          "timeEntries": [
+            {
+              "date": "2016-06-22T04:00:00Z",
+              "id": 21
+            }
+          ]
+        },
+        {
+          "position": {
+            "id": 44
+          },
+          "timeEntries": [
+            {
+              "date": "2016-06-22T04:00:00Z",
+              "id": 9
+            }
+          ]
+        }
+      ];
+      var targetPositions = [
+        {id: 32 },
+        {id: 11 },
+        {id: 44 }
+      ];
+
+      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo, targetPositions);
+
+      expect(collatedInfo["2016-06-22T04:00:00Z"][0]).toEqual(jasmine.objectContaining({position: jasmine.objectContaining({id: 32}), id: 12}));
+      expect(collatedInfo["2016-06-22T04:00:00Z"][1]).toEqual(jasmine.objectContaining({position: jasmine.objectContaining({id: 11}), id: 21}));
+      expect(collatedInfo["2016-06-22T04:00:00Z"][2]).toEqual(jasmine.objectContaining({position: jasmine.objectContaining({id: 44}), id: 9}));
+    });
+
+    it('should generate a placeholder time entry for any missing time entries for a position for a day', function() {
+      var targetPositionInfo = [
+        {
+          "position": {
+            "id": 32
+          },
+          "timeEntries": [
+            {
+              "date": "2016-06-22T04:00:00Z",
+              "id": 12
+            }
+          ]
+        },
+        {
+          "position": {
+            "id": 11
+          },
+          "timeEntries": [
+            {
+              "date": "2016-06-23T04:00:00Z",
+              "id": 21
+            }
+          ]
+        },
+        {
+          "position": {
+            "id": 44
+          },
+          "timeEntries": [
+            {
+              "date": "2016-06-22T04:00:00Z",
+              "id": 9
+            }
+          ]
+        }
+      ];
+      var targetPositions = [
+        {id: 32 },
+        {id: 11 },
+        {id: 44 }
+      ];
+
+      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo, targetPositions);
+
+      expect(collatedInfo["2016-06-22T04:00:00Z"][1]).toEqual(jasmine.objectContaining({position: jasmine.objectContaining({id: 11}), id: "placeholder_11_2016-06-22"}));
+    });
+  });
+
+  describe('collatePositions()', function() {
+    it('should return an empty array if there are no positions in the position info', function() {
+      var targetPositionInfo = [];
+
+      var collatedInfo = TimesheetUtil.collatePositions(targetPositionInfo);
+
+      expect(collatedInfo.length).toEqual(0);
+    });
+
+    it('should return an element for each position in the position info', function() {
+      var targetPositionInfo = [
+        {
+          "position": {
+            "id": 32
+          }
+        },
+        {
+          "position": {
+            "id": 11
+          }
+        }
+      ];
+
+      var collatedInfo = TimesheetUtil.collatePositions(targetPositionInfo);
+
+      expect(collatedInfo.length).toEqual(2);
+      expect(collatedInfo[0].id).toEqual(32);
+      expect(collatedInfo[1].id).toEqual(11);
+    });
+
+    it('should capture the position name', function() {
+      var targetPositionInfo = [
+        {
+          "position": {
+            "id": 32,
+            "name": "joe"
+          }
+        }
+      ];
+
+      var collatedInfo = TimesheetUtil.collatePositions(targetPositionInfo);
+
+      expect(collatedInfo[0].name).toEqual("joe");
+    });
+
+    it('should capture the position note', function() {
+      var targetPositionInfo = [
+        {
+          "position": {
+            "id": 32,
+            "note": "joe's note"
+          }
+        }
+      ];
+
+      var collatedInfo = TimesheetUtil.collatePositions(targetPositionInfo);
+
+      expect(collatedInfo[0].note).toEqual("joe's note");
     });
   });
 

@@ -120,6 +120,60 @@ describe('Displaying basic information', function() {
     });
   });
 
+  describe('for the positions', function() {
+    beforeEach(function() {
+      var fixture = "<div id='fixture' class='wrapper-generatedView'></div>";
+      document.body.insertAdjacentHTML('afterbegin', fixture);
+    });
+
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('fixture'));
+    });
+
+    describe('via displayTimesheetInfo()', function() {
+      it('should generate a position entry with the name (and no note if it is null) of the position', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1", "name": "targetName", "note": null}, {"te1": {date: "2016-05-31T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+
+        expect($('.wrapper-generatedView .position:first').text()).toEqual("targetName");
+      });
+
+      it('should generate a position entry with the name and note of the position', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1", "name": "targetName", "note": "targetNote"}, {"te1": {date: "2016-05-31T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+
+        expect($('.wrapper-generatedView .position:first').text()).toEqual("targetName: targetNote");
+      });
+
+      it('should generate a position entry for each of the positions', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z"}}),
+            generatePositionAndTimeEntryInfo({"id": "p2"}, {"te2": {date: "2016-05-31T04:00:00Z"}}),
+            generatePositionAndTimeEntryInfo({"id": "p3"}, {"te3": {date: "2016-05-31T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+
+        expect($('.wrapper-generatedView .position').length).toEqual(3);
+      });
+    });
+  });
+
   describe('for the days', function() {
     beforeEach(function() {
       var fixture = "<div id='fixture' class='wrapper-generatedView'></div>";
@@ -217,6 +271,40 @@ describe('Displaying basic information', function() {
         expect($('.wrapper-generatedView .timeEntry[data-date="2016-05-31T04:00:00Z"]:first label').text()).toEqual("targetName: targetNote");
       });
 
+      it('should generate the time entries for a day in the same order as the positions', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z"}}),
+            generatePositionAndTimeEntryInfo({"id": "p2"}, {"te2": {date: "2016-05-31T04:00:00Z"}}),
+            generatePositionAndTimeEntryInfo({"id": "p3"}, {"te3": {date: "2016-05-31T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+
+        expect($('.wrapper-generatedView .timeEntry[data-date="2016-05-31T04:00:00Z"] input:eq(0)').prop('id')).toEqual("te1");
+        expect($('.wrapper-generatedView .timeEntry[data-date="2016-05-31T04:00:00Z"] input:eq(1)').prop('id')).toEqual("te2");
+        expect($('.wrapper-generatedView .timeEntry[data-date="2016-05-31T04:00:00Z"] input:eq(2)').prop('id')).toEqual("te3");
+      });
+
+      it('should generate an empty, uneditable time entry for a position if that day had no time entry for the position', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z"}}),
+            generatePositionAndTimeEntryInfo({"id": "p2"}, {"te2": {date: "2016-05-30T04:00:00Z"}}),
+            generatePositionAndTimeEntryInfo({"id": "p3"}, {"te3": {date: "2016-05-31T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+
+        expect($('.wrapper-generatedView .timeEntry[data-date="2016-05-31T04:00:00Z"] input:eq(1)').prop('id')).toEqual("placeholder_p2_2016-05-31");
+        expect($('.wrapper-generatedView .timeEntry[data-date="2016-05-31T04:00:00Z"] input:eq(1)').prop('disabled')).toEqual(true);
+        expect($('.wrapper-generatedView .timeEntry[data-date="2016-05-31T04:00:00Z"] input:eq(1)').attr('class')).toEqual('placeholderTimeEntryField');
+      });
+
       it('should generate a day entry for each day represented in the timesheet information', function() {
         var timesheetInfo = {
           "timesheetInstance": generateBasicTimesheetInstanceData(),
@@ -227,7 +315,7 @@ describe('Displaying basic information', function() {
 
         TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
 
-        expect($('.wrapper-generatedView .days').children().length).toEqual(2);
+        expect($('.wrapper-generatedView .day').length).toEqual(2);
       });
 
       it('should generate time entries for each position and its time entry for a day represented in the timesheet information', function() {

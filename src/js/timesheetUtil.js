@@ -1,7 +1,34 @@
 var TimesheetUtil = (function() {
   var self = {};
 
-  self.collateDays = function(timeEntryPositionInfo) {
+  function addPlaceholdersForMissingPositions(dayEntries, positionOrder) {
+    var positionIndex = 0;
+    var newDayEntries = [];
+    dayEntries.forEach(function(dayEntry) {
+      if (dayEntry.position.id === positionOrder[positionIndex].id) {
+        newDayEntries.push(dayEntry);
+        positionIndex += 1;
+      } else {
+        while (dayEntry.position.id !== positionOrder[positionIndex].id) {
+          newDayEntries.push({
+            id: "placeholder_" + positionOrder[positionIndex].id + "_" + self.formatDateYYYYMMDD(dayEntry.date),
+            date: dayEntry.date,
+            hours: 0,
+            projectedHours: 0,
+            position: {
+              id: positionOrder[positionIndex].id,
+              name: positionOrder[positionIndex].name,
+              note: positionOrder[positionIndex].note
+            }
+          });
+          positionIndex += 1;
+        }
+      }
+    });
+    return newDayEntries;
+  }
+
+  self.collateDays = function(timeEntryPositionInfo, positionOrder) {
     var daysEntries = {};
 
     function fetchDayEntry(date) {
@@ -21,13 +48,33 @@ var TimesheetUtil = (function() {
           date: timeEntry.date,
           hours: timeEntry.hours,
           projectedHours: timeEntry.projectedHours,
-          positionId: infoEntry.position.id,
-          positionName: infoEntry.position.name,
-          positionNote: infoEntry.position.note
+          position: {
+            id: infoEntry.position.id,
+            name: infoEntry.position.name,
+            note: infoEntry.position.note
+          }
         });
       });
     });
+
+    self.mapKeys(daysEntries).forEach(function(date) {
+      daysEntries[date] = addPlaceholdersForMissingPositions(daysEntries[date], positionOrder);
+    });
+
     return daysEntries;
+  };
+
+  self.collatePositions = function(timeEntryPositionInfo) {
+    var positions = [];
+    timeEntryPositionInfo.forEach(function(infoEntry) {
+      var position = infoEntry.position;
+      positions.push({
+        id: position.id,
+        name: position.name,
+        note: position.note
+      });
+    });
+    return positions;
   };
 
   self.sortDaysEntryDates = function(daysEntries) {
