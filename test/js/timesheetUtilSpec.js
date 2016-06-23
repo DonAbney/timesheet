@@ -130,7 +130,7 @@ describe('TimesheetUtil', function() {
   });
 
   describe('formatDate()', function() {
-    it('should reformat a string date into <weekday> MM/DD', function() {
+    it('should reformat a string date into <weekday> M/DD', function() {
       var targetDate = "2016-05-24T04:00:00Z";
 
       expect(TimesheetUtil.formatDate(targetDate)).toEqual("Tuesday 5/24");
@@ -144,6 +144,56 @@ describe('TimesheetUtil', function() {
       expect(TimesheetUtil.formatDate("2016-05-26T04:00:00Z")).toEqual("Thursday 5/26");
       expect(TimesheetUtil.formatDate("2016-05-27T04:00:00Z")).toEqual("Friday 5/27");
       expect(TimesheetUtil.formatDate("2016-05-28T04:00:00Z")).toEqual("Saturday 5/28");
+    });
+  });
+
+  describe('weekdayForDate()', function() {
+    it('should map to the names of the days of the week correctly', function() {
+      expect(TimesheetUtil.weekdayForDate("2016-05-22T04:00:00Z")).toEqual("Sunday");
+      expect(TimesheetUtil.weekdayForDate("2016-05-23T04:00:00Z")).toEqual("Monday");
+      expect(TimesheetUtil.weekdayForDate("2016-05-24T04:00:00Z")).toEqual("Tuesday");
+      expect(TimesheetUtil.weekdayForDate("2016-05-25T04:00:00Z")).toEqual("Wednesday");
+      expect(TimesheetUtil.weekdayForDate("2016-05-26T04:00:00Z")).toEqual("Thursday");
+      expect(TimesheetUtil.weekdayForDate("2016-05-27T04:00:00Z")).toEqual("Friday");
+      expect(TimesheetUtil.weekdayForDate("2016-05-28T04:00:00Z")).toEqual("Saturday");
+    });
+  });
+
+  describe('weekdayAbbreviationForDate()', function() {
+    it('should map to the abbreviations of the days of the week correctly', function() {
+      expect(TimesheetUtil.weekdayAbbreviationForDate("2016-05-22T04:00:00Z")).toEqual("Sun");
+      expect(TimesheetUtil.weekdayAbbreviationForDate("2016-05-23T04:00:00Z")).toEqual("Mon");
+      expect(TimesheetUtil.weekdayAbbreviationForDate("2016-05-24T04:00:00Z")).toEqual("Tues");
+      expect(TimesheetUtil.weekdayAbbreviationForDate("2016-05-25T04:00:00Z")).toEqual("Wed");
+      expect(TimesheetUtil.weekdayAbbreviationForDate("2016-05-26T04:00:00Z")).toEqual("Thurs");
+      expect(TimesheetUtil.weekdayAbbreviationForDate("2016-05-27T04:00:00Z")).toEqual("Fri");
+      expect(TimesheetUtil.weekdayAbbreviationForDate("2016-05-28T04:00:00Z")).toEqual("Sat");
+    });
+  });
+
+  describe('weekdayShortAbbreviationForDate()', function() {
+    it('should map to the short abbreviations of the days of the week correctly', function() {
+      expect(TimesheetUtil.weekdayShortAbbreviationForDate("2016-05-22T04:00:00Z")).toEqual("Su");
+      expect(TimesheetUtil.weekdayShortAbbreviationForDate("2016-05-23T04:00:00Z")).toEqual("M");
+      expect(TimesheetUtil.weekdayShortAbbreviationForDate("2016-05-24T04:00:00Z")).toEqual("T");
+      expect(TimesheetUtil.weekdayShortAbbreviationForDate("2016-05-25T04:00:00Z")).toEqual("W");
+      expect(TimesheetUtil.weekdayShortAbbreviationForDate("2016-05-26T04:00:00Z")).toEqual("R");
+      expect(TimesheetUtil.weekdayShortAbbreviationForDate("2016-05-27T04:00:00Z")).toEqual("F");
+      expect(TimesheetUtil.weekdayShortAbbreviationForDate("2016-05-28T04:00:00Z")).toEqual("Sa");
+    });
+  });
+
+  describe('formatDateMDD()', function() {
+    it('should reformat a string date into M/DD', function() {
+      var targetDate = '2016-05-22T04:00:00Z';
+
+      expect(TimesheetUtil.formatDateMDD(targetDate)).toEqual("5/22");
+    });
+
+    it('should work even if a date object is passed in', function() {
+      var targetDate = new Date(2016, 4, 22);
+
+      expect(TimesheetUtil.formatDateMDD(targetDate)).toEqual("5/22");
     });
   });
 

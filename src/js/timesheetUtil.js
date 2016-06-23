@@ -83,17 +83,73 @@ var TimesheetUtil = (function() {
     return dates;
   };
 
-  var daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  var daysOfWeek = [
+    {
+      name: 'Sunday',
+      abbreviation: 'Sun',
+      shortAbbreviation: 'Su'
+    },
+    {
+      name: 'Monday',
+      abbreviation: 'Mon',
+      shortAbbreviation: 'M'
+    },
+    {
+      name: 'Tuesday',
+      abbreviation: 'Tues',
+      shortAbbreviation: 'T'
+    },
+    {
+      name: 'Wednesday',
+      abbreviation: 'Wed',
+      shortAbbreviation: 'W'
+    },
+    {
+      name: 'Thursday',
+      abbreviation: 'Thurs',
+      shortAbbreviation: 'R'
+    },
+    {
+      name: 'Friday',
+      abbreviation: 'Fri',
+      shortAbbreviation: 'F'
+    },
+    {
+      name: 'Saturday',
+      abbreviation: 'Sat',
+      shortAbbreviation: 'Sa'
+    }
+  ];
 
   self.formatDate = function(dateString) {
     var date = new Date(dateString);
-    return daysOfWeek[date.getDay()] + " " + (date.getMonth() + 1) + "/" + date.getDate();
+    return daysOfWeek[date.getDay()].name + " " + (date.getMonth() + 1) + "/" + date.getDate();
+  };
+
+  self.formatDateMDD = function(date) {
+    var date = new Date(date);
+    return (date.getMonth() + 1) + "/" + date.getDate();
   };
 
   self.formatDateYYYYMMDD = function(date) {
     var date = new Date(date);
     return date.toJSON().split("T")[0];
-  }
+  };
+
+  self.weekdayForDate = function(date) {
+    var date = new Date(date);
+    return daysOfWeek[date.getDay()].name;
+  };
+
+  self.weekdayAbbreviationForDate = function(date) {
+    var date = new Date(date);
+    return daysOfWeek[date.getDay()].abbreviation;
+  };
+
+  self.weekdayShortAbbreviationForDate = function(date) {
+    var date = new Date(date);
+    return daysOfWeek[date.getDay()].shortAbbreviation;
+  };
 
   self.aggregateTime = function(enteredTimes) {
     var aggregatedTimes = {};
