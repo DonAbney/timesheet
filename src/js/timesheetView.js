@@ -10,6 +10,10 @@ var TimesheetView = (function() {
         position: '',
         day: 'column',
         dayHeader: '',
+        dayName: '',
+        dayAbbreviation: '',
+        dayShortAbbreviation: '',
+        dayAndMonth: '',
         dayTotal: '',
         timeEntries: '',
         timeEntry: '',
@@ -152,10 +156,51 @@ var TimesheetView = (function() {
     return dayElement;
   }
 
+  function constructDayName(date) {
+    var dayName = document.createElement('div');
+    construct.configureElementStyle('dayName', dayName);
+    dayName.innerHTML = TimesheetUtil.weekdayForDate(date);
+    return dayName;
+  }
+
+  function constructDayAbbreviation(date) {
+    var dayAbbreviation = document.createElement('div');
+    construct.configureElementStyle('dayAbbreviation', dayAbbreviation);
+    dayAbbreviation.innerHTML = TimesheetUtil.weekdayAbbreviationForDate(date);
+    return dayAbbreviation;
+  }
+
+  function constructDayShortAbbreviation(date) {
+    var dayShortAbbreviation = document.createElement('div');
+    construct.configureElementStyle('dayShortAbbreviation', dayShortAbbreviation);
+    dayShortAbbreviation.innerHTML = TimesheetUtil.weekdayShortAbbreviationForDate(date);
+    return dayShortAbbreviation;
+  }
+
+  function constructDayAndMonth(date) {
+    var dayAndMonth = document.createElement('div');
+    construct.configureElementStyle('dayAndMonth', dayAndMonth);
+    dayAndMonth.innerHTML = TimesheetUtil.formatDateMDD(date);
+    return dayAndMonth;
+  }
+
+  function constructDayTotal(date) {
+    var dayTotal = document.createElement('div');
+    construct.configureElementStyle('dayTotal', dayTotal);
+    dayTotal.innerHTML = '0';
+    dayTotal.setAttribute('data-date', date);
+    return dayTotal;
+  }
+
   function constructDayHeader(date) {
     var dayHeader = document.createElement("div");
     construct.configureElementStyle("dayHeader", dayHeader);
-    dayHeader.innerHTML = TimesheetUtil.formatDate(date) + "<span class='" + construct.css.classNamesForElement('dayTotal') + "' data-date='" + date + "'>0</span>";
+    dayHeader.insertAdjacentElement('beforeend', constructDayName(date));
+    dayHeader.insertAdjacentElement('beforeend', constructDayAbbreviation(date));
+    dayHeader.insertAdjacentElement('beforeend', constructDayShortAbbreviation(date));
+    dayHeader.insertAdjacentElement('beforeend', constructDayAndMonth(date));
+    dayHeader.insertAdjacentElement('beforeend', constructDayTotal(date));
+    // dayHeader.innerHTML = TimesheetUtil.formatDate(date) + "<span class='" + construct.css.classNamesForElement('dayTotal') + "' data-date='" + date + "'>0</span>";
     dayHeader.setAttribute('onclick', '$(this).siblings(".timeEntries").toggle()');
     return dayHeader;
   }

@@ -3,11 +3,11 @@ h1 {
   padding-left: 10px;
 }
 
-.weekTotal::before {
+.weekTotal::before,.dayTotal::before {
   content: ' (';
 }
 
-.weekTotal::after {
+.weekTotal::after,.dayTotal::after {
   content: ' hrs)';
 }
 
@@ -22,20 +22,20 @@ h1 {
   margin-bottom: 10px;
 }
 
-.dayTotal::before {
-  content: ' (';
-}
-
-.dayTotal::after {
-  content: ' hrs)';
-}
-
-.positions {
+.dayName,.dayAbbreviation,.dayShortAbbreviation,.positions {
   display: none;
+  padding-right: 10px;
+}
+
+.dayTotal,.dayAndMonth {
+  display: inline;
 }
 
 /* Small only */
 @media screen and (max-width: 39.9375em) {
+  .dayName {
+    display: inline;
+  }
 }
 
 /* Medium and up */
@@ -44,10 +44,21 @@ h1 {
 
 /* Medium only */
 @media screen and (min-width: 40em) and (max-width: 63.9375em) {
+  .dayName {
+    display: inline;
+  }
 }
 
 /* Large and up */
 @media screen and (min-width: 64em) {
+  .dayShortAbbreviation {
+    display: inline;
+  }
+
+  .dayTotal {
+    display: block;
+  }
+
   .positions {
     display: block;
   }
