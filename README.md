@@ -37,3 +37,6 @@ The karma test runner (installed via npm dependencies) is used to run the tests.
 
 If this doesn't work for you, it may be because you don't have the karma cli tools installed.  Those can be installed via:
 * `npm install -g karma-cli`
+
+### A Note About Testing
+A conscious decision has been made to make a distinction between "Look & Feel" and "Functionality".  "Functionality" is being tested at effectively the "unit" level, with some rendering to fixtures within Jasmine tests.  "Look & Feel" is not being tested.  So, it may be completely possible to hose up the "Look & Feel" of the page without breaking any tests, but the functionality of the page should still be intact.  Breaking any of the functionality should break some of the tests.  This means that while the page might not look nice or be easy to use after a change to the code or styling, it should at least still be functional.
