@@ -56,6 +56,7 @@ var TimesheetView = (function() {
     displayDaysAndPositions(daysEntries, positions);
     adjustValidatedIndicator(timesheetInfo.timesheetInstance.validated);
     updatePageOnStateChange();
+    self.windowSizeChanged();
   };
 
   self.updateUsername = function(name) {
@@ -150,8 +151,12 @@ var TimesheetView = (function() {
     $(element).change(updatePageOnStateChange);
   }
 
-  self.windowSizeChanged = function(mediaSize) {
-    // TODO do something interesting here
+  function updatePositionHeaderHeight() {
+    $('.positionHeader').height($('.dayHeader:eq(0)').height());
+  }
+
+  self.windowSizeChanged = function() {
+    updatePositionHeaderHeight();
   }
 
   function constructDayWrapper(date) {

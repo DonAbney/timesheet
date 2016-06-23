@@ -29,14 +29,7 @@
     $(document).ready(function() {
       $('.saveChanges').click(TimesheetCommunication.sendSaveTimesheet);
       $('.validateTimesheet').click(TimesheetCommunication.sendValidateTimesheet);
-      $(window).resize(TimesheetView.windowSizeChanged({
-        smallOnly: Foundation.MediaQuery.current === 'small',
-        smallUp: Foundation.MediaQuery.atLeast('small'),
-        mediumOnly: Foundation.MediaQuery.current === 'medium',
-        mediumUp: Foundation.MediaQuery.atLeast('medium'),
-        largeOnly: Foundation.MediaQuery.current === 'large',
-        largeUp: Foundation.MediaQuery.atLeast('large')
-      }));
+      $(window).resize(TimesheetView.windowSizeChanged);
       TimesheetCommunication.fetchTimesheetInfo('tjones', new Date());
     });
   </script>

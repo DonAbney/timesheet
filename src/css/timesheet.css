@@ -14,15 +14,25 @@ h1 {
 .dayHeader,.positionHeader {
   cursor: pointer;
   font-weight: bold;
-  font-size: x-large;
-  border-color: #e2e2e2;
-  border-style: solid;
-  border-width: 1px;
-  padding-left: 10px;
   margin-bottom: 10px;
+  font-size: 1.5rem;
+  padding: .75rem;
+  margin-top: .5rem;
+  border-style: solid;
+  border-color: #e2e2e2;
+  border-width: 1px;
 }
 
-.dayName,.dayAbbreviation,.dayShortAbbreviation,.positions {
+.positionHeader {
+  border-color: white;
+}
+
+.dayName {
+  display: inline;
+  padding-right: 10px;
+}
+
+.dayAbbreviation,.dayShortAbbreviation,.positions {
   display: none;
   padding-right: 10px;
 }
@@ -35,7 +45,7 @@ h1 {
   box-sizing: border-box;
   width: 100%;
   height: 2.4375rem;
-  padding: .5rem;
+  padding: .125rem;
   border: 1px solid #cacaca;
   margin: 0 0 1rem;
   font-size: .5rem;
@@ -43,9 +53,6 @@ h1 {
 
 /* Small only */
 @media screen and (max-width: 39.9375em) {
-  .dayName {
-    display: inline;
-  }
 }
 
 /* Medium and up */
@@ -54,13 +61,20 @@ h1 {
 
 /* Medium only */
 @media screen and (min-width: 40em) and (max-width: 63.9375em) {
-  .dayName {
-    display: inline;
-  }
 }
 
 /* Large and up */
 @media screen and (min-width: 64em) {
+  .dayHeader,.positionHeader {
+    font-size: 1rem;
+    padding: 0px 0px 0px 10px;
+    margin-top: 0px;
+  }
+
+  .dayName {
+    display: none;
+  }
+
   .dayShortAbbreviation {
     display: inline;
   }
@@ -71,6 +85,10 @@ h1 {
 
   .positions {
     display: block;
+  }
+
+  .timeEntries {
+    display: block!important;
   }
 
   .timeEntry .positionLabel {
