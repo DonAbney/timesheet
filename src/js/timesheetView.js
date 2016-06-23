@@ -150,6 +150,10 @@ var TimesheetView = (function() {
     $(element).change(updatePageOnStateChange);
   }
 
+  self.windowSizeChanged = function(mediaSize) {
+    // TODO do something interesting here
+  }
+
   function constructDayWrapper(date) {
     var dayElement = document.createElement("div");
     construct.configureElementStyle("day", dayElement);
