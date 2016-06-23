@@ -6,9 +6,9 @@ var TimesheetCommunication = (function() {
     protocol: "http",
     host: "private-696ecf-ddaugherfba.apiary-mock.com",
     api: {
-      getTimesheetForUser: "/api/timesheet/{email_shortname}/{date}",
-      saveTimesheet: "/api/timesheet/{id}",
-      validateTimesheet: "/api/timesheet/{id}/validate"
+      getTimesheetForUser: "/fba/api/timesheet/{email_shortname}/{date}",
+      saveTimesheet: "/fba/api/timesheet/{id}",
+      validateTimesheet: "/fba/api/timesheet/{id}/validate"
     }
   };
 
