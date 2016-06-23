@@ -7,6 +7,7 @@ var TimesheetView = (function() {
         timesheetInfo: '',
         days: 'row small-up-1 medium-up-1 large-up-8',
         positions: 'column',
+        positionHeader: '',
         position: '',
         day: 'column',
         dayHeader: '',
@@ -267,9 +268,16 @@ var TimesheetView = (function() {
     return positionElement;
   }
 
+  function constructPositionHeaderElement() {
+    var positionHeaderElement = document.createElement('div');
+    construct.configureElementStyle('positionHeader', positionHeaderElement);
+    return positionHeaderElement;
+  }
+
   function constructPositionsElement(positions) {
     var positionsElement = document.createElement('div');
     construct.configureElementStyle("positions", positionsElement);
+    positionsElement.insertAdjacentElement('afterbegin', constructPositionHeaderElement());
     positions.forEach(function(position) {
       positionsElement.insertAdjacentElement('beforeend', constructPositionElement(position));
     });
