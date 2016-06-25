@@ -51,6 +51,30 @@ h1 {
   font-size: .5rem;
 }
 
+.buttonArea {
+  margin-top: 1rem;
+}
+
+.validateTimesheet {
+  background-color: #f3e1cb;
+}
+
+.saveChanges {
+  background-color: #a0eca0;
+}
+
+button {
+  height: 4rem;
+  border: 1px solid #000;
+  font-weight: bold;
+}
+
+button:disabled {
+  border-color: #e2e2e2;
+  background-color: #f7f7f7;
+  color: #e2e2e2;
+}
+
 /* Small only */
 @media screen and (max-width: 39.9375em) {
 }
@@ -93,6 +117,10 @@ h1 {
 
   .timeEntry .positionLabel {
     display: none;
+  }
+
+  #successfulResponse {
+    margin: 0 1rem;
   }
 }
 
