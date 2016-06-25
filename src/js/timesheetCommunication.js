@@ -9,7 +9,8 @@ var TimesheetCommunication = (function() {
       getTimesheetForUser: "/fba/api/timesheet/{email_shortname}/{date}",
       saveTimesheet: "/fba/api/timesheet/{id}",
       validateTimesheet: "/fba/api/timesheet/{id}/validate"
-    }
+    },
+    crossDomain: true
   };
 
   // self.requestHeaders.Prefer = "status=404"  // This is for mocked error responses with apiary to assist with manual testing
@@ -35,7 +36,7 @@ var TimesheetCommunication = (function() {
     $.ajax({
       url: generateURL(self.api.saveTimesheet, valueMap),
       method: 'POST',
-      crossDomain: true,
+      crossDomain: self.crossDomain,
       headers: self.requestHeaders,
       contentType: 'application/json',
       processData: false,
@@ -62,7 +63,7 @@ var TimesheetCommunication = (function() {
     $.ajax({
       url: generateURL(self.api.validateTimesheet, valueMap),
       method: 'POST',
-      crossDomain: true,
+      crossDomain: self.crossDomain,
       headers: self.requestHeaders
     }).done(function(data) {
       // do something
@@ -85,7 +86,7 @@ var TimesheetCommunication = (function() {
 
     $.ajax({
       url: generateURL(self.api.getTimesheetForUser, valueMap),
-      crossDomain: true,
+      crossDomain: self.crossDomain,
       headers: self.requestHeaders
     }).done(function(data) {
       ResponseHandling.makeSuccessResponseVisible();
