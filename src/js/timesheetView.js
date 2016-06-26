@@ -48,7 +48,7 @@ var TimesheetView = (function() {
   };
 
   self.displayTimesheetInfo = function(username, timesheetInfo) {
-    clearOldInformation();
+    self.clearOldInformation();
     self.updateUsername(username);
     constructTimesheetInfoEntry(username, timesheetInfo.timesheetInstance);
     var positions = TimesheetUtil.collatePositions(timesheetInfo.timeEntryPositionMapByDate);
@@ -320,7 +320,7 @@ var TimesheetView = (function() {
     generatedWrapper.append(timesheetInfoEntry);
   }
 
-  function clearOldInformation() {
+  self.clearOldInformation = function() {
     var generatedWrapper = $('.wrapper-generatedView');
     generatedWrapper.empty();
   }

@@ -1,6 +1,16 @@
 var TimesheetAuthentication = (function() {
   var self = {};
 
+  self.signOut = function() {
+    var authInstance = gapi.auth2.getAuthInstance();
+    authInstance.signOut().then(function() {
+      TimesheetView.clearOldInformation();
+      $('#authentication').show();
+      $('#errorResponse').hide();
+      $('#successfulResponse').hide();
+    });
+  };
+
   self.onSignIn = function(googleUser) {
     initializeForAuthenticatedUser(googleUser);
   };
