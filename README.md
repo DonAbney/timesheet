@@ -40,3 +40,8 @@ If this doesn't work for you, it may be because you don't have the karma cli too
 
 ### A Note About Testing
 A conscious decision has been made to make a distinction between "Look & Feel" and "Functionality".  "Functionality" is being tested at effectively the "unit" level, with some rendering to fixtures within Jasmine tests.  "Look & Feel" is not being tested.  So, it may be completely possible to hose up the "Look & Feel" of the page without breaking any tests, but the functionality of the page should still be intact.  Breaking any of the functionality should break some of the tests.  This means that while the page might not look nice or be easy to use after a change to the code or styling, it should at least still be functional.
+
+## Resources
+Some resources that will facilitate in deployment configuration:
+* [Setting up Authentication](https://developers.google.com/identity/sign-in/web/)
+* [Using Amazon API Gateway as a proxy to S3](http://docs.aws.amazon.com/apigateway/latest/developerguide/integrating-api-with-aws-services-s3.html)
