@@ -3,6 +3,10 @@ h1 {
   padding-left: 10px;
 }
 
+#successfulResponse,#errorResponse {
+  display: none;
+}
+
 .weekTotal::before,.dayTotal::before {
   content: ' (';
 }
