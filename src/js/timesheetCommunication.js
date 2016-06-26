@@ -1,19 +1,5 @@
 var TimesheetCommunication = (function() {
-  var self = {
-    requestHeaders: {
-      'Application-Identifier': "github.com/donabney/timesheet"
-    },
-    protocol: "http",
-    host: "private-696ecf-ddaugherfba.apiary-mock.com",
-    api: {
-      getTimesheetForUser: "/fba/api/timesheet/{email_shortname}/{date}",
-      saveTimesheet: "/fba/api/timesheet/{id}",
-      validateTimesheet: "/fba/api/timesheet/{id}/validate"
-    },
-    crossDomain: true
-  };
-
-  // self.requestHeaders.Prefer = "status=404"  // This is for mocked error responses with apiary to assist with manual testing
+  var self = {};
 
   function replaceAll(targetString, replacementMapping){
       var regex = new RegExp(Object.keys(replacementMapping).join("|"), "g");
@@ -24,7 +10,7 @@ var TimesheetCommunication = (function() {
   };
 
   function generateURL(api, valueMap) {
-    return self.protocol + "://" + self.host + replaceAll(api, valueMap);
+    return TimesheetConfig.protocol + "://" + TimesheetConfig.host + replaceAll(api, valueMap);
   };
 
   function saveTimesheet(timesheetId, hoursForTimesheetEntries) {
@@ -34,10 +20,10 @@ var TimesheetCommunication = (function() {
     };
 
     $.ajax({
-      url: generateURL(self.api.saveTimesheet, valueMap),
+      url: generateURL(TimesheetConfig.api.saveTimesheet, valueMap),
       method: 'POST',
-      crossDomain: self.crossDomain,
-      headers: self.requestHeaders,
+      crossDomain: TimesheetConfig.crossDomain,
+      headers: TimesheetConfig.requestHeaders,
       contentType: 'application/json',
       processData: false,
       data: JSON.stringify(hoursForTimesheetEntries)
@@ -61,10 +47,10 @@ var TimesheetCommunication = (function() {
     };
 
     $.ajax({
-      url: generateURL(self.api.validateTimesheet, valueMap),
+      url: generateURL(TimesheetConfig.api.validateTimesheet, valueMap),
       method: 'POST',
-      crossDomain: self.crossDomain,
-      headers: self.requestHeaders
+      crossDomain: TimesheetConfig.crossDomain,
+      headers: TimesheetConfig.requestHeaders
     }).done(function(data) {
       // do something
       deferred.resolve();
@@ -85,9 +71,9 @@ var TimesheetCommunication = (function() {
     };
 
     $.ajax({
-      url: generateURL(self.api.getTimesheetForUser, valueMap),
-      crossDomain: self.crossDomain,
-      headers: self.requestHeaders
+      url: generateURL(TimesheetConfig.api.getTimesheetForUser, valueMap),
+      crossDomain: TimesheetConfig.crossDomain,
+      headers: TimesheetConfig.requestHeaders
     }).done(function(data) {
       ResponseHandling.makeSuccessResponseVisible();
       TimesheetView.displayTimesheetInfo(username, data);
