@@ -136,5 +136,28 @@ describe('Error handling', function() {
         expect($('.wrapper-generatedErrorInfo .requestInfo-value:eq(1)').text()).toEqual("another value");
       });
     });
+
+    describe('via displayErrorMessage()', function() {
+      var message = "some generic error message for testing";
+
+      it('should not include any information within the status code area', function() {
+        ResponseHandling.displayErrorMessage(message);
+
+        expect($('.wrapper-generatedErrorInfo .statusCode').text()).toEqual("");
+      });
+
+      it('should set the status message to the provided message', function() {
+        ResponseHandling.displayErrorMessage(message);
+
+        expect($('.wrapper-generatedErrorInfo .statusMessage').text()).toEqual(message);
+      });
+
+      it('should not display any request information', function() {
+        ResponseHandling.displayErrorMessage(message);
+
+        expect($('.wrapper-generatedErrorInfo .requestInfo-key').length).toEqual(0);
+        expect($('.wrapper-generatedErrorInfo .requestInfo-value').length).toEqual(0);
+      });
+    });
   });
 });

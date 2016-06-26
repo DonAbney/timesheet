@@ -196,16 +196,5 @@ var TimesheetUtil = (function() {
     return keys;
   }
 
-  self.extractUsername = function(emailAddress) {
-    if (emailAddress) {
-      var regex = /^(.+)@pillartechnology.com$/i;
-      var matches = regex.exec(emailAddress);
-      if (matches) {
-        return matches[1];
-      }
-    }
-    return '';
-  }
-
   return self;
 })();

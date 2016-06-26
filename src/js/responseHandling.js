@@ -18,6 +18,11 @@ var ResponseHandling = (function() {
     wrapper.append(constructErrorInfo(statusCodeText, statusMessage, requestInfo));
   };
 
+  self.displayErrorMessage = function(message) {
+    var wrapper = $('.wrapper-generatedErrorInfo');
+    wrapper.append(constructErrorInfo('', message, ''));
+  }
+
   function constructErrorInfo(statusCodeText, statusMessage, requestInfo) {
     var errorInfo = document.createElement('div');
     errorInfo.className = 'errorInfo';

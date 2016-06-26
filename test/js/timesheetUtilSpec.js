@@ -782,36 +782,4 @@ describe('TimesheetUtil', function() {
       expect(timeEntries[0].hours).toEqual(6);
     });
   });
-
-  describe('extractUsername()', function() {
-    it('should return an empty string if the email was undefined', function() {
-      var username = TimesheetUtil.extractUsername(undefined);
-
-      expect(username).toEqual('');
-    });
-
-    it('should return an empty string if the email was null', function() {
-      var username = TimesheetUtil.extractUsername(null);
-
-      expect(username).toEqual('');
-    });
-
-    it('should return an empty string if the email was an empty string', function() {
-      var username = TimesheetUtil.extractUsername('');
-
-      expect(username).toEqual('');
-    });
-
-    it('should return an empty string if the email was not a Pillar Technology email address', function() {
-      var username = TimesheetUtil.extractUsername('joe@noackexpected.com');
-
-      expect(username).toEqual('');
-    });
-
-    it('should return the username from the email address', function() {
-      var username = TimesheetUtil.extractUsername('joe@pillartechnology.com');
-
-      expect(username).toEqual('joe');
-    });
-  });
 });
