@@ -14,6 +14,7 @@ var JS_FILES = ['lib/js/jquery-*.js', 'lib/js/foundation-*.js', 'src/js/*.js'];
 var HTML_FILES = 'src/*.html';
 var CONFIG_FILES = {
   dev: 'config/timesheetConfig-dev.js',
+  mock: 'config/timesheetConfig-mock.js',
   prod: 'config/timesheetConfig-prod.js'
 };
 
@@ -68,7 +69,7 @@ gulp.task('serve', ['default'], function() {
 });
 
 function resolveEnvironment() {
-  return util.env.prod ? 'prod' : 'dev';
+  return util.env.prod ? 'prod' : (util.env.mock ? 'mock' : 'dev');
 }
 
 function resolveDestinationDirectory() {

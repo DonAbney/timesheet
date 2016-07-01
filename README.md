@@ -16,6 +16,9 @@ Artifacts are created using gulp.  To build the artifacts, simply run:
 By default, the `dev` artifacts will be built.  If you want to build the `prod` artifacts, pass `--prod` to `gulp`:
 * `gulp --prod`
 
+If you want to build prod-like artifacts that call the mock API, pass `--mock` to `gulp`:
+* `gulp --mock`
+
 If this doesn't work for you, it may be because you don't have the gulp cli tools installed.  Those can be installed via:
 * `npm install --global gulp-cli`
 
