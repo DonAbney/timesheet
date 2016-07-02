@@ -49,7 +49,28 @@ A conscious decision has been made to make a distinction between "Look & Feel" a
 
 The current exception to this is the Google Authentication, which I haven't yet taken the time to mock out for testing purposes.
 
+## Deploying Artifacts
+Artifacts can be deployed to Amazon AWS S3 via gulp if you have AWS credentials to push to the S3 bucket from which the timesheet artifacts are served.  They will be rebuilt for the specified environment and then copied out to S3.  Simply run:
+* `gulp deploy --prod` (or `--mock`)
+
+### Amazon AWS S3 Credentials
+If you feel that you need credentials to push timesheet artifacts to S3, ask Mike to generate you access keys.
+
+Once you have credentials, you will need to create the AWS credentials INI file `~/.aws/credentials` with the following format:
+```
+[pillarTimesheetDeploy]
+aws_access_key_id=AKIAIOSFODNN7EXAMPLE
+aws_secret_access_key=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+```
+(replacing the values for the two keys with the keys that you are provided)
+
+Because they are credentials, it is suggested that you make both the `~/.aws` directory and the `credentials` file read/write for the owner only.  You can do this by:
+* `chmod -R go-rwx ~/.aws`
+
 ## Resources
 Some resources that will facilitate in deployment configuration:
 * [Setting up Authentication](https://developers.google.com/identity/sign-in/web/)
 * [Using Amazon API Gateway as a proxy to S3](http://docs.aws.amazon.com/apigateway/latest/developerguide/integrating-api-with-aws-services-s3.html)
+* [Setting up Amazon AWS Credentials](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html)
+* [Generating Amazon AWS Access Keys](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html)
+* [Amazon AWS Policy Required by gulp-awspublish](https://www.npmjs.com/package/gulp-awspublish)

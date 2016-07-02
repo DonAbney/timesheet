@@ -7,6 +7,9 @@ var tap = require('gulp-tap');
 var util = require('gulp-util');
 var cleanCSS = require('gulp-clean-css');
 var browserSync = require('browser-sync').create();
+var aws = require('aws-sdk');
+var awspublish = require('gulp-awspublish');
+var rename = require('gulp-rename');
 
 var DEST = 'build/';
 var CSS_FILES = ['lib/css/*.css', 'src/css/*.css'];
@@ -17,11 +20,32 @@ var CONFIG_FILES = {
   mock: 'config/timesheetConfig-mock.js',
   prod: 'config/timesheetConfig-prod.js'
 };
+var PROD_DEPLOYMENTS = ['mock', 'prod'];
 
-gulp.task('default', ['minifyCss', 'minifyJs', 'copyHtml']);
+var publisher = awspublish.create({
+  region: 'us-east-1',
+  params: {
+    Bucket: 'pillartimesheet'
+  },
+  credentials: new aws.SharedIniFileCredentials({profile: 'pillarTimesheetDeploy'})
+});
 
-gulp.task('deploy', [], function() {
-  util.log("Need to do something if we want to deploy...");
+gulp.task('default', ['build']);
+
+gulp.task('build', ['minifyCss', 'minifyJs', 'copyHtml']);
+
+gulp.task('deploy', ['build'], function() {
+  util.log(" * Deploying artifacts from " + DEST + resolveEnvironment() + "/*");
+  gulp.src(DEST + resolveEnvironment() + "/*")
+    .pipe(tap(function(file) {
+      util.log(" - Deploying " + file.path);
+    }))
+    .pipe(rename(function(path) {
+      path.dirname += "/assets/" + resolveEnvironment()
+    }))
+    .pipe(publisher.publish())
+    .pipe(publisher.cache())
+    .pipe(awspublish.reporter());
 });
 
 gulp.task('minifyCss', function() {
