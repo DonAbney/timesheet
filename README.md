@@ -67,6 +67,11 @@ aws_secret_access_key=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 Because they are credentials, it is suggested that you make both the `~/.aws` directory and the `credentials` file read/write for the owner only.  You can do this by:
 * `chmod -R go-rwx ~/.aws`
 
+### Amazon AWS API Gateway
+There are environment-specific generated JavaScript files for the AWS API Gateway.  These are used to facilitate use of authentication restrictions on the timesheet API endpoints.  They are located in the `lib/env-specific/<environment>/apiGateway-js-sdk/` directory and are automatically bundled, by the gulp task, into the minified timesheet javascript file for the environment.
+
+There is not yet a gulp task for working with AWS to automatically generate a new copy of the apiGateway-js-sdk and update the version in the lib directory, but that is on the TODO list.
+
 ## Resources
 Some resources that will facilitate in deployment configuration:
 * [Setting up Authentication](https://developers.google.com/identity/sign-in/web/)
