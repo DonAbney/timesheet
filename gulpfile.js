@@ -15,10 +15,10 @@ var DEST = 'build/';
 var CSS_FILES = ['lib/css/*.css', 'src/css/*.css'];
 var JS_FILES = ['lib/js/jquery-*.js', 'lib/js/foundation-*.js', 'src/js/*.js'];
 var HTML_FILES = 'src/*.html';
-var CONFIG_FILES = {
-  dev: 'config/timesheetConfig-dev.js',
-  mock: 'config/timesheetConfig-mock.js',
-  prod: 'config/timesheetConfig-prod.js'
+var CONFIG_SPECIFIC_FILES = {
+  dev: ['config/dev/*.js'],
+  mock: ['config/mock/*.js', 'lib/env-specific/mock/**/*.js'],
+  prod: ['config/prod/*.js', 'lib/env-specific/prod/**/*.js']
 };
 var PROD_DEPLOYMENTS = ['mock', 'prod'];
 
@@ -101,7 +101,5 @@ function resolveDestinationDirectory() {
 }
 
 function resolveJsFiles() {
-  var jsFilesForEnvironment = JS_FILES.slice(0);
-  jsFilesForEnvironment.push(CONFIG_FILES[resolveEnvironment()]);
-  return jsFilesForEnvironment;
+  return JS_FILES.concat(CONFIG_SPECIFIC_FILES[resolveEnvironment()]);
 }
