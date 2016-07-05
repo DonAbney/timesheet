@@ -37,13 +37,7 @@ var TimesheetAuthentication = (function() {
   };
 
   self.extractCredentialFromStsResponse = function(credentialName, stsResponse) {
-    var expression = "<" + credentialName + ">(.*)</" + credentialName + ">";
-    var regex = new RegExp(expression);
-    var matches = regex.exec(stsResponse);
-    if (matches) {
-      return matches[1];
-    }
-    return '';
+    return $(stsResponse).find(credentialName).text();
   }
 
   function authenticationListener(state) {
@@ -79,8 +73,15 @@ var TimesheetAuthentication = (function() {
         RoleArn: 'arn:aws:iam::158167676023:role/PillarTimeSheetAuthenticatedUser',
         WebIdentityToken: token,
         Version: '2011-06-15'
-      }
+      },
+      dataType: 'xml'
     }).done(function(data) {
+      TimesheetConfig.aws.apigClient = apigClientFactory.newClient({
+        accessKey: self.extractCredentialFromStsResponse('AccessKeyId', data),
+        secretKey: self.extractCredentialFromStsResponse('SecretAccessKey', data),
+        sessionToken: self.extractCredentialFromStsResponse('SessionToken', data),
+        region: 'us-east-1'
+      });
       deferred.resolve();
     }).fail(function(jqXHR) {
       ResponseHandling.makeErrorResponseVisible();
