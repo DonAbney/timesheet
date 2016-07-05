@@ -10,7 +10,10 @@ var TimesheetConfig = (function() {
       saveTimesheet: "/mock/api/timesheet/{id}",
       validateTimesheet: "/mock/api/timesheet/{id}/validate"
     },
-    crossDomain: true
+    crossDomain: true,
+    aws: {
+      useApiGateway: true
+    }
   };
 
   return self;

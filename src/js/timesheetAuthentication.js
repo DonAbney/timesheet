@@ -65,6 +65,10 @@ var TimesheetAuthentication = (function() {
 
   function registerAwsRoleCredentials(token, username) {
     var deferred = $.Deferred();
+    if (!TimesheetConfig.aws.useApiGateway) {
+      deferred.resolve();
+      return deferred.promise();
+    }
 
     $.ajax({
       url: "https://sts.amazonaws.com/",
