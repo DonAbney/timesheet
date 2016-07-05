@@ -325,5 +325,21 @@ var TimesheetView = (function() {
     generatedWrapper.empty();
   }
 
+  self.showAuthenticationArea = function() {
+    $('#authentication').show();
+    $('#errorResponse').hide();
+    $('#successfulResponse').hide();
+  }
+
+  self.hideAuthenticationArea = function() {
+    $('#authentication').hide();
+  }
+
+  self.registerPageListeners = function() {
+    $('.saveChanges').click(TimesheetCommunication.sendSaveTimesheet);
+    $('.validateTimesheet').click(TimesheetCommunication.sendValidateTimesheet);
+    $(window).resize(TimesheetView.windowSizeChanged);
+  }
+
   return self;
 })();

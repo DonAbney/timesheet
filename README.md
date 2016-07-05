@@ -74,3 +74,6 @@ Some resources that will facilitate in deployment configuration:
 * [Setting up Amazon AWS Credentials](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html)
 * [Generating Amazon AWS Access Keys](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html)
 * [Amazon AWS Policy Required by gulp-awspublish](https://www.npmjs.com/package/gulp-awspublish)
+* [Assuming an AWS IAM Role via a web identity](http://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRoleWithWebIdentity.html)
+* [Generating a custom JavaScript SDK for the defined endpoints in the AWS API Gateway](http://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-generate-sdk.html)
+* [Passing AWS IAM tokens from a REST client](http://stackoverflow.com/questions/32833331/api-gateway-how-to-pass-aws-iam-authorization-from-rest-client)

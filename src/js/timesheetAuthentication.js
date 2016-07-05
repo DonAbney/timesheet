@@ -5,9 +5,7 @@ var TimesheetAuthentication = (function() {
     var authInstance = gapi.auth2.getAuthInstance();
     authInstance.signOut().then(function() {
       TimesheetView.clearOldInformation();
-      $('#authentication').show();
-      $('#errorResponse').hide();
-      $('#successfulResponse').hide();
+      TimesheetView.showAuthenticationArea();
     });
   };
 
@@ -38,20 +36,55 @@ var TimesheetAuthentication = (function() {
     return '';
   };
 
+  self.extractCredentialFromStsResponse = function(credentialName, stsResponse) {
+    var expression = "<" + credentialName + ">(.*)</" + credentialName + ">";
+    var regex = new RegExp(expression);
+    var matches = regex.exec(stsResponse);
+    if (matches) {
+      return matches[1];
+    }
+    return '';
+  }
+
   function authenticationListener(state) {
     var authInstance = gapi.auth2.getAuthInstance();
     if (authInstance.isSignedIn.get()) {
-      initializeForAuthenticatedUser(authInstance.currentUser.get());
+      var currentUser = authInstance.currentUser.get();
+      var username = self.extractUsername(currentUser.getBasicProfile().getEmail());
+      registerAwsRoleCredentials(currentUser.getAuthResponse().id_token, username).done(function() {
+        initializeForAuthenticatedUser(username);
+      });
     }
   }
 
-  function initializeForAuthenticatedUser(googleUser) {
-    var profile = googleUser.getBasicProfile();
-    $('#authentication').hide();
-    $('.saveChanges').click(TimesheetCommunication.sendSaveTimesheet);
-    $('.validateTimesheet').click(TimesheetCommunication.sendValidateTimesheet);
-    $(window).resize(TimesheetView.windowSizeChanged);
-    TimesheetCommunication.fetchTimesheetInfo(self.extractUsername(profile.getEmail()), new Date());
+  function initializeForAuthenticatedUser(username) {
+    TimesheetView.hideAuthenticationArea();
+    TimesheetView.registerPageListeners();
+    TimesheetCommunication.fetchTimesheetInfo(username, new Date());
+  }
+
+  function registerAwsRoleCredentials(token, username) {
+    var deferred = $.Deferred();
+
+    $.ajax({
+      url: "https://sts.amazonaws.com/",
+      crossDomain: true,
+      data: {
+        Action: 'AssumeRoleWithWebIdentity',
+        RoleSessionName: username,
+        RoleArn: 'arn:aws:iam::158167676023:role/PillarTimeSheetAuthenticatedUser',
+        WebIdentityToken: token,
+        Version: '2011-06-15'
+      }
+    }).done(function(data) {
+      deferred.resolve();
+    }).fail(function(jqXHR) {
+      ResponseHandling.makeErrorResponseVisible();
+      ResponseHandling.displayError(jqXHR, valueMap);
+      deferred.reject();
+    });
+
+    return deferred.promise();
   }
 
   return self;
