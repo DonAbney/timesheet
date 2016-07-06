@@ -10,10 +10,7 @@ var TimesheetConfig = (function() {
       saveTimesheet: "/fba/api/timesheet/{id}",
       validateTimesheet: "/fba/api/timesheet/{id}/validate"
     },
-    crossDomain: true,
-    aws: {
-      useApiGateway: false
-    }
+    crossDomain: true
   };
 
   // self.requestHeaders.Prefer = "status=404"  // This is for mocked error responses with apiary to assist with manual testing

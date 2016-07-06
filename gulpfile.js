@@ -17,8 +17,8 @@ var JS_FILES = ['lib/js/jquery-*.js', 'lib/js/foundation-*.js', 'src/js/*.js'];
 var HTML_FILES = 'src/*.html';
 var CONFIG_SPECIFIC_FILES = {
   dev: ['config/dev/*.js'],
-  mock: ['config/mock/*.js', 'lib/env-specific/mock/**/*.js'],
-  prod: ['config/prod/*.js', 'lib/env-specific/prod/**/*.js']
+  mock: ['config/mock/*.js', 'config/nonDev/*.js', 'lib/env-specific/mock/**/*.js'],
+  prod: ['config/prod/*.js', 'config/nonDev/*.js', 'lib/env-specific/prod/**/*.js']
 };
 var PROD_DEPLOYMENTS = ['mock', 'prod'];
 
