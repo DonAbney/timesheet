@@ -46,7 +46,23 @@ var TimesheetApiWrapper = (function(){
 
   self.fetchTimesheetInfo = function(username, date) {
     var deferred = $.Deferred();
-    deferred.resolve();
+    TimesheetConfig.aws.apigClient.apiTimesheetIdDateGet({
+      'Application-Identifier': TimesheetConfig.requestHeaders['Application-Identifier'],
+      'date': TimesheetUtil.formatDateYYYYMMDD(date),
+      'id': username
+    }).then(function(data) {
+      console.log("success: " + JSON.stringify(data));
+      deferred.resolve(data);
+    }).catch(function(data) {
+      ResponseHandling.makeErrorResponseVisible();
+      var bundledData = {
+        status: data.status,
+        statusText: data.statusText,
+        responseText: JSON.stringify({message: data.data.Message})
+      };
+      ResponseHandling.displayError(bundledData, {});
+      deferred.reject();
+    });
     return deferred.promise();
   };
 

@@ -17,9 +17,26 @@ var JS_FILES = ['lib/js/jquery-*.js', 'lib/js/foundation-*.js', 'src/js/*.js'];
 var HTML_FILES = 'src/*.html';
 var CONFIG_SPECIFIC_FILES = {
   dev: ['config/dev/*.js'],
-  mock: ['config/mock/*.js', 'config/nonDev/*.js', 'lib/env-specific/mock/**/*.js'],
-  prod: ['config/prod/*.js', 'config/nonDev/*.js', 'lib/env-specific/prod/**/*.js']
+  mock: ['config/mock/*.js', 'config/nonDev/*.js'],
+  prod: ['config/prod/*.js', 'config/nonDev/*.js']
 };
+var API_GATEWAY_BASE = {
+  mock: 'lib/env-specific/mock/apiGateway-js-sdk/',
+  prod: 'lib/env-specific/prod/apiGateway-js-sdk/'
+}
+var API_GATEWAY_FILES = [
+  "lib/axios/dist/axios.standalone.js",
+  "lib/CryptoJS/rollups/hmac-sha256.js",
+  "lib/CryptoJS/rollups/sha256.js",
+  "lib/CryptoJS/components/hmac.js",
+  "lib/CryptoJS/components/enc-base64.js",
+  "lib/url-template/url-template.js",
+  "lib/apiGatewayCore/sigV4Client.js",
+  "lib/apiGatewayCore/apiGatewayClient.js",
+  "lib/apiGatewayCore/simpleHttpClient.js",
+  "lib/apiGatewayCore/utils.js",
+  "apigClient.js"
+];
 var PROD_DEPLOYMENTS = ['mock', 'prod'];
 
 var publisher = awspublish.create({
@@ -101,5 +118,12 @@ function resolveDestinationDirectory() {
 }
 
 function resolveJsFiles() {
-  return JS_FILES.concat(CONFIG_SPECIFIC_FILES[resolveEnvironment()]);
+  var files = JS_FILES.concat(CONFIG_SPECIFIC_FILES[resolveEnvironment()]);
+  var baseApiGatewayPath = API_GATEWAY_BASE[resolveEnvironment()];
+  if (baseApiGatewayPath) {
+    API_GATEWAY_FILES.forEach(function(filename) {
+      files.push(baseApiGatewayPath + filename);
+    });
+  }
+  return files;
 }
