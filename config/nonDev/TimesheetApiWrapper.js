@@ -50,15 +50,14 @@ var TimesheetApiWrapper = (function(){
       'Application-Identifier': TimesheetConfig.requestHeaders['Application-Identifier'],
       'date': TimesheetUtil.formatDateYYYYMMDD(date),
       'id': username
-    }).then(function(data) {
-      console.log("success: " + JSON.stringify(data));
-      deferred.resolve(data);
-    }).catch(function(data) {
+    }).then(function(response) {
+      deferred.resolve(response.data);
+    }).catch(function(response) {
       ResponseHandling.makeErrorResponseVisible();
       var bundledData = {
-        status: data.status,
-        statusText: data.statusText,
-        responseText: JSON.stringify({message: data.data.Message})
+        status: response.status,
+        statusText: response.statusText,
+        responseText: JSON.stringify({message: response.data.Message})
       };
       ResponseHandling.displayError(bundledData, {});
       deferred.reject();
