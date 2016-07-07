@@ -54,16 +54,31 @@ var TimesheetApiWrapper = (function(){
       deferred.resolve(response.data);
     }).catch(function(response) {
       ResponseHandling.makeErrorResponseVisible();
-      var bundledData = {
-        status: response.status,
-        statusText: response.statusText,
-        responseText: JSON.stringify({message: response.data.Message})
-      };
-      ResponseHandling.displayError(bundledData, {});
+      ResponseHandling.displayError(bundleErrorResponseDataForDisplay(response), {});
       deferred.reject();
     });
     return deferred.promise();
   };
+
+  function bundleErrorResponseDataForDisplay(response) {
+    return {
+      status: response.status,
+      statusText: response.statusText,
+      responseText: JSON.stringify({message: extractErrorMessageFromVariousFormsOfErrorResponses(response)})
+    };
+  }
+
+  function extractErrorMessageFromVariousFormsOfErrorResponses(response) {
+    var message = response.message;
+    if (response.data) {
+      if (response.data.Message) {
+        message = response.data.Message;
+      } else {
+        message = response.data.message;
+      }
+    }
+    return message;
+  }
 
   function extractCredentialFromStsResponse(credentialName, stsResponse) {
     return $(stsResponse).find(credentialName).text();
