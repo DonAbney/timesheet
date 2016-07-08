@@ -10,6 +10,10 @@ describe('Collecting entered time', function() {
 
   it('should contain a map entry for each of the time entries in the timesheet', function() {
     TimesheetView.displayTimesheetInfo('tjones', generateTimesheetInfo());
+    enterHours('te1', 5);
+    enterHours('te2', 6);
+    enterHours('te3', 7);
+    enterHours('te4', 8);
 
     var collectedEnteredTime = TimesheetView.collectEnteredTime();
 
@@ -20,8 +24,33 @@ describe('Collecting entered time', function() {
     expect(keys).toContain('te4');
   });
 
+  it('should contain only map entries for time entries whose value has changed', function() {
+    TimesheetView.displayTimesheetInfo('tjones', generateTimesheetInfo());
+    enterHours('te1', 5);
+    enterHours('te2', 6);
+    enterHours('te4', 8);
+
+    var collectedEnteredTime = TimesheetView.collectEnteredTime();
+
+    var keys = TimesheetUtil.mapKeys(collectedEnteredTime);
+    expect(keys).not.toContain('te3');
+  });
+
+  it('should contain map entries for time entries even if their value has not changed, when explicitly requested to do so', function() {
+    TimesheetView.displayTimesheetInfo('tjones', generateTimesheetInfo());
+    enterHours('te1', 5);
+    enterHours('te2', 6);
+    enterHours('te4', 8);
+
+    var collectedEnteredTime = TimesheetView.collectEnteredTime(true);
+
+    var keys = TimesheetUtil.mapKeys(collectedEnteredTime);
+    expect(keys).toContain('te3');
+  });
+
   it('should return the id of the time entry', function() {
     TimesheetView.displayTimesheetInfo('tjones', generateTimesheetInfoWithOneTimeEntry());
+    enterHours('te1', 5);
 
     var collectedEnteredTime = TimesheetView.collectEnteredTime();
 
@@ -30,6 +59,7 @@ describe('Collecting entered time', function() {
 
   it('should return the date of the time entry', function() {
     TimesheetView.displayTimesheetInfo('tjones', generateTimesheetInfoWithOneTimeEntry());
+    enterHours('te1', 5);
 
     var collectedEnteredTime = TimesheetView.collectEnteredTime();
 
@@ -38,8 +68,8 @@ describe('Collecting entered time', function() {
 
   it('should return the hours entered for the time entry', function() {
     TimesheetView.displayTimesheetInfo('tjones', generateTimesheetInfoWithOneTimeEntryAndExistingHours());
-
     enterHours('te1', 5);
+
     var collectedEnteredTime = TimesheetView.collectEnteredTime();
 
     expect(collectedEnteredTime['te1'].hours).toEqual(5);
@@ -47,8 +77,8 @@ describe('Collecting entered time', function() {
 
   it('should return the last-saved hours for the time entry', function() {
     TimesheetView.displayTimesheetInfo('tjones', generateTimesheetInfoWithOneTimeEntryAndExistingHours());
-
     enterHours('te1', 5);
+
     var collectedEnteredTime = TimesheetView.collectEnteredTime();
 
     expect(collectedEnteredTime['te1']['last-saved-hours']).toEqual(3);

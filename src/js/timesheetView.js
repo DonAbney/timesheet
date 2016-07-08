@@ -63,17 +63,27 @@ var TimesheetView = (function() {
     $(".username").text(name);
   };
 
-  self.collectEnteredTime = function() {
+  function floatValueChanged(f1, f2) {
+    return (Math.abs(f1 - f2) > 0.001);
+  }
+
+  function parseFloatOrElse(stringValue, defaultValue) {
+    return stringValue ? parseFloat(stringValue) : defaultValue;
+  }
+
+  self.collectEnteredTime = function(shouldCollectAllTime) {
     var collectedEnteredTime = {};
     $(".timeEntryField").each(function(index, element) {
-      var enteredHours = $(element).val();
-      var lastSavedHours = element.getAttribute('data-last-saved-value');
-      collectedEnteredTime[element.id] = {
-        id: element.id,
-        date: element.getAttribute('data-date'),
-        'last-saved-hours': lastSavedHours ? parseFloat(lastSavedHours) : 0.0,
-        hours: enteredHours ? parseFloat(enteredHours) : 0.0
-      };
+      var enteredHours = parseFloatOrElse($(element).val(), 0.0);
+      var lastSavedHours = parseFloatOrElse(element.getAttribute('data-last-saved-value'), 0.0);
+      if (shouldCollectAllTime || floatValueChanged(enteredHours, lastSavedHours)) {
+        collectedEnteredTime[element.id] = {
+          id: element.id,
+          date: element.getAttribute('data-date'),
+          'last-saved-hours': lastSavedHours,
+          hours: enteredHours
+        };
+      }
     });
     return collectedEnteredTime;
   };
@@ -104,7 +114,7 @@ var TimesheetView = (function() {
   }
 
   function updatePageOnStateChange() {
-    var collectedEnteredTime = self.collectEnteredTime();
+    var collectedEnteredTime = self.collectEnteredTime(true);
     recalculateTotals(collectedEnteredTime);
     var hasEnteredTimeChanged = TimesheetUtil.hasEnteredTimeChanged(collectedEnteredTime);
     adjustStateChangeIndicator(hasEnteredTimeChanged);
