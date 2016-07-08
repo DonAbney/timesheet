@@ -32,25 +32,9 @@ var TimesheetApiWrapper = (function(){
     return deferred.promise();
   };
 
-  self.saveTimesheet = function(timesheetId, hoursForTimesheetEntries) {
+  function wrapRequest(targetAPICall, params, body) {
     var deferred = $.Deferred();
-    deferred.resolve();
-    return deferred.promise();
-  };
-
-  self.validateTimesheet = function(timesheetId) {
-    var deferred = $.Deferred();
-    deferred.resolve();
-    return deferred.promise();
-  };
-
-  self.fetchTimesheetInfo = function(username, date) {
-    var deferred = $.Deferred();
-    TimesheetConfig.aws.apigClient.apiTimesheetIdDateGet({
-      'Application-Identifier': TimesheetConfig.requestHeaders['Application-Identifier'],
-      'date': TimesheetUtil.formatDateYYYYMMDD(date),
-      'id': username
-    }).then(function(response) {
+    targetAPICall(params, body).then(function(response) {
       deferred.resolve(response.data);
     }).catch(function(response) {
       ResponseHandling.makeErrorResponseVisible();
@@ -58,6 +42,38 @@ var TimesheetApiWrapper = (function(){
       deferred.reject();
     });
     return deferred.promise();
+  }
+
+  self.saveTimesheet = function(timesheetId, hoursForTimesheetEntries) {
+    return wrapRequest(
+      TimesheetConfig.aws.apigClient.apiTimesheetIdPost,
+      {
+        'Application-Identifier': TimesheetConfig.requestHeaders['Application-Identifier'],
+        'id': timesheetId
+      },
+      hoursForTimesheetEntries
+    );
+  };
+
+  self.validateTimesheet = function(timesheetId) {
+    return wrapRequest(
+      TimesheetConfig.aws.apigClient.apiTimesheetIdValidatePost,
+      {
+        'Application-Identifier': TimesheetConfig.requestHeaders['Application-Identifier'],
+        'id': timesheetId
+      }
+    );
+  };
+
+  self.fetchTimesheetInfo = function(username, date) {
+    return wrapRequest(
+      TimesheetConfig.aws.apigClient.apiTimesheetIdDateGet,
+      {
+        'Application-Identifier': TimesheetConfig.requestHeaders['Application-Identifier'],
+        'date': TimesheetUtil.formatDateYYYYMMDD(date),
+        'id': username
+      }
+    );
   };
 
   function bundleErrorResponseDataForDisplay(response) {
