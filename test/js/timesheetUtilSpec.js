@@ -761,7 +761,7 @@ describe('TimesheetUtil', function() {
 
       var timeEntriesIds = [];
       timeEntries.forEach(function(value) {
-        timeEntriesIds.push(value.id);
+        timeEntriesIds.push(value.timeEntryId);
       });
       expect(timeEntriesIds).toContain(123);
       expect(timeEntriesIds).toContain(456);

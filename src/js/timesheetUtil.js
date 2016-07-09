@@ -179,7 +179,7 @@ var TimesheetUtil = (function() {
     var timeEntries = [];
     self.mapKeys(enteredTimes).forEach(function(key) {
       timeEntries.push({
-        id: parseFloat(key),
+        timeEntryId: parseFloat(key),
         hours: enteredTimes[key].hours
       });
     });
