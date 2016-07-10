@@ -72,9 +72,180 @@ There are environment-specific generated JavaScript files for the AWS API Gatewa
 
 There is not yet a gulp task for working with AWS to automatically generate a new copy of the apiGateway-js-sdk and update the version in the lib directory, but that is on the TODO list.
 
+### Current Authentication Workflow
+The current authentication workflow combines Google OpenID authentication along with Amazon IAM roles.
+1. Two IAM roles are defined:
+  * An "unauthenticated" role
+    * This provides access to the basic artifacts (html, css, js) that are stored in S3, using the Amazon API Gateway as a proxy to control access, allowing the initial page to load (see link in resources for "Using Amazon API Gateway as a proxy to S3")
+  * An "authenticated" role
+    * This provides access to the Timesheet API endpoints on the AWS API Gateway
+2. Upon initiating the sign-in process (e.g. clicking the sign-in button), the user is redirected through Google OpenID authentication (see link in resources for "Setting up Google OpenID Authentication")
+3. Once the successful authentication via OpenID is detected, the authentication information is sent to AWS, with the request to assume the "authenticated" role (STS AssumeRoleWithWebIdentity) (see link in resources for "Assuming an AWS IAM Role via a web identity")
+4. Once the "authenticated" role has been assumed, the user can interact with the Timesheet API endpoints on the AWS API Gateway
+
+*Note: The current authentication workflow is not "bulletproof".  No application that does all of its authentication on the client side will ever be "bulletproof", as the source code that is being executed is already in the hands of the end-user, who has access to browser tools to change the behavior on-the-fly.  On the TODO list for the future are enhancements that will shift portions of the validation and such of the authentication to server-side AWS Lambda functions, granting additional enhancements to the security and authentication process.*
+
+#### Roles and Policies
+Several roles and policies were defined in AWS to assist with the authentication:
+* Role: PillarTimesheetUser (unauthenticated)
+  * Attached policies:
+    * PillarTimesheetGetObject
+  * Trust Relationship: (this allows any user accessing the API Gateway to assume this role)
+```
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "apigateway.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+```
+* Role: PillarTimesheetAuthenticatedUser
+  * Attached policies:
+    * PillarTimesheetAPIValidateTimesheetInfo
+    * PillarTimesheetAPIGetTimesheetInfo
+    * PillarTimesheetAPISaveTimesheetInfo
+  * Trust Relationship:  (the value for accounts.google.com:aud is the google app ID that was generated as part of registration for OpenID authentication)
+```
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Federated": "accounts.google.com"
+      },
+      "Action": "sts:AssumeRoleWithWebIdentity",
+      "Condition": {
+        "StringEquals": {
+          "accounts.google.com:aud": "500EXAMPLE.apps.googleusercontent.com"
+        }
+      }
+    }
+  ]
+}
+```
+ * Policy: PillarTimesheetGetObject
+   * This provides access to the static assets (html, css, js) used by the UI
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject"
+            ],
+            "Resource": "arn:aws:s3:::pillartimesheet/assets/*"
+        }
+    ]
+}
+```
+* Policy: PillarTimesheetAPIGetTimesheetInfo
+  * Provides granular access to the API endpoint to get timesheet information
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": "execute-api:Invoke",
+            "Effect": "Allow",
+            "Resource": "arn:aws:execute-api:us-east-1:<account-id>:<api-id>/*/GET/api/timesheet/*/*"
+        }
+    ]
+}
+```
+* Policy: PillarTimesheetAPISaveTimesheetInfo
+  * Provides granular access to the API endpoint to save timesheet information
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": "execute-api:Invoke",
+            "Effect": "Allow",
+            "Resource": "arn:aws:execute-api:us-east-1:<account-id>:<api-id>/*/POST/api/timesheet/*"
+        }
+    ]
+}
+```
+* Policy: PillarTimesheetAPIValidateTimesheetInfo
+  * Provides granular access to the API endpoint to validate the timesheet
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": "execute-api:Invoke",
+            "Effect": "Allow",
+            "Resource": "arn:aws:execute-api:us-east-1:<account-id>:<api-id>/*/POST/api/timesheet/*/validate"
+        }
+    ]
+}
+```
+* Policy: PillarTimesheetDeploy
+  * Provides access to publish assets to S3.  This is the policy assigned to users that allows them to push assets to S3 during the `gulp deploy` task (see the link in resources for "Amazon AWS Policy Required by gulp-awspublish")
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::pillartimesheet"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:PutObjectAcl",
+                "s3:GetObject",
+                "s3:GetObjectAcl",
+                "s3:DeleteObject",
+                "s3:ListMultipartUploadParts",
+                "s3:AbortMultipartUpload"
+            ],
+            "Resource": [
+                "arn:aws:s3:::pillartimesheet/*"
+            ]
+        }
+    ]
+}
+```
+
+#### AWS S3 Bucket Structure
+The AWS S3 Bucket contains the static assets that are part of the UI.  They are all "private".  No special configuration for sharing or permissions is required.  "Static Website Hosting" should not be enabled, as access to the assets is controlled via the API Gateway and assuming the role of the "unauthenticated" user.  The structure of the assets within the bucket is:
+* pillartimesheet (this is the bucket)
+ * assets
+  * mock
+  * prod
+
+Any additional "environments" should be added under `assets`.
+
+#### AWS API Gateway Configuration
+The API Gateway is where most of the magic happens to make things "look" and "feel" like a normal website interaction.  It's also one of the simplest (but most tedious) parts to configure.  You define your "API" by defining the tree of "resources" within the API and then configuring zero or more "methods" (HTTP Verbs) on them that describe the action to take, any required authentication, transformations of headers/body of the request/response, etc.  The current configuration looks something like this:
+* / (GET)
+  * index.html (GET)
+  * timesheet.min.js (GET)
+  * timesheet.min.css (GET)
+  * api
+    * timesheet
+      * {id} (POST)
+        * validate (POST)
+        * {date} (GET)
+
 ## Resources
 Some resources that will facilitate in deployment configuration:
-* [Setting up Authentication](https://developers.google.com/identity/sign-in/web/)
+* [Setting up Google OpenID Authentication](https://developers.google.com/identity/sign-in/web/)
 * [Using Amazon API Gateway as a proxy to S3](http://docs.aws.amazon.com/apigateway/latest/developerguide/integrating-api-with-aws-services-s3.html)
 * [Setting up Amazon AWS Credentials](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html)
 * [Generating Amazon AWS Access Keys](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html)
