@@ -74,6 +74,7 @@ There is not yet a gulp task for working with AWS to automatically generate a ne
 
 ### Current Authentication Workflow
 The current authentication workflow combines Google OpenID authentication along with Amazon IAM roles.
+
 1. Two IAM roles are defined:
   * An "unauthenticated" role
     * This provides access to the basic artifacts (html, css, js) that are stored in S3, using the Amazon API Gateway as a proxy to control access, allowing the initial page to load (see link in resources for "Using Amazon API Gateway as a proxy to S3")
