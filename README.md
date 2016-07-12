@@ -234,15 +234,162 @@ Any additional "environments" should be added under `assets`.
 
 #### AWS API Gateway Configuration
 The API Gateway is where most of the magic happens to make things "look" and "feel" like a normal website interaction.  It's also one of the simplest (but most tedious) parts to configure.  You define your "API" by defining the tree of "resources" within the API and then configuring zero or more "methods" (HTTP Verbs) on them that describe the action to take, any required authentication, transformations of headers/body of the request/response, etc.  The current configuration looks something like this:
-* / (GET)
-  * index.html (GET)
-  * timesheet.min.js (GET)
-  * timesheet.min.css (GET)
-  * api
-    * timesheet
-      * {id} (POST)
-        * validate (POST)
-        * {date} (GET)
+* `/` (GET)
+  * `index.html` (GET)
+  * `timesheet.min.js` (GET)
+  * `timesheet.min.css` (GET)
+  * `api`
+    * `timesheet`
+      * `{id}` (POST)
+        * `validate` (POST)
+        * `{date}` (GET)
+
+##### Stage: mock
+This stage uses the API Gateway and authentication, but hits the apiary API endpoints instead of the real Timesheet API endpoints.
+
+Stage Variables:
+|Name|Value|
+|----|-----|
+|configuration|mock|
+|indexHtml|/mock/index.html|
+|timesheetHost|*host.name.for.apiary.api*|
+
+##### Stage: timesheet
+This stage is the "prod" stage.  It uses the API Gateway, authentication, and hits the real Timesheet API endpoints.
+
+Stage Variables:
+|Name|Value|
+|----|-----|
+|configuration|prod|
+|indexHtml|/timesheet/index.html|
+|timesheetHost|*host.name.for.real.api*|
+
+
+##### / (GET)
+Redirects to `/index.html`.
+* Authorization: None (automatically assumes role: PillarTimesheetUser)
+* API Key Required: false
+* Integration type: Mock Integration
+* Integration response:
+|HTTP Status Regex|Method Response Status|Default Mapping|Response Header|
+|-----------------|----------------------|---------------|---------------|
+| |302|Yes|Location: stageVariables.indexHtml|
+
+##### /index.html (GET)
+Fetches `timesheet.html` from the correct asset directory within the S3 bucket and returns it to the client.
+* Authorization: None (automatically assumes role: PillarTimesheetUser)
+* API Key Required: false
+* Integration type: AWS Service Proxy
+  * Region: us-east-1
+  * AWS Service: S3
+  * HTTP Method: GET
+  * Path Override: /pillartimesheet/assets/${stageVariables.configuration}/timesheet.html
+  * Execution role: arn:aws:iam::<account-id>:role/PillarTimesheetUser
+* Integration Response:
+|HTTP Status Regex|Method Response Status|Default Mapping|Response Header|
+|-----------------|----------------------|---------------|---------------|
+| |200|Yes| |
+* Method Response: 200, Content Type: text/html, Models: empty
+
+##### /timesheet.min.css (GET)
+Fetches `timesheet.min.css` from the correct asset directory within the S3 bucket and returns it to the client.
+* Authorization: None (automatically assumes role: PillarTimesheetUser)
+* API Key Required: false
+* Integration type: AWS Service Proxy
+  * Region: us-east-1
+  * AWS Service: S3
+  * HTTP Method: GET
+  * Path Override: /pillartimesheet/assets/${stageVariables.configuration}/timesheet.min.css
+  * Execution role: arn:aws:iam::<account-id>:role/PillarTimesheetUser
+* Integration Response:
+|HTTP Status Regex|Method Response Status|Default Mapping|Response Header|
+|-----------------|----------------------|---------------|---------------|
+| |200|Yes| |
+* Method Response: 200, Content Type: text/css, Models: empty
+
+##### /timesheet.min.js (GET)
+Fetches `timesheet.min.css` from the correct asset directory within the S3 bucket and returns it to the client.
+* Authorization: None (automatically assumes role: PillarTimesheetUser)
+* API Key Required: false
+* Integration type: AWS Service Proxy
+  * Region: us-east-1
+  * AWS Service: S3
+  * HTTP Method: GET
+  * Path Override: /pillartimesheet/assets/${stageVariables.configuration}/timesheet.min.js
+  * Execution role: arn:aws:iam::<account-id>:role/PillarTimesheetUser
+* Integration Response:
+|HTTP Status Regex|Method Response Status|Default Mapping|Response Header|
+|-----------------|----------------------|---------------|---------------|
+| |200|Yes| |
+* Method Response: 200, Content Type: application/x-javascript, Models: empty
+
+##### /api/timesheet/{id} (POST)
+Posts changed time entry information for a timesheet back to the Timesheet API (i.e. save changes to timesheet).
+* Authorization: AWS_IAM (assumes role based on web identity: PillarTimesheetAuthenticatedUser)
+* API Key Required: false
+* Request Path: id
+* HTTP Request Headers:  Application-Identifier
+* Integration type: HTTP Proxy
+  * HTTP Method: POST
+  * Endpoint URL: http://${stageVariables.timesheetHost}/fba/api/timesheet/{id}
+  * URL Path Parameters: id, Mapped from: method.request.path.id
+  * HTTP Headers: Application-Identifier, Mapped from: method.request.header.Application-Identifier
+* Integration Response:
+|HTTP Status Regex|Method Response Status|Default Mapping|Response Header|
+|-----------------|----------------------|---------------|---------------|
+| |500|Yes| |
+|404|404|No| |
+|200|200|No| |
+* Method Response:
+  * 500, Content Type: application/json, Models: empty
+  * 200, Content Type: application/json, Models: empty
+  * 404, Content Type: application/json, Models: empty
+
+##### /api/timesheet/{id}/validate (POST)
+Posts a validation request for a timesheet back to the Timesheet API (i.e. validate timesheet).
+* Authorization: AWS_IAM (assumes role based on web identity: PillarTimesheetAuthenticatedUser)
+* API Key Required: false
+* Request Path: id
+* HTTP Request Headers:  Application-Identifier
+* Integration type: HTTP Proxy
+  * HTTP Method: POST
+  * Endpoint URL: http://${stageVariables.timesheetHost}/fba/api/timesheet/{id}/validate
+  * URL Path Parameters: id, Mapped from: method.request.path.id
+  * HTTP Headers: Application-Identifier, Mapped from: method.request.header.Application-Identifier
+* Integration Response:
+|HTTP Status Regex|Method Response Status|Default Mapping|Response Header|
+|-----------------|----------------------|---------------|---------------|
+| |500|Yes| |
+|404|404|No| |
+|200|200|No| |
+* Method Response:
+  * 500, Content Type: application/json, Models: empty
+  * 200, Content Type: application/json, Models: empty
+  * 404, Content Type: application/json, Models: empty
+
+##### /api/timesheet/{id}/{date} (GET)
+Requests timesheet information for the specified user for the specified date.
+* Authorization: AWS_IAM (assumes role based on web identity: PillarTimesheetAuthenticatedUser)
+* API Key Required: false
+* Request Path: id, date
+* HTTP Request Headers:  Application-Identifier
+* Integration type: HTTP Proxy
+  * HTTP Method: GET
+  * Endpoint URL: http://${stageVariables.timesheetHost}/fba/api/timesheet/{id}/{date}
+  * URL Path Parameters:
+    * id, Mapped from: method.request.path.id
+    * date, Mapped from: method.request.path.date
+  * HTTP Headers: Application-Identifier, Mapped from: method.request.header.Application-Identifier
+* Integration Response:
+|HTTP Status Regex|Method Response Status|Default Mapping|Response Header|
+|-----------------|----------------------|---------------|---------------|
+| |500|Yes| |
+|404|404|No| |
+|200|200|No| |
+* Method Response:
+  * 500, Content Type: application/json, Models: empty
+  * 200, Content Type: application/json, Models: empty
+  * 404, Content Type: application/json, Models: empty
 
 ## Resources
 Some resources that will facilitate in deployment configuration:
