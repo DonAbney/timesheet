@@ -87,6 +87,15 @@ button:disabled {
   display: none;
 }
 
+#authenticated .username {
+  display: none;
+}
+
+#authenticated .signOut {
+  display: inline;
+  padding: 0px;
+}
+
 /* Small only */
 @media screen and (max-width: 39.9375em) {
 }
@@ -95,6 +104,22 @@ button:disabled {
 @media screen and (min-width: 40em) {
     .large-status {
       display: block;
+    }
+
+    #authenticated {
+      padding: .7rem 1rem;
+    }
+
+    #authenticated .username {
+      display: inline;
+    }
+
+    #authenticated .signOut::before {
+      content: ' (';
+    }
+
+    #authenticated .signOut::after {
+      content: ')';
     }
 }
 

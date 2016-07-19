@@ -334,16 +334,19 @@ var TimesheetView = (function() {
     generatedWrapper.empty();
     $('.stateChangeIndicator').hide();
     $('.validatedIndicator').hide();
+    $('.username').text('not signed in');
   }
 
   self.showAuthenticationArea = function() {
     $('#authentication').show();
     $('#errorResponse').hide();
     $('#successfulResponse').hide();
+    $('#authenticated').hide();
   }
 
   self.hideAuthenticationArea = function() {
     $('#authentication').hide();
+    $('#authenticated').show();
   }
 
   self.registerPageListeners = function() {

@@ -16,22 +16,23 @@
 <body>
   <div class="title-bar" data-responsive-toggle="responsive-menu" data-hide-for="medium">
     <button class="menu-icon" type="button" data-toggle></button>
-    <div class="title-bar-title"><span class="username">not signed in</span> <span class="weekTotal">0</span><span class='stateChangeIndicator' style='display:none'>*</span><span class='validatedIndicator' style='display:none'>&#8224;</span></div>
+    <div class="title-bar-title"><span class="username">not signed in</span> <span class="weekTotal">0</span><span class='stateChangeIndicator' style='display:none;'>*</span><span class='validatedIndicator' style='display:none;'>&#8224;</span></div>
   </div>
 
   <div class="top-bar" id="responsive-menu">
     <div class="large-status top-bar-left">
       <ul class="menu">
         <li class="menu-text">Pillar Timesheet</li>
-        <li><span class="weekTotal">0</span><span class='stateChangeIndicator' style='display:none'>*</span><span class='validatedIndicator' style='display:none'>&#8224;</span></li>
+        <li><span class="weekTotal">0</span><span class='stateChangeIndicator' style='display:none;'>*</span><span class='validatedIndicator' style='display:none;'>&#8224;</span></li>
       </ul>
     </div>
     <div class="top-bar-right">
       <ul class="menu">
-        <li>
-          <div id="authentication">
-            <div class="g-signin2" data-onsuccess="TimesheetAuthentication.onSignIn" data-onerror="TimesheetAuthentication.onError" data-theme="dark"></div>
-          </div>
+        <li id="authentication">
+          <div class="g-signin2" data-onsuccess="TimesheetAuthentication.onSignIn" data-onerror="TimesheetAuthentication.onError" data-theme="dark"></div>
+        </li>
+        <li id="authenticated" style="display:none;">
+          <span class="username">not signed in</span><a href="#" class="signOut" onclick="TimesheetAuthentication.signOut();">SignOut</a>
         </li>
       </ul>
     </div>
@@ -47,9 +48,6 @@
     <div class="buttonArea row expanded">
       <button class="saveChanges small-12 large-4 columns" type="button">Save Changes</button>
       <button class="validateTimesheet small-12 large-4 columns" type="button">Validate Timesheet</button>
-    </div>
-    <div class="temporary-junk row expanded">
-      <a href="#" class="signOut" onclick="TimesheetAuthentication.signOut();">SignOut</a>
     </div>
   </div>
 </body>

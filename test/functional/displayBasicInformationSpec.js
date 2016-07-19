@@ -53,7 +53,7 @@ describe('Displaying basic information', function() {
 
   describe('clearing old information', function() {
     beforeEach(function() {
-      var fixture = "<div id='fixture'><div class='stateChangeIndicator'></div><div class='validatedIndicator'></div></div>";
+      var fixture = "<div id='fixture'><div class='username'>joe</div><div class='stateChangeIndicator'></div><div class='validatedIndicator'></div></div>";
       document.body.insertAdjacentHTML('afterbegin', fixture);
     });
 
@@ -71,6 +71,12 @@ describe('Displaying basic information', function() {
       TimesheetView.clearOldInformation();
 
       expect($('.validatedIndicator').is(':visible')).toEqual(false);
+    });
+
+    it('should reset the username to "not signed in"', function() {
+      TimesheetView.clearOldInformation();
+
+      expect($('.username').text()).toEqual('not signed in');
     });
   });
 
@@ -446,6 +452,68 @@ describe('Displaying basic information', function() {
         expect($('#te1').prop('disabled')).toEqual(false);
         expect($('#te2').prop('disabled')).toEqual(false);
       });
+    });
+  });
+
+  describe('showing the authentication area', function() {
+    beforeEach(function() {
+      var fixture = "<div id='fixture'><div id='authentication'></div><div id='errorResponse'></div><div id='successfulResponse'></div><div id='authenticated'></div></div>";
+      document.body.insertAdjacentHTML('afterbegin', fixture);
+    });
+
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('fixture'));
+    });
+
+    it('should show the authentication area', function() {
+      $('#authentication').hide();
+
+      TimesheetView.showAuthenticationArea();
+
+      expect($('#authentication').is(':visible')).toEqual(true);
+    });
+
+    it('should hide the error response area', function() {
+      TimesheetView.showAuthenticationArea();
+
+      expect($('#errorResponse').is(':visible')).toEqual(false);
+    });
+
+    it('should hide the successful response area', function() {
+      TimesheetView.showAuthenticationArea();
+
+      expect($('#successfulResponse').is(':visible')).toEqual(false);
+    });
+
+    it('should hide the authenticated area', function() {
+      TimesheetView.showAuthenticationArea();
+
+      expect($('#authenticated').is(':visible')).toEqual(false);
+    });
+  });
+
+  describe('hiding the authentication area', function() {
+    beforeEach(function() {
+      var fixture = "<div id='fixture'><div id='authentication'></div><<div id='authenticated'></div></div>";
+      document.body.insertAdjacentHTML('afterbegin', fixture);
+    });
+
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('fixture'));
+    });
+
+    it('should hide the authentication area', function() {
+      TimesheetView.hideAuthenticationArea();
+
+      expect($('#authentication').is(':visible')).toEqual(false);
+    });
+
+    it('should show the authenticated area', function() {
+      $('#authenticated').hide();
+
+      TimesheetView.hideAuthenticationArea();
+
+      expect($('#authenticated').is(':visible')).toEqual(true);
     });
   });
 });
