@@ -220,7 +220,6 @@ var TimesheetView = (function() {
     dayHeader.insertAdjacentElement('beforeend', constructDayShortAbbreviation(date));
     dayHeader.insertAdjacentElement('beforeend', constructDayAndMonth(date));
     dayHeader.insertAdjacentElement('beforeend', constructDayTotal(date));
-    // dayHeader.innerHTML = TimesheetUtil.formatDate(date) + "<span class='" + construct.css.classNamesForElement('dayTotal') + "' data-date='" + date + "'>0</span>";
     dayHeader.setAttribute('onclick', '$(this).siblings(".timeEntries").toggle()');
     return dayHeader;
   }
@@ -333,6 +332,8 @@ var TimesheetView = (function() {
   self.clearOldInformation = function() {
     var generatedWrapper = $('.wrapper-generatedView');
     generatedWrapper.empty();
+    $('.stateChangeIndicator').hide();
+    $('.validatedIndicator').hide();
   }
 
   self.showAuthenticationArea = function() {

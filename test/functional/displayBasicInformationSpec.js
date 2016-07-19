@@ -51,6 +51,29 @@ describe('Displaying basic information', function() {
     });
   });
 
+  describe('clearing old information', function() {
+    beforeEach(function() {
+      var fixture = "<div id='fixture'><div class='stateChangeIndicator'></div><div class='validatedIndicator'></div></div>";
+      document.body.insertAdjacentHTML('afterbegin', fixture);
+    });
+
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('fixture'));
+    });
+
+    it('should hide the state change indicator', function() {
+      TimesheetView.clearOldInformation();
+
+      expect($('.stateChangeIndicator').is(':visible')).toEqual(false);
+    });
+
+    it('should hide the validated indicator', function() {
+      TimesheetView.clearOldInformation();
+
+      expect($('.validatedIndicator').is(':visible')).toEqual(false);
+    });
+  });
+
   describe('before adding new time entry information', function() {
     beforeEach(function() {
       var fixture = "<div id='fixture' class='wrapper-generatedView'><div id='unwanted-old-element'>old junk</div></div>";

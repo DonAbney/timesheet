@@ -3,6 +3,10 @@ h1 {
   padding-left: 10px;
 }
 
+.title-bar button {
+  border: 0px;
+}
+
 #successfulResponse,#errorResponse {
   display: none;
 }
@@ -79,12 +83,19 @@ button:disabled {
   color: #e2e2e2;
 }
 
+.large-status {
+  display: none;
+}
+
 /* Small only */
 @media screen and (max-width: 39.9375em) {
 }
 
 /* Medium and up */
 @media screen and (min-width: 40em) {
+    .large-status {
+      display: block;
+    }
 }
 
 /* Medium only */
@@ -96,7 +107,6 @@ button:disabled {
   .dayHeader,.positionHeader {
     font-size: 1rem;
     padding: 0px 0px 0px 10px;
-    margin-top: 0px;
   }
 
   .dayName {
@@ -130,4 +140,19 @@ button:disabled {
 
 /* Large only */
 @media screen and (min-width: 64em) and (max-width: 74.9375em) {
+}
+
+/* Before JS Loads */
+.no-js .top-bar {
+  display: none;
+}
+
+@media screen and (min-width: 40em) {
+  .no-js .top-bar {
+    display: block;
+  }
+
+  .no-js .title-bar {
+    display: none;
+  }
 }
