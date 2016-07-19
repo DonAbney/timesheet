@@ -62,7 +62,7 @@ describe('Displaying basic information', function() {
 
   describe('clearing old information', function() {
     beforeEach(function() {
-      var fixture = "<div id='fixture'><div class='username'>joe</div><div class='stateChangeIndicator'></div><div class='validatedIndicator'></div></div>";
+      var fixture = "<div id='fixture'><div class='username'>joe</div><div class='stateChangeIndicator'></div><div class='validatedIndicator'></div><div class='weekTotal'>23</div></div>";
       document.body.insertAdjacentHTML('afterbegin', fixture);
     });
 
@@ -86,6 +86,12 @@ describe('Displaying basic information', function() {
       TimesheetView.clearOldInformation();
 
       expect($('.username').text()).toEqual('not signed in');
+    });
+
+    it('should reset the total hours for the week to 0', function() {
+      TimesheetView.clearOldInformation();
+
+      expect($('.weekTotal').text()).toEqual('0');
     });
   });
 

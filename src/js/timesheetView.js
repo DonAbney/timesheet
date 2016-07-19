@@ -352,6 +352,7 @@ var TimesheetView = (function() {
     $('.stateChangeIndicator').hide();
     $('.validatedIndicator').hide();
     $('.username').text('not signed in');
+    $('.weekTotal').text('0');
   }
 
   self.showAuthenticationArea = function() {
