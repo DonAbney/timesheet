@@ -1,4 +1,13 @@
 describe('Displaying basic information', function() {
+  var userInfo = {
+    username: 'tjones',
+    fullName: 'Tom Jones',
+    givenName: 'Tom',
+    familyName: 'Jones',
+    emailAddress: 'tjones@example.com',
+    imageUrl: 'http://some.url.com/images/myImage.png'
+  };
+
   describe('in the header', function() {
     beforeEach(function() {
       var fixture = "<span id='fixture' class='username'>unmodified</span><span class='validatedIndicator'>*</span>";
@@ -18,7 +27,7 @@ describe('Displaying basic information', function() {
     });
 
     describe('via displayTimesheetInfo()', function() {
-      it('should update the username to the provided user name', function() {
+      it('should update the username to the provided full name for the user', function() {
         var timesheetInfo = {
           "timesheetInstance": {
             "employee": {
@@ -28,15 +37,15 @@ describe('Displaying basic information', function() {
           "timeEntryPositionMapByDate": []
         };
 
-        TimesheetView.displayTimesheetInfo("tjones", timesheetInfo);
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
-        expect($('.username').text()).toEqual("tjones");
+        expect($('.username').text()).toEqual("Tom Jones");
       });
 
       it('should hide the validated state indicator if the timesheet is not in a validated state', function() {
         var timesheetInfo = generateTimesheetInfo();
 
-        TimesheetView.displayTimesheetInfo("tjones", timesheetInfo);
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
         expect($('.validatedIndicator').is(':visible')).toEqual(false);
       });
@@ -44,7 +53,7 @@ describe('Displaying basic information', function() {
       it('should show the validated state indicator if the timesheet is in a validated state', function() {
         var timesheetInfo = generateValidatedTimesheetInfo();
 
-        TimesheetView.displayTimesheetInfo("tjones", timesheetInfo);
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
         expect($('.validatedIndicator').is(':visible')).toEqual(true);
       });
@@ -98,7 +107,7 @@ describe('Displaying basic information', function() {
         ]
       };
 
-      TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+      TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
       expect($('#unwanted-old-element').length === 0).toEqual(true);
     });
@@ -118,7 +127,7 @@ describe('Displaying basic information', function() {
       it('should disable the save changes button if the timesheet has already been validated, so that additional changes cannot be attempted', function() {
         var timesheetInfo = generateValidatedTimesheetInfo();
 
-        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
         expect($('.saveChanges').prop('disabled')).toEqual(true);
       });
@@ -126,7 +135,7 @@ describe('Displaying basic information', function() {
       it('should enable the save changes button if the timesheet has not yet been validated, so that additional changes can be attempted', function() {
         var timesheetInfo = generateTimesheetInfo();
 
-        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
         expect($('.saveChanges').prop('disabled')).toEqual(false);
       });
@@ -134,7 +143,7 @@ describe('Displaying basic information', function() {
       it('should disable the validate timesheet button if the timesheet has already been validated, so that additional validation cannot be attempted', function() {
         var timesheetInfo = generateValidatedTimesheetInfo();
 
-        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
         expect($('.validateTimesheet').prop('disabled')).toEqual(true);
       });
@@ -142,7 +151,7 @@ describe('Displaying basic information', function() {
       it('should enable the validate timesheet button if the timesheet has not yet been validated, so that additional validation can be attempted', function() {
         var timesheetInfo = generateTimesheetInfo();
 
-        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
         expect($('.validateTimesheet').prop('disabled')).toEqual(false);
       });
@@ -168,7 +177,7 @@ describe('Displaying basic information', function() {
           ]
         };
 
-        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
         expect($('.wrapper-generatedView .position:first').text()).toEqual("targetName");
       });
@@ -181,7 +190,7 @@ describe('Displaying basic information', function() {
           ]
         };
 
-        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
         expect($('.wrapper-generatedView .position:first').text()).toEqual("targetName: targetNote");
       });
@@ -196,7 +205,7 @@ describe('Displaying basic information', function() {
           ]
         };
 
-        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
         expect($('.wrapper-generatedView .position').length).toEqual(3);
       });
@@ -222,7 +231,7 @@ describe('Displaying basic information', function() {
           ]
         };
 
-        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
         expect($('.wrapper-generatedView .timesheetInfo').attr('data-timesheetId')).toEqual('789');
       });
@@ -235,9 +244,74 @@ describe('Displaying basic information', function() {
           ]
         };
 
-        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
         expect($('.wrapper-generatedView .timesheetInfo').attr('data-username')).toEqual('tjones');
+      });
+
+      it('should generate a timesheet element that contains the full name', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
+
+        expect($('.wrapper-generatedView .timesheetInfo').attr('data-fullName')).toEqual('Tom Jones');
+      });
+
+      it('should generate a timesheet element that contains the given name', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
+
+        expect($('.wrapper-generatedView .timesheetInfo').attr('data-givenName')).toEqual('Tom');
+      });
+
+      it('should generate a timesheet element that contains the family name', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
+
+        expect($('.wrapper-generatedView .timesheetInfo').attr('data-familyName')).toEqual('Jones');
+      });
+
+      it('should generate a timesheet element that contains the email address', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
+
+        expect($('.wrapper-generatedView .timesheetInfo').attr('data-emailAddress')).toEqual('tjones@example.com');
+      });
+
+      it('should generate a timesheet element that contains the image url', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
+
+        expect($('.wrapper-generatedView .timesheetInfo').attr('data-imageUrl')).toEqual('http://some.url.com/images/myImage.png');
       });
 
       it('should generate a timesheet element that contains the start date for the timesheet', function() {
@@ -248,7 +322,7 @@ describe('Displaying basic information', function() {
           ]
         };
 
-        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
         expect($('.wrapper-generatedView .timesheetInfo').attr('data-startDate')).toEqual('2016-05-14T04:00:00Z');
       });
@@ -256,7 +330,7 @@ describe('Displaying basic information', function() {
       it('should generate a timesheet element that contains the validation state for the timesheet', function() {
         var timesheetInfo = generateValidatedTimesheetInfo();
 
-        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
         expect($('.wrapper-generatedView .timesheetInfo').attr('data-validated')).toEqual('true');
       });
@@ -269,7 +343,7 @@ describe('Displaying basic information', function() {
           ]
         };
 
-        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
         expect($('.wrapper-generatedView .day').length).toEqual(1);
       });
@@ -282,7 +356,7 @@ describe('Displaying basic information', function() {
           ]
         };
 
-        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
         expect($('.wrapper-generatedView .timeEntry[data-date="2016-05-31T04:00:00Z"]:first label').text()).toEqual("targetName");
       });
@@ -295,7 +369,7 @@ describe('Displaying basic information', function() {
           ]
         };
 
-        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
         expect($('.wrapper-generatedView .timeEntry[data-date="2016-05-31T04:00:00Z"]:first label').text()).toEqual("targetName: targetNote");
       });
@@ -310,7 +384,7 @@ describe('Displaying basic information', function() {
           ]
         };
 
-        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
         expect($('.wrapper-generatedView .timeEntry[data-date="2016-05-31T04:00:00Z"] input:eq(0)').prop('id')).toEqual("te1");
         expect($('.wrapper-generatedView .timeEntry[data-date="2016-05-31T04:00:00Z"] input:eq(1)').prop('id')).toEqual("te2");
@@ -327,7 +401,7 @@ describe('Displaying basic information', function() {
           ]
         };
 
-        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
         expect($('.wrapper-generatedView .timeEntry[data-date="2016-05-31T04:00:00Z"] input:eq(1)').prop('id')).toEqual("placeholder_p2_2016-05-31");
         expect($('.wrapper-generatedView .timeEntry[data-date="2016-05-31T04:00:00Z"] input:eq(1)').prop('disabled')).toEqual(true);
@@ -342,7 +416,7 @@ describe('Displaying basic information', function() {
           ]
         };
 
-        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
         expect($('.wrapper-generatedView .day').length).toEqual(2);
       });
@@ -356,7 +430,7 @@ describe('Displaying basic information', function() {
           ]
         };
 
-        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
         expect($('.wrapper-generatedView .timeEntries[data-date="2016-05-31T04:00:00Z"]').children().length).toEqual(2);
       });
@@ -373,7 +447,7 @@ describe('Displaying basic information', function() {
           ]
         };
 
-        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
         expect(doesElementExist('.wrapper-generatedView .dayTotal[data-date="2016-05-31T04:00:00Z"]')).toEqual(true);
       });
@@ -386,7 +460,7 @@ describe('Displaying basic information', function() {
           ]
         };
 
-        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
         expect(doesElementExist('.wrapper-generatedView .dayTotal[data-date="2016-06-01T04:00:00Z"]')).toEqual(true);
       });
@@ -400,7 +474,7 @@ describe('Displaying basic information', function() {
           ]
         };
 
-        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
         expect($('#te1').val()).toEqual('1');
         expect($('#te2').val()).toEqual('2');
@@ -417,7 +491,7 @@ describe('Displaying basic information', function() {
           ]
         };
 
-        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
         expect($('#te1').attr('data-last-saved-value')).toEqual('1');
         expect($('#te2').attr('data-last-saved-value')).toEqual('2');
@@ -433,7 +507,7 @@ describe('Displaying basic information', function() {
           ]
         };
 
-        TimesheetView.displayTimesheetInfo('tjones', timesheetInfo);
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
         expect($('#te1').prop('disabled')).toEqual(true);
         expect($('#te2').prop('disabled')).toEqual(true);

@@ -36,22 +36,33 @@ var TimesheetAuthentication = (function() {
     return '';
   };
 
+  self.extractUserInfo = function(basicProfile) {
+    return {
+      username: self.extractUsername(basicProfile.getEmail()),
+      emailAddress: basicProfile.getEmail(),
+      fullName: basicProfile.getName(),
+      givenName: basicProfile.getGivenName(),
+      familyName: basicProfile.getFamilyName(),
+      imageUrl: basicProfile.getImageUrl()
+    };
+  }
+
   function authenticationListener(state) {
     var authInstance = gapi.auth2.getAuthInstance();
     if (authInstance.isSignedIn.get()) {
       var currentUser = authInstance.currentUser.get();
-      var username = self.extractUsername(currentUser.getBasicProfile().getEmail());
+      var userInfo = self.extractUserInfo(currentUser.getBasicProfile());
       var token = currentUser.getAuthResponse().id_token;
-      TimesheetApiWrapper.registerCredentials(token, username).done(function() {
-        initializeForAuthenticatedUser(username);
+      TimesheetApiWrapper.registerCredentials(token, userInfo.username).done(function() {
+        initializeForAuthenticatedUser(userInfo);
       });
     }
   }
 
-  function initializeForAuthenticatedUser(username) {
+  function initializeForAuthenticatedUser(userInfo) {
     TimesheetView.hideAuthenticationArea();
     TimesheetView.registerPageListeners();
-    TimesheetCommunication.fetchTimesheetInfo(username, new Date());
+    TimesheetCommunication.fetchTimesheetInfo(userInfo, new Date());
   }
 
   return self;

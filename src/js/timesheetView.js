@@ -47,10 +47,10 @@ var TimesheetView = (function() {
     }
   };
 
-  self.displayTimesheetInfo = function(username, timesheetInfo) {
+  self.displayTimesheetInfo = function(userInfo, timesheetInfo) {
     self.clearOldInformation();
-    self.updateUsername(username);
-    constructTimesheetInfoEntry(username, timesheetInfo.timesheetInstance);
+    self.updateUsername(userInfo.fullName);
+    constructTimesheetInfoEntry(userInfo, timesheetInfo.timesheetInstance);
     var positions = TimesheetUtil.collatePositions(timesheetInfo.timeEntryPositionMapByDate);
     var daysEntries = TimesheetUtil.collateDays(timesheetInfo.timeEntryPositionMapByDate, positions);
     displayDaysAndPositions(daysEntries, positions);
@@ -92,10 +92,22 @@ var TimesheetView = (function() {
     var stringTimesheetId = $('.timesheetInfo').attr('data-timesheetId');
     var username = $('.timesheetInfo').attr('data-username');
     var startDate = $('.timesheetInfo').attr('data-startDate');
+    var fullName = $('.timesheetInfo').attr('data-fullName');
+    var givenName = $('.timesheetInfo').attr('data-givenName');
+    var familyName = $('.timesheetInfo').attr('data-familyName');
+    var emailAddress = $('.timesheetInfo').attr('data-emailAddress');
+    var imageUrl = $('.timesheetInfo').attr('data-imageUrl');
     return {
       'id': stringTimesheetId ? parseFloat(stringTimesheetId) : 0.0,
-      'username': username ? username : "",
-      'startDate': startDate ? startDate : ""
+      'startDate': startDate ? startDate : "",
+      'userInfo': {
+        'username': username ? username : "",
+        'fullName': fullName ? fullName : "",
+        'givenName': givenName ? givenName : "",
+        'familyName': familyName ? familyName : "",
+        'emailAddress': emailAddress ? emailAddress : "",
+        'imageUrl': imageUrl ? imageUrl : ""
+      }
     };
   }
 
@@ -318,12 +330,17 @@ var TimesheetView = (function() {
     generatedWrapper.append(constructDaysElement(daysEntries, positions));
   }
 
-  function constructTimesheetInfoEntry(username, timesheetInstance) {
+  function constructTimesheetInfoEntry(userInfo, timesheetInstance) {
     var generatedWrapper = $('.wrapper-generatedView');
     var timesheetInfoEntry = document.createElement('div');
     construct.configureElementStyle('timesheetInfo', timesheetInfoEntry);
     timesheetInfoEntry.setAttribute('data-timesheetId', timesheetInstance.id);
-    timesheetInfoEntry.setAttribute('data-username', username);
+    timesheetInfoEntry.setAttribute('data-username', userInfo.username);
+    timesheetInfoEntry.setAttribute('data-fullName', userInfo.fullName);
+    timesheetInfoEntry.setAttribute('data-givenName', userInfo.givenName);
+    timesheetInfoEntry.setAttribute('data-familyName', userInfo.familyName);
+    timesheetInfoEntry.setAttribute('data-emailAddress', userInfo.emailAddress);
+    timesheetInfoEntry.setAttribute('data-imageUrl', userInfo.imageUrl);
     timesheetInfoEntry.setAttribute('data-startDate', timesheetInstance.startDate);
     timesheetInfoEntry.setAttribute('data-validated', timesheetInstance.validated);
     generatedWrapper.append(timesheetInfoEntry);
