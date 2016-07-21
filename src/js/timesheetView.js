@@ -66,11 +66,11 @@ var TimesheetView = (function() {
   };
 
   function updateDisplayedStartDate(date) {
-    $('.timesheet-startDate').text(TimesheetUtil.formatDateMDD(date));
+    $('.timesheet-startDate').text(TimesheetUtil.formatDateMDDYY(date));
   }
 
   function updateDisplayedEndDate(date) {
-    $('.timesheet-endDate').text(TimesheetUtil.formatDateMDD(date));
+    $('.timesheet-endDate').text(TimesheetUtil.formatDateMDDYY(date));
   }
 
   function floatValueChanged(f1, f2) {

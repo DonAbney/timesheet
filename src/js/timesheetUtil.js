@@ -131,6 +131,13 @@ var TimesheetUtil = (function() {
     return (date.getMonth() + 1) + "/" + date.getDate();
   };
 
+  self.formatDateMDDYY = function(date) {
+    var date = new Date(date);
+    var year = "" + date.getFullYear();
+    year = year.substring(year.length - 2);
+    return (date.getMonth() + 1) + "/" + date.getDate() + "/" + year;
+  }
+
   self.formatDateYYYYMMDD = function(date) {
     var date = new Date(date);
     return date.toJSON().split("T")[0];

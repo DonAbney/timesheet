@@ -3,14 +3,8 @@ h1 {
   padding-left: 10px;
 }
 
-.timesheet-startDate::before {
-  content: '[';
-}
 .timesheet-endDate::before {
   content: ' - ';
-}
-.timesheet-endDate::after {
-  content: ']';
 }
 
 .title-bar button {
@@ -125,6 +119,14 @@ button:disabled {
 @media screen and (min-width: 64em) {
   .top-bar .top-bar-right, .top-bar .top-bar-left {
     width: auto;
+  }
+
+  .timesheet-startDate::before {
+    content: '[';
+  }
+
+  .timesheet-endDate::after {
+    content: ']';
   }
 
   .large-status {

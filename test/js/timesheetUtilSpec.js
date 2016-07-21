@@ -197,6 +197,20 @@ describe('TimesheetUtil', function() {
     });
   });
 
+  describe('formatDateMDDYY', function() {
+    it('should reformat a string date into M/DD/YY', function() {
+      var targetDate = '2016-05-22T04:00:00Z';
+
+      expect(TimesheetUtil.formatDateMDDYY(targetDate)).toEqual("5/22/16");
+    });
+
+    it('should work even if a date object is passed in', function() {
+      var targetDate = new Date(2016, 4, 22);
+
+      expect(TimesheetUtil.formatDateMDDYY(targetDate)).toEqual("5/22/16");
+    });
+  });
+
   describe('formatDateYYYYMMDD()', function() {
     it('should reformat a string date into YYYY-MM-DD', function() {
       var targetDate = '05/22/2016';

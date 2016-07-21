@@ -55,7 +55,7 @@ describe('Displaying basic information', function() {
 
         TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
-        expect($('.timesheet-startDate').text()).toEqual("5/22");
+        expect($('.timesheet-startDate').text()).toEqual("5/22/15");
       });
 
       it('should update the displayed end date to the end date of the timesheet', function() {
@@ -71,7 +71,7 @@ describe('Displaying basic information', function() {
 
         TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
-        expect($('.timesheet-endDate').text()).toEqual("5/24");
+        expect($('.timesheet-endDate').text()).toEqual("5/24/15");
       });
 
       it('should hide the validated state indicator if the timesheet is not in a validated state', function() {
