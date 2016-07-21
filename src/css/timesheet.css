@@ -102,25 +102,9 @@ button:disabled {
 
 /* Medium and up */
 @media screen and (min-width: 40em) {
-    .large-status {
-      display: block;
-    }
-
-    #authenticated {
-      padding: .7rem 1rem;
-    }
-
-    #authenticated .username {
-      display: inline;
-    }
-
-    #authenticated .signOut::before {
-      content: ' (';
-    }
-
-    #authenticated .signOut::after {
-      content: ')';
-    }
+  .top-bar .top-bar-right, .top-bar .top-bar-left {
+    width: 100%;
+  }
 }
 
 /* Medium only */
@@ -129,6 +113,29 @@ button:disabled {
 
 /* Large and up */
 @media screen and (min-width: 64em) {
+  .top-bar .top-bar-right, .top-bar .top-bar-left {
+    width: auto;
+  }
+
+  .large-status {
+    display: block;
+  }
+  #authenticated {
+    padding: .7rem 1rem;
+  }
+
+  #authenticated .username {
+    display: inline;
+  }
+
+  #authenticated .signOut::before {
+    content: ' (';
+  }
+
+  #authenticated .signOut::after {
+    content: ')';
+  }
+
   .dayHeader,.positionHeader {
     font-size: 1rem;
     padding: 0px 0px 0px 10px;
