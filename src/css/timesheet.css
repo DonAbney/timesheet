@@ -3,6 +3,16 @@ h1 {
   padding-left: 10px;
 }
 
+.timesheet-startDate::before {
+  content: '[';
+}
+.timesheet-endDate::before {
+  content: ' - ';
+}
+.timesheet-endDate::after {
+  content: ']';
+}
+
 .title-bar button {
   border: 0px;
 }

@@ -1,6 +1,6 @@
 describe('Collecting timesheet information', function() {
   beforeEach(function() {
-    var fixture = "<div id='fixture' class='timesheetInfo' data-startDate='2016-05-14T04:00:00Z' data-username='tjones' data-timesheetId='789' data-fullName='Tom Jones' data-givenName='Tom' data-familyName='Jones' data-emailAddress='tjones@example.com' data-imageUrl='http://some.url.com/images/myImage.jpg'></div>";
+    var fixture = "<div id='fixture' class='timesheetInfo' data-startDate='2016-05-14T04:00:00Z' data-endDate='2016-05-21T04:00:00Z' data-username='tjones' data-timesheetId='789' data-fullName='Tom Jones' data-givenName='Tom' data-familyName='Jones' data-emailAddress='tjones@example.com' data-imageUrl='http://some.url.com/images/myImage.jpg'></div>";
     document.body.insertAdjacentHTML('afterbegin', fixture);
   });
 
@@ -55,6 +55,12 @@ describe('Collecting timesheet information', function() {
       var timesheetInfo = TimesheetView.collectTimesheetInfo();
 
       expect(timesheetInfo.startDate).toEqual('2016-05-14T04:00:00Z');
+    });
+
+    it('should return the end date for the timesheet', function() {
+      var timesheetInfo = TimesheetView.collectTimesheetInfo();
+
+      expect(timesheetInfo.endDate).toEqual('2016-05-21T04:00:00Z');
     });
   });
 });

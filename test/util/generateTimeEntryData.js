@@ -2,6 +2,7 @@ function generateBasicTimesheetInstanceData() {
   return {
     "id": 789,
     "startDate": "2016-05-14T04:00:00Z",
+    "endDate": "2016-05-21T04:00:00Z",
     "employee": {
       "id": 23
     },
@@ -13,6 +14,7 @@ function generateBasicValidatedTimesheetInstanceData() {
   return {
     "id": 789,
     "startDate": "2016-05-14T04:00:00Z",
+    "endDate": "2016-05-21T04:00:00Z",
     "employee": {
       "id": 23
     },

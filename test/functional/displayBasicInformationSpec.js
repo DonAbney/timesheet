@@ -10,7 +10,7 @@ describe('Displaying basic information', function() {
 
   describe('in the header', function() {
     beforeEach(function() {
-      var fixture = "<span id='fixture' class='username'>unmodified</span><span class='validatedIndicator'>*</span>";
+      var fixture = "<div id='fixture'><span class='username'>unmodified</span><span class='validatedIndicator'>*</span><span class='timesheet-startDate'>unmodified</span><span class='timesheet-endDate'>unmodified</span></div>";
       document.body.insertAdjacentHTML('afterbegin', fixture);
     });
 
@@ -42,6 +42,38 @@ describe('Displaying basic information', function() {
         expect($('.username').text()).toEqual("Tom Jones");
       });
 
+      it('should update the displayed start date to the start date of the timesheet', function() {
+        var timesheetInfo = {
+          "timesheetInstance": {
+            "startDate": "2015-05-22T04:00:00Z",
+            "employee": {
+              "id": 23
+            }
+          },
+          "timeEntryPositionMapByDate": []
+        };
+
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
+
+        expect($('.timesheet-startDate').text()).toEqual("5/22");
+      });
+
+      it('should update the displayed end date to the end date of the timesheet', function() {
+        var timesheetInfo = {
+          "timesheetInstance": {
+            "endDate": "2015-05-24T04:00:00Z",
+            "employee": {
+              "id": 23
+            }
+          },
+          "timeEntryPositionMapByDate": []
+        };
+
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
+
+        expect($('.timesheet-endDate').text()).toEqual("5/24");
+      });
+
       it('should hide the validated state indicator if the timesheet is not in a validated state', function() {
         var timesheetInfo = generateTimesheetInfo();
 
@@ -62,7 +94,7 @@ describe('Displaying basic information', function() {
 
   describe('clearing old information', function() {
     beforeEach(function() {
-      var fixture = "<div id='fixture'><div class='username'>joe</div><div class='stateChangeIndicator'></div><div class='validatedIndicator'></div><div class='weekTotal'>23</div></div>";
+      var fixture = "<div id='fixture'><div class='username'>joe</div><div class='stateChangeIndicator'></div><div class='validatedIndicator'></div><div class='weekTotal'>23</div><div class='timesheet-startDate'>someDate</div><div class='timesheet-endDate'>someDate</div></div>";
       document.body.insertAdjacentHTML('afterbegin', fixture);
     });
 
@@ -92,6 +124,18 @@ describe('Displaying basic information', function() {
       TimesheetView.clearOldInformation();
 
       expect($('.weekTotal').text()).toEqual('0');
+    });
+
+    it('should reset the displayed start date for the timesheet to "no timesheet selected"', function() {
+      TimesheetView.clearOldInformation();
+
+      expect($('.timesheet-startDate').text()).toEqual('no timesheet selected');
+    });
+
+    it('should clear the displayed end date for the timesheet', function() {
+      TimesheetView.clearOldInformation();
+
+      expect($('.timesheet-endDate').text()).toEqual('');
     });
   });
 
@@ -331,6 +375,19 @@ describe('Displaying basic information', function() {
         TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
         expect($('.wrapper-generatedView .timesheetInfo').attr('data-startDate')).toEqual('2016-05-14T04:00:00Z');
+      });
+
+      it('should generate a timesheet element that contains the end date for the timesheet', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
+
+        expect($('.wrapper-generatedView .timesheetInfo').attr('data-endDate')).toEqual('2016-05-21T04:00:00Z');
       });
 
       it('should generate a timesheet element that contains the validation state for the timesheet', function() {

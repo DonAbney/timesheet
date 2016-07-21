@@ -50,6 +50,8 @@ var TimesheetView = (function() {
   self.displayTimesheetInfo = function(userInfo, timesheetInfo) {
     self.clearOldInformation();
     self.updateUsername(userInfo.fullName);
+    updateDisplayedStartDate(timesheetInfo.timesheetInstance.startDate);
+    updateDisplayedEndDate(timesheetInfo.timesheetInstance.endDate);
     constructTimesheetInfoEntry(userInfo, timesheetInfo.timesheetInstance);
     var positions = TimesheetUtil.collatePositions(timesheetInfo.timeEntryPositionMapByDate);
     var daysEntries = TimesheetUtil.collateDays(timesheetInfo.timeEntryPositionMapByDate, positions);
@@ -62,6 +64,14 @@ var TimesheetView = (function() {
   self.updateUsername = function(name) {
     $(".username").text(name);
   };
+
+  function updateDisplayedStartDate(date) {
+    $('.timesheet-startDate').text(TimesheetUtil.formatDateMDD(date));
+  }
+
+  function updateDisplayedEndDate(date) {
+    $('.timesheet-endDate').text(TimesheetUtil.formatDateMDD(date));
+  }
 
   function floatValueChanged(f1, f2) {
     return (Math.abs(f1 - f2) > 0.001);
@@ -89,17 +99,20 @@ var TimesheetView = (function() {
   };
 
   self.collectTimesheetInfo = function() {
-    var stringTimesheetId = $('.timesheetInfo').attr('data-timesheetId');
-    var username = $('.timesheetInfo').attr('data-username');
-    var startDate = $('.timesheetInfo').attr('data-startDate');
-    var fullName = $('.timesheetInfo').attr('data-fullName');
-    var givenName = $('.timesheetInfo').attr('data-givenName');
-    var familyName = $('.timesheetInfo').attr('data-familyName');
-    var emailAddress = $('.timesheetInfo').attr('data-emailAddress');
-    var imageUrl = $('.timesheetInfo').attr('data-imageUrl');
+    var timesheetInfoElement = $('.timesheetInfo');
+    var stringTimesheetId = timesheetInfoElement.attr('data-timesheetId');
+    var username = timesheetInfoElement.attr('data-username');
+    var startDate = timesheetInfoElement.attr('data-startDate');
+    var endDate = timesheetInfoElement.attr('data-endDate');
+    var fullName = timesheetInfoElement.attr('data-fullName');
+    var givenName = timesheetInfoElement.attr('data-givenName');
+    var familyName = timesheetInfoElement.attr('data-familyName');
+    var emailAddress = timesheetInfoElement.attr('data-emailAddress');
+    var imageUrl = timesheetInfoElement.attr('data-imageUrl');
     return {
       'id': stringTimesheetId ? parseFloat(stringTimesheetId) : 0.0,
       'startDate': startDate ? startDate : "",
+      'endDate': endDate ? endDate : "",
       'userInfo': {
         'username': username ? username : "",
         'fullName': fullName ? fullName : "",
@@ -342,6 +355,7 @@ var TimesheetView = (function() {
     timesheetInfoEntry.setAttribute('data-emailAddress', userInfo.emailAddress);
     timesheetInfoEntry.setAttribute('data-imageUrl', userInfo.imageUrl);
     timesheetInfoEntry.setAttribute('data-startDate', timesheetInstance.startDate);
+    timesheetInfoEntry.setAttribute('data-endDate', timesheetInstance.endDate);
     timesheetInfoEntry.setAttribute('data-validated', timesheetInstance.validated);
     generatedWrapper.append(timesheetInfoEntry);
   }
@@ -353,6 +367,8 @@ var TimesheetView = (function() {
     $('.validatedIndicator').hide();
     $('.username').text('not signed in');
     $('.weekTotal').text('0');
+    $('.timesheet-startDate').text('no timesheet selected');
+    $('.timesheet-endDate').text('');
   }
 
   self.showAuthenticationArea = function() {
