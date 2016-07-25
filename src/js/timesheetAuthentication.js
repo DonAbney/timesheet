@@ -82,6 +82,7 @@ var TimesheetAuthentication = (function() {
   function initializeForAuthenticatedUser(userInfo) {
     TimesheetView.hideAuthenticationArea();
     TimesheetView.registerPageListeners();
+    TimesheetView.updateUsername(userInfo.fullName);
     TimesheetCommunication.fetchTimesheetInfo(new Date());
   }
 
