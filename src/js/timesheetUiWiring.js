@@ -7,14 +7,13 @@ var TimesheetUiWiring = (function() {
 
   self.initializeDatePicker = function() {
     $('#dateSelection').fdatepicker({
-  		initialDate: TimesheetUtil.formatDateMDDYY(TimesheetView.collectTimesheetInfo().startDate),
+  		initialDate: TimesheetUtil.formatDateMDDYY(new Date()),
   		format: 'm/dd/yy',
       weekStart: 6,
   		disableDblClickSelection: true
   	}).on('changeDate', function(ev) {
-      var timesheetInfo = TimesheetView.collectTimesheetInfo();
       var selectedDate = $('#dateSelection').data('date');
-      TimesheetCommunication.fetchTimesheetInfo(timesheetInfo.userInfo, selectedDate);
+      TimesheetCommunication.fetchTimesheetInfo(selectedDate);
       $('#dateSelection').fdatepicker('hide');
     });
   };
