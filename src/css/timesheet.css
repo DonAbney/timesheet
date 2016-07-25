@@ -3,6 +3,10 @@ h1 {
   padding-left: 10px;
 }
 
+.timesheet-startDate {
+  padding-left: 5px;
+}
+
 .timesheet-endDate::before {
   content: ' - ';
 }
@@ -132,6 +136,11 @@ button:disabled {
   .large-status {
     display: block;
   }
+
+  #authentication .g-signin2 {
+    padding-left: 10px;
+  }
+
   #authenticated {
     padding: .7rem 1rem;
   }

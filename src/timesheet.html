@@ -7,6 +7,7 @@
   <meta name="google-signin-scope" content="profile email">
   <meta name="google-signin-client_id" content="499658899787-0p682umlf2fjhqdi78jdl5sjp3jcjoer.apps.googleusercontent.com">
   <title>Pillar Timesheet</title>
+  <link href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
   <link href="timesheet.min.css" rel="stylesheet" type="text/css"/>
   <script src="https://sdk.amazonaws.com/js/aws-sdk-2.4.4.min.js"></script>
   <script src="https://apis.google.com/js/platform.js"></script>
@@ -28,7 +29,7 @@
     </div>
     <div class="top-bar-right">
       <ul class="vertical large-horizontal menu">
-        <li id="dateSelection"><span class="timesheet-startDate"></span><span class="timesheet-endDate"></span></li>
+        <li id="dateSelection"><span class="fa fa-calendar"></span><span class="timesheet-startDate"></span><span class="timesheet-endDate"></span></li>
         <li id="authentication">
           <div class="g-signin2" data-theme="dark"></div>
         </li>
@@ -54,7 +55,8 @@
 </body>
 <script type="text/javascript">
   $(document).ready(function() {
-    $(document).foundation();
+    TimesheetUiWiring.initializeFoundationPlugins();
+    TimesheetUiWiring.initializeDatePicker();
     TimesheetAuthentication.listenForAuthentication();
   });
 </script>
