@@ -7,6 +7,12 @@ h1 {
   padding-left: 0.15rem;
 }
 
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 #customGoogleButton {
   display: inline-block;
   background: white;
@@ -49,11 +55,18 @@ h1 {
 }
 
 .title-bar .fa-bars {
-  vertical-align: middle;
+  position: absolute;
+  padding-top: 0.35rem;
 }
 
 .title-bar .fa-bars:hover {
   color: #9a9a9a;
+}
+
+.title-bar-title {
+  padding-left: 1.15rem;
+  width: 100%;
+  display: inline-flex;
 }
 
 #dateSelection {
@@ -70,6 +83,10 @@ h1 {
 
 #successfulResponse,#errorResponse {
   display: none;
+}
+
+.weekTotal {
+  white-space: nowrap;
 }
 
 .weekTotal::before,.dayTotal::before {
@@ -95,18 +112,19 @@ h1 {
   border-color: white;
 }
 
-.dayName {
+.dayAbbreviation {
   display: inline;
   padding-right: 0.15rem;
 }
 
-.dayAbbreviation,.dayShortAbbreviation,.positions {
+.dayName,.dayShortAbbreviation,.positions {
   display: none;
   padding-right: 0.15rem;
 }
 
 .dayTotal,.dayAndMonth {
   display: inline;
+  white-space: nowrap;
 }
 
 .position {
@@ -218,7 +236,7 @@ button:disabled {
     padding: 0rem 0rem 0rem 0.15rem;
   }
 
-  .dayName {
+  .dayAbbreviation {
     display: none;
   }
 
