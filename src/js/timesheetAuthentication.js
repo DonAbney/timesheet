@@ -21,6 +21,7 @@ var TimesheetAuthentication = (function() {
   self.listenForAuthentication = function() {
     gapi.load('auth2', function() {
       var authInstance = gapi.auth2.init({});
+      authInstance.attachClickHandler(document.getElementById('customGoogleButton'), {}, self.onSignIn, self.onError);
       authInstance.isSignedIn.listen(authenticationListener);
     });
   };

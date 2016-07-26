@@ -1,10 +1,43 @@
 /* Base styling */
+html {
+  font-size: 64px;
+}
+
 h1 {
-  padding-left: 10px;
+  padding-left: 0.15rem;
+}
+
+#customGoogleButton {
+  display: inline-block;
+  background: white;
+  color: #444;
+  width: 7rem;
+  border-radius: 0.25rem;
+  border: thin solid #888;
+  box-shadow: 0.075rem 0.075rem 0.075rem grey;
+  white-space: nowrap;
+}
+#customGoogleButton:hover {
+  cursor: pointer;
+}
+#customGoogleButton div.googleG {
+  display: inline-block;
+  vertical-align: middle;
+  width: 2.625rem;
+  height: 2.625rem;
+  padding: 0.75rem;
+}
+#customGoogleButton div.googleText {
+  display: inline-block;
+  vertical-align: middle;
+  padding: 0rem;
+  font-size: 0.875rem;
+  font-weight: bold;
+  font-family: 'Roboto', sans-serif;
 }
 
 .timesheet-startDate {
-  padding-left: 5px;
+  padding-left: 0.5rem;
 }
 
 .timesheet-endDate::before {
@@ -12,7 +45,27 @@ h1 {
 }
 
 .title-bar button {
-  border: 0px;
+  border: 0rem;
+}
+
+.title-bar .fa-bars {
+  vertical-align: middle;
+}
+
+.title-bar .fa-bars:hover {
+  color: #9a9a9a;
+}
+
+#dateSelection {
+  cursor: pointer;
+}
+
+.top-bar .fa-calendar:hover {
+  color: #9a9a9a;
+}
+
+.menu li {
+  margin: 0.5rem 0rem;
 }
 
 #successfulResponse,#errorResponse {
@@ -30,7 +83,7 @@ h1 {
 .dayHeader,.positionHeader {
   cursor: pointer;
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 0.15rem;
   font-size: 1.5rem;
   padding: .75rem;
   margin-top: .5rem;
@@ -45,12 +98,12 @@ h1 {
 
 .dayName {
   display: inline;
-  padding-right: 10px;
+  padding-right: 0.15rem;
 }
 
 .dayAbbreviation,.dayShortAbbreviation,.positions {
   display: none;
-  padding-right: 10px;
+  padding-right: 0.15rem;
 }
 
 .dayTotal,.dayAndMonth {
@@ -61,10 +114,10 @@ h1 {
   box-sizing: border-box;
   width: 100%;
   height: 2.4375rem;
-  padding: .125rem;
+  padding: 0.125rem;
   border: 1px solid #cacaca;
   margin: 0 0 1rem;
-  font-size: .5rem;
+  font-size: 0.5rem;
 }
 
 .buttonArea {
@@ -101,7 +154,7 @@ button:disabled {
 
 #authenticated .signOut {
   display: inline;
-  padding: 0px;
+  padding: 0rem;
 }
 
 /* Small only */
@@ -121,6 +174,10 @@ button:disabled {
 
 /* Large and up */
 @media screen and (min-width: 64em) {
+  html {
+    font-size: 16px;
+  }
+
   .top-bar .top-bar-right, .top-bar .top-bar-left {
     width: auto;
   }
@@ -137,12 +194,12 @@ button:disabled {
     display: block;
   }
 
-  #authentication .g-signin2 {
-    padding-left: 10px;
+  #authentication .customGPlusSignIn {
+    margin: 0rem 1rem;
   }
 
   #authenticated {
-    padding: .7rem 1rem;
+    padding: 0.7rem 1rem;
   }
 
   #authenticated .username {
@@ -159,7 +216,7 @@ button:disabled {
 
   .dayHeader,.positionHeader {
     font-size: 1rem;
-    padding: 0px 0px 0px 10px;
+    padding: 0rem 0rem 0rem 0.15rem;
   }
 
   .dayName {
