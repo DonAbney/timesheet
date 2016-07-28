@@ -219,30 +219,17 @@ describe('Displaying basic information', function() {
     });
 
     describe('via displayTimesheetInfo()', function() {
-      it('should generate a position entry with the name (and no note if it is null) of the position', function() {
+      it('should generate a position entry with the base text being the project name', function() {
         var timesheetInfo = {
           "timesheetInstance": generateBasicTimesheetInstanceData(),
           "timeEntryPositionMapByDate": [
-            generatePositionAndTimeEntryInfo({"id": "p1", "name": "targetName", "note": null}, {"te1": {date: "2016-05-31T04:00:00Z"}})
+            generatePositionAndTimeEntryInfo({"id": "p1", "name": "positionName", "note": null}, {"te1": {date: "2016-05-31T04:00:00Z"}})
           ]
         };
 
         TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
-        expect($('.wrapper-generatedView .position:first').text()).toEqual("targetName");
-      });
-
-      it('should generate a position entry with the name and note of the position', function() {
-        var timesheetInfo = {
-          "timesheetInstance": generateBasicTimesheetInstanceData(),
-          "timeEntryPositionMapByDate": [
-            generatePositionAndTimeEntryInfo({"id": "p1", "name": "targetName", "note": "targetNote"}, {"te1": {date: "2016-05-31T04:00:00Z"}})
-          ]
-        };
-
-        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
-
-        expect($('.wrapper-generatedView .position:first').text()).toEqual("targetName: targetNote");
+        expect($('.wrapper-generatedView .position:first').text()).toEqual("Project ABC");
       });
 
       it('should generate a position entry for each of the positions', function() {
@@ -411,7 +398,7 @@ describe('Displaying basic information', function() {
         expect($('.wrapper-generatedView .day').length).toEqual(1);
       });
 
-      it('should generate a time entry within the day for the position with name and no note when no note is present', function() {
+      it('should generate a time entry within the day for the position containing the project name', function() {
         var timesheetInfo = {
           "timesheetInstance": generateBasicTimesheetInstanceData(),
           "timeEntryPositionMapByDate": [
@@ -421,20 +408,7 @@ describe('Displaying basic information', function() {
 
         TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
-        expect($('.wrapper-generatedView .timeEntry[data-date="2016-05-31T04:00:00Z"]:first label').text()).toEqual("targetName");
-      });
-
-      it('should generate a time entry within the day for the position with name and note', function() {
-        var timesheetInfo = {
-          "timesheetInstance": generateBasicTimesheetInstanceData(),
-          "timeEntryPositionMapByDate": [
-            generatePositionAndTimeEntryInfo({"id": "p1", "name": "targetName", "note": "targetNote"}, {"te1": {date: "2016-05-31T04:00:00Z"}})
-          ]
-        };
-
-        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
-
-        expect($('.wrapper-generatedView .timeEntry[data-date="2016-05-31T04:00:00Z"]:first label').text()).toEqual("targetName: targetNote");
+        expect($('.wrapper-generatedView .timeEntry[data-date="2016-05-31T04:00:00Z"]:first label').text()).toEqual("Project ABC");
       });
 
       it('should generate the time entries for a day in the same order as the positions', function() {

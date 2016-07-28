@@ -40,7 +40,10 @@ function generatePositionAndTimeEntryInfo(positionInfo, timeEntryInfo) {
     "position": {
       "id": positionInfo.hasOwnProperty("id") ? positionInfo.id : "001",
       "name": positionInfo.hasOwnProperty("name") ? positionInfo.name : "someName",
-      "note": positionInfo.hasOwnProperty("note") ? positionInfo.note : "someNote"
+      "note": positionInfo.hasOwnProperty("note") ? positionInfo.note : "someNote",
+      "project": {
+        "name": positionInfo.hasOwnProperty("projectName") ? positionInfo.projectName : "Project ABC"
+      }
     },
     "timeEntries": generateTimeEntries(timeEntryInfo)
   }

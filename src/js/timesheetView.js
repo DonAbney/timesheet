@@ -249,12 +249,11 @@ var TimesheetView = (function() {
     return dayHeader;
   }
 
-  function constructPositionLabel(entry) {
+  function constructPositionLabel(entry, position) {
     var positionLabel = document.createElement("label");
     construct.configureElementStyle('positionLabel', positionLabel);
-    var note = entry.position.note ? ": " + entry.position.note.trim() : "";
     positionLabel.setAttribute('for', entry.id);
-    positionLabel.innerHTML = entry.position.name.trim() + note;
+    positionLabel.innerHTML = position.projectName.trim();
     return positionLabel;
   }
 
@@ -275,39 +274,53 @@ var TimesheetView = (function() {
     return field;
   }
 
-  function constructTimeEntry(entry) {
+  function constructTimeEntry(entry, position) {
     var timeEntry = document.createElement("div");
     construct.configureElementStyle("timeEntry", timeEntry);
     timeEntry.setAttribute('data-date', entry.date);
-    var positionLabel = constructPositionLabel(entry);
+    var positionLabel = constructPositionLabel(entry, position);
     var field = constructTimeEntryField(entry);
     timeEntry.insertAdjacentElement('afterbegin', positionLabel);
     timeEntry.insertAdjacentElement('beforeend', field);
     return timeEntry;
   }
 
-  function constructTimeEntries(dayEntries, date) {
+  function constructTimeEntries(dayEntries, date, positions) {
     var timeEntriesWrapper = document.createElement("div");
     construct.configureElementStyle("timeEntries", timeEntriesWrapper);
     timeEntriesWrapper.setAttribute('data-date', date);
+
+    var positionInfoLookup = {};
+    positions.forEach(function(info) {
+      positionInfoLookup[info.id] = info;
+    });
+
+    function fetchPositionInfo(positionId) {
+      var unrecognizedValue = {
+        "id": positionId,
+        "name": "(unrecognized)",
+        "projectName": "(unrecognized)"
+      };
+      return positionInfoLookup[positionId] ? positionInfoLookup[positionId] : unrecognizedValue;
+    }
+
     dayEntries.forEach(function(entry) {
-      timeEntriesWrapper.insertAdjacentElement('beforeend', constructTimeEntry(entry));
+      timeEntriesWrapper.insertAdjacentElement('beforeend', constructTimeEntry(entry, fetchPositionInfo(entry.position.id)));
     });
     return timeEntriesWrapper;
   }
 
-  function constructDayElement(dayEntries, date) {
+  function constructDayElement(dayEntries, date, positions) {
     var dayElement = constructDayWrapper(date);
     dayElement.insertAdjacentElement('afterbegin', constructDayHeader(date));
-    dayElement.insertAdjacentElement('beforeend', constructTimeEntries(dayEntries, date));
+    dayElement.insertAdjacentElement('beforeend', constructTimeEntries(dayEntries, date, positions));
     return dayElement;
   }
 
   function constructPositionElement(position) {
     var positionElement = document.createElement('div');
     construct.configureElementStyle('position', positionElement);
-    var note = position.note ? ": " + position.note.trim() : "";
-    positionElement.innerHTML = position.name.trim() + note;
+    positionElement.innerHTML = position.projectName.trim();
     return positionElement;
   }
 
@@ -333,7 +346,7 @@ var TimesheetView = (function() {
     daysElement.insertAdjacentElement('afterbegin', constructPositionsElement(positions));
     var sortedDates = TimesheetUtil.sortDaysEntryDates(daysEntries);
     sortedDates.forEach(function(date) {
-      daysElement.insertAdjacentElement('beforeend', constructDayElement(daysEntries[date], date));
+      daysElement.insertAdjacentElement('beforeend', constructDayElement(daysEntries[date], date, positions));
     });
     return daysElement;
   }
