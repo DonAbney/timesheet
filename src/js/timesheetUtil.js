@@ -40,7 +40,22 @@ var TimesheetUtil = (function() {
       return dayEntry;
     }
 
+    var positionInfoLookup = {};
+    positionOrder.forEach(function(info) {
+      positionInfoLookup[info.id] = info;
+    });
+
+    function fetchPositionInfo(positionId) {
+      var unrecognizedValue = {
+        "id": positionId,
+        "name": "(unrecognized)",
+        "projectName": "(unrecognized)"
+      };
+      return positionInfoLookup[positionId] ? positionInfoLookup[positionId] : unrecognizedValue;
+    }
+
     timeEntryPositionInfo.forEach(function(infoEntry) {
+      var positionInfo = fetchPositionInfo(infoEntry.position.id);
       infoEntry.timeEntries.forEach(function(timeEntry) {
         var dayEntry = fetchDayEntry(timeEntry.date);
         dayEntry.push({
@@ -49,9 +64,10 @@ var TimesheetUtil = (function() {
           hours: timeEntry.hours,
           projectedHours: timeEntry.projectedHours,
           position: {
-            id: infoEntry.position.id,
-            name: infoEntry.position.name,
-            note: infoEntry.position.note
+            id: positionInfo.id,
+            name: positionInfo.name,
+            note: positionInfo.note,
+            projectName: positionInfo.projectName
           }
         });
       });
@@ -67,11 +83,13 @@ var TimesheetUtil = (function() {
   self.collatePositions = function(timeEntryPositionInfo) {
     var positions = [];
     timeEntryPositionInfo.forEach(function(infoEntry) {
-      var position = infoEntry.position;
+      var position = infoEntry.position ? infoEntry.position : {};
+      var project = infoEntry.position.project ? infoEntry.position.project : {};
       positions.push({
         id: position.id,
         name: position.name,
-        note: position.note
+        note: position.note,
+        projectName: project.name
       });
     });
     return positions;

@@ -368,8 +368,7 @@ describe('TimesheetUtil', function() {
       var targetPositionInfo = [
         {
           "position": {
-            id: 32,
-            "name": "some position name"
+            id: 32
           },
           "timeEntries": [
             {
@@ -379,7 +378,10 @@ describe('TimesheetUtil', function() {
         }
       ];
       var targetPositions = [
-        { id: 32 }
+        {
+          id: 32,
+          "name": "some position name"
+        }
       ];
 
       var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo, targetPositions);
@@ -391,8 +393,7 @@ describe('TimesheetUtil', function() {
       var targetPositionInfo = [
         {
           "position": {
-            id: 32,
-            "note": "some position note"
+            id: 32
           },
           "timeEntries": [
             {
@@ -402,12 +403,40 @@ describe('TimesheetUtil', function() {
         }
       ];
       var targetPositions = [
-        {id: 32 }
+        {
+          id: 32,
+          "note": "some position note"
+        }
       ];
 
       var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo, targetPositions);
 
       expect(collatedInfo["2016-06-22T04:00:00Z"][0].position.note).toEqual("some position note");
+    });
+
+    it('should include the project name in the collated info', function() {
+      var targetPositionInfo = [
+        {
+          "position": {
+            id: 32
+          },
+          "timeEntries": [
+            {
+              "date": "2016-06-22T04:00:00Z"
+            }
+          ]
+        }
+      ];
+      var targetPositions = [
+        {
+          id: 32,
+          "projectName": "Project ABC"
+        }
+      ];
+
+      var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo, targetPositions);
+
+      expect(collatedInfo["2016-06-22T04:00:00Z"][0].position.projectName).toEqual("Project ABC");
     });
 
     it('should include the date in the collated info', function() {
@@ -715,6 +744,23 @@ describe('TimesheetUtil', function() {
       var collatedInfo = TimesheetUtil.collatePositions(targetPositionInfo);
 
       expect(collatedInfo[0].note).toEqual("joe's note");
+    });
+
+    it('should capture the project name', function() {
+      var targetPositionInfo = [
+        {
+          "position": {
+            "id": 32,
+            "project": {
+              "name": "Project ABC"
+            }
+          }
+        }
+      ];
+
+      var collatedInfo = TimesheetUtil.collatePositions(targetPositionInfo);
+
+      expect(collatedInfo[0].projectName).toEqual("Project ABC");
     });
   });
 
