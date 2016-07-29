@@ -466,3 +466,13 @@ Some references that will facilitate in deployment configuration:
 * [Assuming an AWS IAM Role via a web identity](http://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRoleWithWebIdentity.html)
 * [Generating a custom JavaScript SDK for the defined endpoints in the AWS API Gateway](http://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-generate-sdk.html)
 * [Passing AWS IAM tokens from a REST client](http://stackoverflow.com/questions/32833331/api-gateway-how-to-pass-aws-iam-authorization-from-rest-client)
+
+Some references for SSL certs and custom domain configuration:
+* [Another person who tried to set up a custom domain with API Gateway, but with a different SSL cert authority](http://www.davekonopka.com/2016/api-gateway-domain.html)
+* [Let's Encrypt](https://letsencrypt.org)
+* [Certbot](https://certbot.eff.org)
+* [Certbot - manual plugin information](https://certbot.eff.org/docs/using.html#manual)
+* [Amazon docs for API Gateway with Custom Domains](http://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-custom-domains.html)
+* [Amazon Certificate Manager docs](https://aws.amazon.com/certificate-manager/)
+* [Setting up secure connections and custom domains with CloudFront](http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/SecureConnections.html#CNAMEsAndHTTPS)
+* [Setting up custom SSL domains with CloudFront](https://aws.amazon.com/cloudfront/custom-ssl-domains/)
