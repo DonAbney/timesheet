@@ -456,6 +456,14 @@ The API Gateway currently requires that you be able to provide the private key t
 
 This is, unfortunately, not quite the end, as you'll need to adjust a few things (like enabling CORS and setting up another API endpoint for the .well-known/acme-challenge so you have it ready when you need to renew your SSL cert).
 
+### Adjustments to above configuration for use with a Custom Domain
+Because we're pointing the root of the target domain at our prod stage, that means that the redirect that we'd previously defined for root is slightly wrong.  This is because previously it had to point to the index.html file that was in the path of the stage, but now no longer needs the stage name in its path.  To do this, you'll simply need to change the value of the `indexHtml` stage variable for the prod stage to be `/index.html`.  It, unfortunately, means that it you use the (now internal) standard URL for that stage and try to access the root of the stage, you won't be redirected properly.  But, since we want to be using the custom domain to access those resources, it's not really an issue for the prod stage.
+
+The other adjustment to be made is to enable CORS on all of the API endpoints.  To do that, in the API Gateway UI, you'll want to select the resource that represents the endpoint and then select the action "Enable CORS".  This will do most of the tedious work for you.  The only configuration change that you'll need to make before clicking to proceed is to add `Application-Identifier` to the list of allowed headers.
+
+### Prepping for Renewal of the SSL Cert
+To make it easier for the renewal (which appears to happen about every 3 months), you'll want to also set up additional resources within the API Gateway for `/.well-known/acme-challenge/{key}` as a pass-through to S3.  It's basically the same thing that was done for the other assets (css, js, html), with the slight modification that you're using `{key}` as a path parameter, but that configuration is very similar to what was done for the api endpoints.  I'd suggest setting up a separate role and policy in IAM for accessing these challenge files, similar to what was done for the css, js, and html assets.
+
 ## References
 Some references that will facilitate in deployment configuration:
 * [Setting up Google OpenID Authentication](https://developers.google.com/identity/sign-in/web/)
