@@ -415,6 +415,47 @@ Requests timesheet information for the specified user for the specified date.
   * 200, Content Type: application/json, Models: empty
   * 404, Content Type: application/json, Models: empty
 
+## Getting SSL with a Custom Domain working with AWS API Gateway
+Amazon offers SSL certificates for your domains through ACM (AWS Certificate Manager).  Unfortunately, you cannot yet use them with their API Gateway ([See this forum post](https://forums.aws.amazon.com/thread.jspa?messageID=700646)).
+
+The API Gateway currently requires that you be able to provide the private key that the cert was encrypted with, the public cert itself, and the entire chain.  That's not accessible through ACM, which means that if you want to use a custom domain, you'll need to obtain your SSL cert from another source.  Because of strong support from various entities that I respect, I decided to go with [Let's Encrypt](https://letsencrypt.org), which offers free SSL certs.  They do their validation that you own the domain through the use of a file that you host on a webservice at the target domain.  Since the API Gateway only allows https access (which will require you to set up a SSL cert in order to redirect requests to one of your staged APIs), you end up with a bit of a chicken and egg problem.  Here's the workaround that I ended up using to do the initial registration:
+
+* Set up an ACM SSL Certificate for your target domain.
+  * This will only be used temporarily with AWS CloudFront for the validation process with Let's Encrypt.
+    * You can keep the cert, because at some point API Gateway will allow use of the ACM SSL Certs and you can switch to using that one instead of the Let's Encrypt signed cert.
+* Set up a new S3 bucket
+  * Configure the following directory structure: `/.well-known/acme-challenge/`
+  * Add a temporary test file to the acme-challenge directory, so you can ensure that the CloudFront configuration is set up properly.
+    * You will need to adjust the permissions on the file in S3 to allow Everyone access to Read the file.
+* Set up a AWS CloudFront distribution.
+  * You're only going to use this to do the initial registration, so don't worry too much about configuration.
+  * You'll want to make sure that you use the ACM SSL cert that you set up and tell CloudFront to use your target domain.
+  * You'll want to point your distribution at the S3 bucket that you set up.
+* Once you get the CloudFront domain name for your distribution, modify your CNAME entry for your target domain to point to the CloudFront domain name.
+  * I'd advise setting it up for a very short TTL (like 30 min), because you'll be changing this again after you do the validation for your new cert.
+* Try to access the temporary file that you put in the S3 bucket through your target domain name:  `http://<your.domain.com>/.well-known/acme-challenge/test.txt`
+  * It can sometimes take a while for the CloudFront domain to resolve.  Once you can access your file, then move on to the next step.
+* Use Certbot (recommended by Let's Encrypt) with its `manual` plugin in order to register the cert for your domain.
+  * The last step will ask you to make a file available with particular contents.
+    * Create and upload the specified file contents with the required name to your S3 bucket and adjust the permissions so that everyone has read access to the file.
+    * After uploading the file to your S3 bucket, it will take a little while for the file to propagate out to the edge nodes in CloudFront, so wait until you can access the file before hitting enter to let Certbot know that it should check for the file at your domain's URL.
+* After Certbot successfully validates that the file it expects is available at the target location, it will generate your cert, private key, and chain, placing the files in /etc/letsencrypt/live/<domainName>
+* You must now disable your CloudFront distribution.
+  * AWS won't let you have both a CloudFront and API Gateway using the same target domain name (you'll get an error message if your CloudFront domain isn't disabled).
+  * You can also delete the temporary S3 bucket if you want.
+* Go to API Gateway and choose "Custom Domain Names" and click the "Create" button.
+  * You'll need to copy and paste the values of your private key (privkey.pem), cert (cert.pem), and chain (chain.pem) into the appropriate text areas.
+    * If you make a mistake, AWS attempts to validate the information in the fields and will not let you finish the creation process.
+* After you finish the creation process, you'll be brought to a screen that shows your "distribution domain name".  This will be a cloudfront.net domain.  As with the previous creation of a CloudFront domain, it can take a while for the CloudFront domain to resolve.
+  * Modify your CNAME entry for your target domain to point to this new cloudfront.net domain.  I'd also suggest lengthening the TTL (1 hour is fine).
+* On the API Gateway configuration screen for your new custom domain, you'll want to add an "API Mapping":
+  * Base Path: (leave blank)
+  * API: Pillar Timesheet (i.e. the name of the API you created in API Gateway)
+  * Stage: timesheet (i.e. prod)
+  * This will point your target domain to the prod stage for the API, meaning that `https://<your.domain.com>/` will then resolve to your prod stage.
+
+This is, unfortunately, not quite the end, as you'll need to adjust a few things (like enabling CORS and setting up another API endpoint for the .well-known/acme-challenge so you have it ready when you need to renew your SSL cert).
+
 ## References
 Some references that will facilitate in deployment configuration:
 * [Setting up Google OpenID Authentication](https://developers.google.com/identity/sign-in/web/)
