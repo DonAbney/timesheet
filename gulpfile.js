@@ -15,6 +15,7 @@ var DEST = 'build/';
 var CSS_FILES = ['lib/css/*.css', 'src/css/*.css'];
 var JS_FILES = ['lib/js/jquery-*.js', 'lib/js/foundation-*.js', 'src/js/*.js'];
 var HTML_FILES = 'src/*.html';
+var IMG_FILES = 'lib/images/*.png';
 var CONFIG_SPECIFIC_FILES = {
   dev: ['config/dev/*.js'],
   mock: ['config/mock/*.js', 'config/nonDev/*.js'],
@@ -49,16 +50,16 @@ var publisher = awspublish.create({
 
 gulp.task('default', ['build']);
 
-gulp.task('build', ['minifyCss', 'minifyJs', 'copyHtml']);
+gulp.task('build', ['minifyCss', 'minifyJs', 'copyHtml', 'copyImages']);
 
 gulp.task('deploy', ['build'], function() {
   util.log(" * Deploying artifacts from " + DEST + resolveEnvironment() + "/*");
-  gulp.src(DEST + resolveEnvironment() + "/*")
+  gulp.src(DEST + resolveEnvironment() + "/**/*")
     .pipe(tap(function(file) {
       util.log(" - Deploying " + file.path);
     }))
     .pipe(rename(function(path) {
-      path.dirname += "/assets/" + resolveEnvironment()
+      path.dirname = "/assets/" + resolveEnvironment() + "/" + (path.dirname === '.' ? '' : path.dirname);
     }))
     .pipe(publisher.publish())
     .pipe(publisher.cache())
@@ -93,6 +94,15 @@ gulp.task('copyHtml', function() {
       util.log(" - Processing " + file.path);
     }))
     .pipe(gulp.dest(resolveDestinationDirectory()))
+    .pipe(browserSync.stream());
+});
+
+gulp.task('copyImages', function() {
+  return gulp.src(IMG_FILES)
+    .pipe(tap(function(file) {
+      util.log(" - Processing " + file.path);
+    }))
+    .pipe(gulp.dest(resolveDestinationDirectory() + "images/"))
     .pipe(browserSync.stream());
 });
 

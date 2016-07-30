@@ -6,15 +6,15 @@ var TimesheetUiWiring = (function() {
   };
 
   self.initializeDatePicker = function() {
-    $('#dateSelection').fdatepicker({
-  		initialDate: TimesheetUtil.formatDateMDDYY(new Date()),
-  		format: 'm/dd/yy',
-      weekStart: 6,
-  		disableDblClickSelection: true
-  	}).on('changeDate', function(ev) {
-      var selectedDate = $('#dateSelection').data('date');
-      TimesheetCommunication.fetchTimesheetInfo(selectedDate);
-      $('#dateSelection').fdatepicker('hide');
+    $('#datepicker').datepicker();
+    $('#dateSelection').on('click', function() {
+      $('#datepicker').datepicker('show');
+    });
+    $('#datepicker').datepicker('option', 'onSelect', function(dateText, instance) {
+      if (dateText) {
+        TimesheetCommunication.fetchTimesheetInfo(dateText);
+        $('#datepicker').datepicker('hide');
+      }
     });
   };
 

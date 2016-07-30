@@ -484,3 +484,4 @@ Some references for SSL certs and custom domain configuration:
 * [Amazon Certificate Manager docs](https://aws.amazon.com/certificate-manager/)
 * [Setting up secure connections and custom domains with CloudFront](http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/SecureConnections.html#CNAMEsAndHTTPS)
 * [Setting up custom SSL domains with CloudFront](https://aws.amazon.com/cloudfront/custom-ssl-domains/)
+* [Enabling CORS on API Gateway](http://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-cors.html)
