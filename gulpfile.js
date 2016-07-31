@@ -40,6 +40,20 @@ var API_GATEWAY_FILES = [
 ];
 var PROD_DEPLOYMENTS = ['mock', 'prod'];
 
+var publisherHeadersCssJs = {
+  // 'Cache-Control': 'max-age=315360000, public'
+  'Cache-Control': 'no-cache'
+};
+
+var publishHeadersHtml = {
+  'Cache-Control': 'no-cache'
+};
+
+var publishHeadersImg = {
+  // 'Cache-Control': 'max-age=86400, public'
+  'Cache-Control': 'no-cache'
+};
+
 var publisher = awspublish.create({
   region: 'us-east-1',
   params: {
@@ -52,16 +66,46 @@ gulp.task('default', ['build']);
 
 gulp.task('build', ['minifyCss', 'minifyJs', 'copyHtml', 'copyImages']);
 
-gulp.task('deploy', ['build'], function() {
-  util.log(" * Deploying artifacts from " + DEST + resolveEnvironment() + "/*");
-  gulp.src(DEST + resolveEnvironment() + "/**/*")
+gulp.task('deploy', ['deployHtml', 'deployCssJs', 'deployImg']);
+
+gulp.task('deployHtml', ['copyHtml'], function() {
+  util.log(" * Deploying HTML artifacts from " + DEST + resolveEnvironment() + "/*");
+  gulp.src(DEST + resolveEnvironment() + "/**/*.html")
     .pipe(tap(function(file) {
       util.log(" - Deploying " + file.path);
     }))
     .pipe(rename(function(path) {
       path.dirname = "/assets/" + resolveEnvironment() + "/" + (path.dirname === '.' ? '' : path.dirname);
     }))
-    .pipe(publisher.publish())
+    .pipe(publisher.publish(publishHeadersHtml))
+    .pipe(publisher.cache())
+    .pipe(awspublish.reporter());
+});
+
+gulp.task('deployCssJs', ['minifyCss', 'minifyJs'], function() {
+  util.log(" * Deploying CSS and JS artifacts from " + DEST + resolveEnvironment() + "/*");
+  gulp.src([DEST + resolveEnvironment() + "/**/*.css", DEST + resolveEnvironment() + "/**/*.js"])
+    .pipe(tap(function(file) {
+      util.log(" - Deploying " + file.path);
+    }))
+    .pipe(rename(function(path) {
+      path.dirname = "/assets/" + resolveEnvironment() + "/" + (path.dirname === '.' ? '' : path.dirname);
+    }))
+    .pipe(publisher.publish(publisherHeadersCssJs))
+    .pipe(publisher.cache())
+    .pipe(awspublish.reporter());
+});
+
+gulp.task('deployImg', ['copyImages'], function() {
+  util.log(" * Deploying image artifacts from " + DEST + resolveEnvironment() + "/*");
+  gulp.src([DEST + resolveEnvironment() + "/**/*.png", DEST + resolveEnvironment() + "/**/*.jpg"])
+    .pipe(tap(function(file) {
+      util.log(" - Deploying " + file.path);
+    }))
+    .pipe(rename(function(path) {
+      path.dirname = "/assets/" + resolveEnvironment() + "/" + (path.dirname === '.' ? '' : path.dirname);
+    }))
+    .pipe(publisher.publish(publishHeadersImg))
     .pipe(publisher.cache())
     .pipe(awspublish.reporter());
 });
