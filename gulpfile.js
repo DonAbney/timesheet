@@ -10,7 +10,7 @@ var browserSync = require('browser-sync').create();
 var aws = require('aws-sdk');
 var awspublish = require('gulp-awspublish');
 var rename = require('gulp-rename');
-var md5 = require('gulp-md5-assets');
+var md5 = require('gulp-md5-plus');
 var del = require('del');
 var eventStream = require('event-stream');
 
@@ -75,11 +75,11 @@ gulp.task('cleanHtml', function() {
 });
 
 gulp.task('cleanCss', function() {
-  return del([resolveDestinationDirectory() + "**/*.css\?*"]);
+  return del([resolveDestinationDirectory() + "**/*.css"]);
 });
 
 gulp.task('cleanJs', function() {
-  return del([resolveDestinationDirectory() + "**/*.js\?*"]);
+  return del([resolveDestinationDirectory() + "**/*.js"]);
 });
 
 gulp.task('cleanImages', function() {
@@ -91,7 +91,7 @@ gulp.task('build', ['minifyCss', 'minifyJs', 'copyHtml', 'copyImages']);
 gulp.task('deploy', ['build'], function() {
   util.log(" * Deploying artifacts from " + DEST + resolveEnvironment() + "/*");
   var deployHtmlStream = constructDeployStream(DEST + resolveEnvironment() + "/**/*.html", publishHeadersHtml);
-  var deployCssJsStream = constructDeployStream([DEST + resolveEnvironment() + "/**/*.css\?*", DEST + resolveEnvironment() + "/**/*.js\?*"], publisherHeadersCssJs);
+  var deployCssJsStream = constructDeployStream([DEST + resolveEnvironment() + "/**/*.css", DEST + resolveEnvironment() + "/**/*.js"], publisherHeadersCssJs);
   var deployImgStream = constructDeployStream([DEST + resolveEnvironment() + "/**/*.png", DEST + resolveEnvironment() + "/**/*.jpg"], publishHeadersImg);
 
   return eventStream.merge(deployHtmlStream, deployCssJsStream, deployImgStream)
