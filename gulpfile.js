@@ -10,12 +10,16 @@ var browserSync = require('browser-sync').create();
 var aws = require('aws-sdk');
 var awspublish = require('gulp-awspublish');
 var rename = require('gulp-rename');
+var md5 = require('gulp-md5-assets');
+var del = require('del');
+var eventStream = require('event-stream');
 
 var DEST = 'build/';
+var BASE_HTML_FILE = "timesheet.html";
 var CSS_FILES = ['lib/css/*.css', 'src/css/*.css'];
 var JS_FILES = ['lib/js/jquery-*.js', 'lib/js/foundation-*.js', 'src/js/*.js'];
 var HTML_FILES = 'src/*.html';
-var IMG_FILES = 'lib/images/*.png';
+var IMG_FILES = ['lib/images/*.png'];
 var CONFIG_SPECIFIC_FILES = {
   dev: ['config/dev/*.js'],
   mock: ['config/mock/*.js', 'config/nonDev/*.js'],
@@ -64,75 +68,74 @@ var publisher = awspublish.create({
 
 gulp.task('default', ['build']);
 
+gulp.task('clean', ['cleanHtml', 'cleanCss', 'cleanJs', 'cleanImages']);
+
+gulp.task('cleanHtml', function() {
+  return del([resolveDestinationDirectory() + "**/*.html"]);
+});
+
+gulp.task('cleanCss', function() {
+  return del([resolveDestinationDirectory() + "**/*.css\?*"]);
+});
+
+gulp.task('cleanJs', function() {
+  return del([resolveDestinationDirectory() + "**/*.js\?*"]);
+});
+
+gulp.task('cleanImages', function() {
+  return del([resolveDestinationDirectory() + "**/*.png", resolveDestinationDirectory() + "**/*.jpg"]);
+});
+
 gulp.task('build', ['minifyCss', 'minifyJs', 'copyHtml', 'copyImages']);
 
-gulp.task('deploy', ['deployHtml', 'deployCssJs', 'deployImg']);
+gulp.task('deploy', ['build'], function() {
+  util.log(" * Deploying artifacts from " + DEST + resolveEnvironment() + "/*");
+  var deployHtmlStream = constructDeployStream(DEST + resolveEnvironment() + "/**/*.html", publishHeadersHtml);
+  var deployCssJsStream = constructDeployStream([DEST + resolveEnvironment() + "/**/*.css\?*", DEST + resolveEnvironment() + "/**/*.js\?*"], publisherHeadersCssJs);
+  var deployImgStream = constructDeployStream([DEST + resolveEnvironment() + "/**/*.png", DEST + resolveEnvironment() + "/**/*.jpg"], publishHeadersImg);
 
-gulp.task('deployHtml', ['copyHtml'], function() {
-  util.log(" * Deploying HTML artifacts from " + DEST + resolveEnvironment() + "/*");
-  gulp.src(DEST + resolveEnvironment() + "/**/*.html")
+  return eventStream.merge(deployHtmlStream, deployCssJsStream, deployImgStream)
+    .pipe(publisher.sync("assets/" + resolveEnvironment()))
+    .pipe(publisher.cache())
+    .pipe(awspublish.reporter());
+});
+
+function constructDeployStream(filePatterns, publishHeaders) {
+  return gulp.src(filePatterns)
     .pipe(tap(function(file) {
       util.log(" - Deploying " + file.path);
     }))
     .pipe(rename(function(path) {
       path.dirname = "/assets/" + resolveEnvironment() + "/" + (path.dirname === '.' ? '' : path.dirname);
     }))
-    .pipe(publisher.publish(publishHeadersHtml))
-    .pipe(publisher.cache())
-    .pipe(awspublish.reporter());
-});
+    .pipe(publisher.publish(publishHeaders));
+}
 
-gulp.task('deployCssJs', ['minifyCss', 'minifyJs'], function() {
-  util.log(" * Deploying CSS and JS artifacts from " + DEST + resolveEnvironment() + "/*");
-  gulp.src([DEST + resolveEnvironment() + "/**/*.css", DEST + resolveEnvironment() + "/**/*.js"])
-    .pipe(tap(function(file) {
-      util.log(" - Deploying " + file.path);
-    }))
-    .pipe(rename(function(path) {
-      path.dirname = "/assets/" + resolveEnvironment() + "/" + (path.dirname === '.' ? '' : path.dirname);
-    }))
-    .pipe(publisher.publish(publisherHeadersCssJs))
-    .pipe(publisher.cache())
-    .pipe(awspublish.reporter());
-});
-
-gulp.task('deployImg', ['copyImages'], function() {
-  util.log(" * Deploying image artifacts from " + DEST + resolveEnvironment() + "/*");
-  gulp.src([DEST + resolveEnvironment() + "/**/*.png", DEST + resolveEnvironment() + "/**/*.jpg"])
-    .pipe(tap(function(file) {
-      util.log(" - Deploying " + file.path);
-    }))
-    .pipe(rename(function(path) {
-      path.dirname = "/assets/" + resolveEnvironment() + "/" + (path.dirname === '.' ? '' : path.dirname);
-    }))
-    .pipe(publisher.publish(publishHeadersImg))
-    .pipe(publisher.cache())
-    .pipe(awspublish.reporter());
-});
-
-gulp.task('minifyCss', function() {
+gulp.task('minifyCss', ['copyHtml', 'cleanCss'], function() {
   return gulp.src(CSS_FILES)
     .pipe(tap(function(file) {
       util.log(" - Processing " + file.path);
     }))
     .pipe(cleanCSS())
     .pipe(concat('timesheet.min.css'))
+    .pipe(md5(10, resolveDestinationDirectory() + BASE_HTML_FILE))
     .pipe(gulp.dest(resolveDestinationDirectory()))
     .pipe(browserSync.stream());
 });
 
-gulp.task('minifyJs', function() {
+gulp.task('minifyJs', ['copyHtml', 'cleanJs'], function() {
   return gulp.src(resolveJsFiles())
     .pipe(tap(function(file) {
       util.log(" - Processing " + file.path);
     }))
     .pipe(uglify())
     .pipe(concat('timesheet.min.js'))
+    .pipe(md5(10, resolveDestinationDirectory() + BASE_HTML_FILE))
     .pipe(gulp.dest(resolveDestinationDirectory()))
     .pipe(browserSync.stream());
 });
 
-gulp.task('copyHtml', function() {
+gulp.task('copyHtml', ['cleanHtml'], function() {
   return gulp.src(HTML_FILES)
     .pipe(tap(function(file) {
       util.log(" - Processing " + file.path);
@@ -141,7 +144,7 @@ gulp.task('copyHtml', function() {
     .pipe(browserSync.stream());
 });
 
-gulp.task('copyImages', function() {
+gulp.task('copyImages', ['cleanImages'], function() {
   return gulp.src(IMG_FILES)
     .pipe(tap(function(file) {
       util.log(" - Processing " + file.path);
