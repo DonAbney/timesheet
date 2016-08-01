@@ -19,7 +19,7 @@ var BASE_HTML_FILE = "timesheet.html";
 var CSS_FILES = ['lib/css/*.css', 'src/css/*.css'];
 var JS_FILES = ['lib/js/jquery-*.js', 'lib/js/foundation-*.js', 'src/js/*.js'];
 var HTML_FILES = 'src/*.html';
-var IMG_FILES = ['lib/images/*.png'];
+var IMG_FILES = ['lib/images/*.png', 'lib/images/*.jpg', 'lib/images/*.ico'];
 var CONFIG_SPECIFIC_FILES = {
   dev: ['config/dev/*.js'],
   mock: ['config/mock/*.js', 'config/nonDev/*.js'],
@@ -81,7 +81,7 @@ gulp.task('cleanJs', function() {
 });
 
 gulp.task('cleanImages', function() {
-  return del([resolveDestinationDirectory() + "**/*.png", resolveDestinationDirectory() + "**/*.jpg"]);
+  return del([resolveDestinationDirectory() + "**/*.png", resolveDestinationDirectory() + "**/*.jpg", resolveDestinationDirectory() + "**/*.ico"]);
 });
 
 gulp.task('build', ['minifyCss', 'minifyJs', 'copyHtml', 'copyImages']);
@@ -90,7 +90,7 @@ gulp.task('deploy', ['build'], function() {
   util.log(" * Deploying artifacts from " + DEST + resolveEnvironment() + "/*");
   var deployHtmlStream = constructDeployStream(DEST + resolveEnvironment() + "/**/*.html", publishHeadersHtml);
   var deployCssJsStream = constructDeployStream([DEST + resolveEnvironment() + "/**/*.css", DEST + resolveEnvironment() + "/**/*.js"], publisherHeadersCssJs);
-  var deployImgStream = constructDeployStream([DEST + resolveEnvironment() + "/**/*.png", DEST + resolveEnvironment() + "/**/*.jpg"], publishHeadersImg);
+  var deployImgStream = constructDeployStream([DEST + resolveEnvironment() + "/**/*.png", DEST + resolveEnvironment() + "/**/*.jpg", DEST + resolveEnvironment() + "/**/*.ico"], publishHeadersImg);
 
   return eventStream.merge(deployHtmlStream, deployCssJsStream, deployImgStream)
     .pipe(publisher.sync("assets/" + resolveEnvironment()))
