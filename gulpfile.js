@@ -45,8 +45,7 @@ var API_GATEWAY_FILES = [
 var PROD_DEPLOYMENTS = ['mock', 'prod'];
 
 var publisherHeadersCssJs = {
-  // 'Cache-Control': 'max-age=315360000, public'
-  'Cache-Control': 'no-cache'
+  'Cache-Control': 'max-age=315360000, public'
 };
 
 var publishHeadersHtml = {
@@ -54,8 +53,7 @@ var publishHeadersHtml = {
 };
 
 var publishHeadersImg = {
-  // 'Cache-Control': 'max-age=86400, public'
-  'Cache-Control': 'no-cache'
+  'Cache-Control': 'max-age=86400, public'
 };
 
 var publisher = awspublish.create({
