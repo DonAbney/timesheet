@@ -30,6 +30,13 @@ describe('Messaging', function() {
 
       expect($('#messageArea .testMessage button').length).toEqual(1);
     });
+
+    it('should allow for multiple messages to be added', function() {
+      ResponseHandling.displayMessage('testMessage', "message 1");
+      ResponseHandling.displayMessage('testMessage', "message 2");
+
+      expect($('#messageArea .testMessage').length).toEqual(2);
+    });
   });
 
   describe('for showing error response information', function() {
@@ -50,6 +57,12 @@ describe('Messaging', function() {
 
         expect(getMessageText()).toEqual("request was lost during testing");
       });
+
+      it('should have a class of alert', function() {
+        ResponseHandling.displayError(jqXHR, requestInfo);
+
+        expect($('#messageArea .alert').length).toEqual(1);
+      });
     });
 
     describe('via displayErrorMessage()', function() {
@@ -59,6 +72,12 @@ describe('Messaging', function() {
         ResponseHandling.displayErrorMessage(message);
 
         expect(getMessageText()).toEqual(message);
+      });
+
+      it('should have a class of alert', function() {
+        ResponseHandling.displayErrorMessage(message);
+
+        expect($('#messageArea .alert').length).toEqual(1);
       });
     });
   });
