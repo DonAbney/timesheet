@@ -12,6 +12,7 @@ var TimesheetCommunication = (function() {
     var hoursForTimesheetEntries = TimesheetUtil.convertToTimeEntries(TimesheetView.collectEnteredTime());
     var timesheetInfo = TimesheetView.collectTimesheetInfo();
     TimesheetApiWrapper.saveTimesheet(timesheetInfo.id, hoursForTimesheetEntries).done(function() {
+      ResponseHandling.displaySuccessMessage('Changes saved');
       self.fetchTimesheetInfo(TimesheetUtil.formatDateYYYYMMDD(timesheetInfo.startDate));
     });
   };
@@ -19,6 +20,7 @@ var TimesheetCommunication = (function() {
   self.sendValidateTimesheet = function() {
     var timesheetInfo = TimesheetView.collectTimesheetInfo();
     TimesheetApiWrapper.validateTimesheet(timesheetInfo.id).done(function() {
+      ResponseHandling.displaySuccessMessage('Timesheet validated');
       self.fetchTimesheetInfo(TimesheetUtil.formatDateYYYYMMDD(timesheetInfo.startDate));
     });
   };
