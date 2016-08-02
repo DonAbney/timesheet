@@ -165,7 +165,7 @@ describe('Displaying basic information', function() {
 
   describe('for the action buttons', function() {
     beforeEach(function() {
-      var fixture = "<div id='fixture'><div class='wrapper-generatedView'></div><button class='saveChanges' type='button'></button><button class='validateTimesheet' type='button'></button></div>";
+      var fixture = "<div id='fixture'><div class='wrapper-generatedView'></div></div>";
       document.body.insertAdjacentHTML('afterbegin', fixture);
     });
 
@@ -174,6 +174,22 @@ describe('Displaying basic information', function() {
     });
 
     describe('via displayTimesheetInfo()', function() {
+      it('should render a save changes button', function() {
+        var timesheetInfo = generateTimesheetInfo();
+
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
+
+        expect($('.saveChanges').length).toEqual(1);
+      });
+
+      it('should render a validate timesheet button', function() {
+        var timesheetInfo = generateTimesheetInfo();
+
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
+
+        expect($('.validateTimesheet').length).toEqual(1);
+      });
+
       it('should disable the save changes button if the timesheet has already been validated, so that additional changes cannot be attempted', function() {
         var timesheetInfo = generateValidatedTimesheetInfo();
 

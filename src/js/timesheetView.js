@@ -20,7 +20,10 @@ var TimesheetView = (function() {
         timeEntry: '',
         positionLabel: '',
         timeEntryField: '',
-        placeholderTimeEntryField: ''
+        placeholderTimeEntryField: '',
+        buttonArea: 'row expanded',
+        saveChanges: 'small-12 large-4 columns',
+        validateTimesheet: 'small-12 large-4 columns'
       },
       styles: {
         timesheetInfo: {
@@ -56,6 +59,7 @@ var TimesheetView = (function() {
     var positions = TimesheetUtil.collatePositions(timesheetInfo.timeEntryPositionMapByDate);
     var daysEntries = TimesheetUtil.collateDays(timesheetInfo.timeEntryPositionMapByDate, positions);
     displayDaysAndPositions(daysEntries, positions);
+    displayButtonArea();
     adjustValidatedIndicator(timesheetInfo.timesheetInstance.validated);
     updatePageOnStateChange();
     self.windowSizeChanged();
@@ -373,6 +377,33 @@ var TimesheetView = (function() {
     generatedWrapper.append(timesheetInfoEntry);
   }
 
+  function constructSaveChangesButton() {
+    var button = document.createElement('button');
+    construct.configureElementStyle('saveChanges', button);
+    button.setAttribute('type', 'button');
+    button.innerHTML = "Save Changes";
+    return button;
+  }
+
+  function constructValidateTimesheetButton() {
+    var button = document.createElement('button');
+    construct.configureElementStyle('validateTimesheet', button);
+    button.setAttribute('type', 'button');
+    button.innerHTML = "Validate Timesheet";
+    return button;
+  }
+
+  function displayButtonArea() {
+    var generatedWrapper = $('.wrapper-generatedView');
+    var buttonArea = document.createElement('div');
+    construct.configureElementStyle('buttonArea', buttonArea);
+    buttonArea.insertAdjacentElement('beforeend', constructSaveChangesButton());
+    buttonArea.insertAdjacentElement('beforeend', constructValidateTimesheetButton());
+    generatedWrapper.append(buttonArea);
+    $('.saveChanges').click(TimesheetCommunication.sendSaveTimesheet);
+    $('.validateTimesheet').click(TimesheetCommunication.sendValidateTimesheet);
+  }
+
   self.clearOldInformation = function() {
     var generatedWrapper = $('.wrapper-generatedView');
     generatedWrapper.empty();
@@ -395,8 +426,6 @@ var TimesheetView = (function() {
   }
 
   self.registerPageListeners = function() {
-    $('.saveChanges').click(TimesheetCommunication.sendSaveTimesheet);
-    $('.validateTimesheet').click(TimesheetCommunication.sendValidateTimesheet);
     $(window).resize(TimesheetView.windowSizeChanged);
   }
 
