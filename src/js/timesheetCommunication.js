@@ -4,7 +4,6 @@ var TimesheetCommunication = (function() {
   self.fetchTimesheetInfo = function(date) {
     var username = TimesheetAuthentication.currentAuthenticatedUsername();
     TimesheetApiWrapper.fetchTimesheetInfo(username, date).done(function(data) {
-      ResponseHandling.makeSuccessResponseVisible();
       TimesheetView.displayTimesheetInfo(TimesheetAuthentication.currentAuthenticatedUserInfo(), data);
     });
   };

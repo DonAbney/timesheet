@@ -159,9 +159,10 @@ gulp.task('serve', ['default'], function() {
     }
   });
 
-  gulp.watch(CSS_FILES, ['minifyCss']);
-  gulp.watch(resolveJsFiles(), ['minifyJs']);
-  gulp.watch(HTML_FILES, ['copyHtml']);
+  gulp.watch(CSS_FILES, ['build']);
+  gulp.watch(resolveJsFiles(), ['build']);
+  gulp.watch(HTML_FILES, ['build']);
+  gulp.watch(IMG_FILES, ['build']);
 });
 
 function resolveEnvironment() {

@@ -24,7 +24,6 @@ var TimesheetApiWrapper = (function(){
       });
       deferred.resolve();
     }).fail(function(jqXHR) {
-      ResponseHandling.makeErrorResponseVisible();
       ResponseHandling.displayError(jqXHR, valueMap);
       deferred.reject();
     });
@@ -37,7 +36,6 @@ var TimesheetApiWrapper = (function(){
     targetAPICall(params, body).then(function(response) {
       deferred.resolve(response.data);
     }).catch(function(response) {
-      ResponseHandling.makeErrorResponseVisible();
       ResponseHandling.displayError(bundleErrorResponseDataForDisplay(response), {});
       deferred.reject();
     });

@@ -386,8 +386,6 @@ var TimesheetView = (function() {
 
   self.showAuthenticationArea = function() {
     $('#authentication').show();
-    $('#errorResponse').hide();
-    $('#successfulResponse').hide();
     $('#authenticated').hide();
   }
 

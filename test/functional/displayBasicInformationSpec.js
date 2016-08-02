@@ -568,7 +568,7 @@ describe('Displaying basic information', function() {
 
   describe('showing the authentication area', function() {
     beforeEach(function() {
-      var fixture = "<div id='fixture'><div id='authentication'></div><div id='errorResponse'></div><div id='successfulResponse'></div><div id='authenticated'></div></div>";
+      var fixture = "<div id='fixture'><div id='authentication'></div><div id='authenticated'></div></div>";
       document.body.insertAdjacentHTML('afterbegin', fixture);
     });
 
@@ -582,18 +582,6 @@ describe('Displaying basic information', function() {
       TimesheetView.showAuthenticationArea();
 
       expect($('#authentication').is(':visible')).toEqual(true);
-    });
-
-    it('should hide the error response area', function() {
-      TimesheetView.showAuthenticationArea();
-
-      expect($('#errorResponse').is(':visible')).toEqual(false);
-    });
-
-    it('should hide the successful response area', function() {
-      TimesheetView.showAuthenticationArea();
-
-      expect($('#successfulResponse').is(':visible')).toEqual(false);
     });
 
     it('should hide the authenticated area', function() {

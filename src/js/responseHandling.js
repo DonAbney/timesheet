@@ -1,16 +1,6 @@
 var ResponseHandling = (function() {
   var self = {};
 
-  self.makeErrorResponseVisible = function() {
-    $('#errorResponse').show();
-    $('#successfulResponse').hide();
-  };
-
-  self.makeSuccessResponseVisible = function() {
-    $('#successfulResponse').show();
-    $('#errorResponse').hide();
-  };
-
   self.displayError = function(jqXHR, requestInfo) {
     var wrapper = $('.wrapper-generatedErrorInfo');
     var statusCodeText = "[" + jqXHR.status + "] " + jqXHR.statusText;

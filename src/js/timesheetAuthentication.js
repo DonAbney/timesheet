@@ -14,7 +14,6 @@ var TimesheetAuthentication = (function() {
   };
 
   self.onError = function(error) {
-    ResponseHandling.makeErrorResponseVisible();
     ResponseHandling.displayErrorMessage(JSON.stringify(error, undefined, 2));
   };
 
