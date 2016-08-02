@@ -418,11 +418,15 @@ var TimesheetView = (function() {
   self.showAuthenticationArea = function() {
     $('#authentication').show();
     $('#authenticated').hide();
+    $('#dateSelection').hide();
+    $('#summaryStatus').hide();
   }
 
   self.hideAuthenticationArea = function() {
     $('#authentication').hide();
     $('#authenticated').show();
+    $('#dateSelection').show();
+    $('#summaryStatus').show();
   }
 
   self.registerPageListeners = function() {

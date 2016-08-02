@@ -584,7 +584,7 @@ describe('Displaying basic information', function() {
 
   describe('showing the authentication area', function() {
     beforeEach(function() {
-      var fixture = "<div id='fixture'><div id='authentication'></div><div id='authenticated'></div></div>";
+      var fixture = "<div id='fixture'><div id='authentication'></div><div id='authenticated'></div><div id='dateSelection'></div><div id='summaryStatus'></div></div>";
       document.body.insertAdjacentHTML('afterbegin', fixture);
     });
 
@@ -605,11 +605,23 @@ describe('Displaying basic information', function() {
 
       expect($('#authenticated').is(':visible')).toEqual(false);
     });
+
+    it('should hide the date selection area', function() {
+      TimesheetView.showAuthenticationArea();
+
+      expect($('#dateSelection').is(':visible')).toEqual(false);
+    });
+
+    it('should hide the summary status area', function() {
+      TimesheetView.showAuthenticationArea();
+
+      expect($('#summaryStatus').is(':visible')).toEqual(false);
+    });
   });
 
   describe('hiding the authentication area', function() {
     beforeEach(function() {
-      var fixture = "<div id='fixture'><div id='authentication'></div><<div id='authenticated'></div></div>";
+      var fixture = "<div id='fixture'><div id='authentication'></div><<div id='authenticated'></div><div id='dateSelection'></div><div id='summaryStatus'></div></div>";
       document.body.insertAdjacentHTML('afterbegin', fixture);
     });
 
@@ -629,6 +641,22 @@ describe('Displaying basic information', function() {
       TimesheetView.hideAuthenticationArea();
 
       expect($('#authenticated').is(':visible')).toEqual(true);
+    });
+
+    it('should show the date selection area', function() {
+      $('#dateSelection').hide();
+
+      TimesheetView.hideAuthenticationArea();
+
+      expect($('#dateSelection').is(':visible')).toEqual(true);
+    });
+
+    it('should show the summary status area', function() {
+      $('#summaryStatus').hide();
+
+      TimesheetView.hideAuthenticationArea();
+
+      expect($('#summaryStatus').is(':visible')).toEqual(true);
     });
   });
 });

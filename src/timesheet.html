@@ -26,12 +26,12 @@
     <div class="large-status top-bar-left">
       <ul class="menu">
         <li class="menu-text">Pillar Timesheet</li>
-        <li><span class="weekTotal">0</span><span class='stateChangeIndicator' style='display:none;'>*</span><span class='validatedIndicator' style='display:none;'>&#8224;</span></li>
+        <li id="summaryStatus" style="display:none;"><span class="weekTotal">0</span><span class='stateChangeIndicator' style='display:none;'>*</span><span class='validatedIndicator' style='display:none;'>&#8224;</span></li>
       </ul>
     </div>
     <div class="top-bar-right">
       <ul class="vertical large-horizontal menu">
-        <li id="dateSelection"><input id="datepicker" type="hidden" /><span class="fa fa-calendar"></span><span class="timesheet-startDate"></span><span class="timesheet-endDate"></span></li>
+        <li id="dateSelection" style="display:none;"><input id="datepicker" type="hidden" /><span class="fa fa-calendar"></span><span class="timesheet-startDate"></span><span class="timesheet-endDate"></span></li>
         <li id="authentication">
           <div id="customGoogleButton" class="customGPlusSignIn">
             <div class="googleG">
