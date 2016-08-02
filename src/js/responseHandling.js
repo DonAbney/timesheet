@@ -41,5 +41,9 @@ var ResponseHandling = (function() {
     self.displayMessage('alert', message);
   };
 
+  self.displaySuccessMessage = function(message) {
+    self.displayMessage('success', message);
+  };
+
   return self;
 })();

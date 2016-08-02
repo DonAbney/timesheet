@@ -81,4 +81,20 @@ describe('Messaging', function() {
       });
     });
   });
+
+  describe('for showing success response information', function() {
+    describe('via displaySuccessMessage()', function() {
+      it('should set the status message to the provided message', function() {
+        ResponseHandling.displaySuccessMessage("some message");
+
+        expect(getMessageText()).toEqual("some message");
+      });
+
+      it('should have a class of success', function() {
+        ResponseHandling.displaySuccessMessage("some message");
+
+        expect($('#messageArea .success').length).toEqual(1);
+      });
+    });
+  });
 });
