@@ -1,11 +1,35 @@
-describe('Error handling', function() {
+describe('Messaging', function() {
   beforeEach(function() {
-    var fixture = "<div id='fixture'><div class='wrapper-generatedErrorInfo'></div></div>";
+    var fixture = "<div id='fixture'><div id='messageArea'></div></div>";
     document.body.insertAdjacentHTML('afterbegin', fixture);
   });
 
   afterEach(function() {
     document.body.removeChild(document.getElementById('fixture'));
+  });
+
+  function getMessageText() {
+    return document.getElementById('messageArea').childNodes[0].childNodes[0].nodeValue;
+  }
+
+  describe('via displayMessage()', function() {
+    it('should add an element to the messageArea with the target type as a class of the element', function() {
+      ResponseHandling.displayMessage('personalMessage', 'some message text');
+
+      expect($('#messageArea .personalMessage').length).toEqual(1);
+    });
+
+    it('should include the message text in the element added to the messageArea', function() {
+      ResponseHandling.displayMessage('testMessage', 'some silly message text');
+
+      expect(getMessageText()).toEqual('some silly message text');
+    });
+
+    it('should include a button to close the message', function() {
+      ResponseHandling.displayMessage('testMessage', 'some message');
+
+      expect($('#messageArea .testMessage button').length).toEqual(1);
+    });
   });
 
   describe('for showing error response information', function() {
@@ -21,48 +45,20 @@ describe('Error handling', function() {
         value2: "another value"
       };
 
-      it('should set the status code to the provided status code', function() {
-        ResponseHandling.displayError(jqXHR, requestInfo);
-
-        expect($('.wrapper-generatedErrorInfo .statusCode').text()).toEqual("[302] standard status code message");
-      });
-
       it('should set the status message to the provided message', function() {
         ResponseHandling.displayError(jqXHR, requestInfo);
 
-        expect($('.wrapper-generatedErrorInfo .statusMessage').text()).toEqual("request was lost during testing");
-      });
-
-      it('should display the provided request information', function() {
-        ResponseHandling.displayError(jqXHR, requestInfo);
-
-        expect($('.wrapper-generatedErrorInfo .requestInfo-key:eq(0)').text()).toEqual("value1");
-        expect($('.wrapper-generatedErrorInfo .requestInfo-value:eq(0)').text()).toEqual("some value");
-        expect($('.wrapper-generatedErrorInfo .requestInfo-key:eq(1)').text()).toEqual("value2");
-        expect($('.wrapper-generatedErrorInfo .requestInfo-value:eq(1)').text()).toEqual("another value");
+        expect(getMessageText()).toEqual("request was lost during testing");
       });
     });
 
     describe('via displayErrorMessage()', function() {
       var message = "some generic error message for testing";
 
-      it('should not include any information within the status code area', function() {
-        ResponseHandling.displayErrorMessage(message);
-
-        expect($('.wrapper-generatedErrorInfo .statusCode').text()).toEqual("");
-      });
-
       it('should set the status message to the provided message', function() {
         ResponseHandling.displayErrorMessage(message);
 
-        expect($('.wrapper-generatedErrorInfo .statusMessage').text()).toEqual(message);
-      });
-
-      it('should not display any request information', function() {
-        ResponseHandling.displayErrorMessage(message);
-
-        expect($('.wrapper-generatedErrorInfo .requestInfo-key').length).toEqual(0);
-        expect($('.wrapper-generatedErrorInfo .requestInfo-value').length).toEqual(0);
+        expect(getMessageText()).toEqual(message);
       });
     });
   });

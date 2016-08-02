@@ -1,64 +1,45 @@
 var ResponseHandling = (function() {
   var self = {};
 
+  self.displayMessage = function(type, message) {
+    var messageArea = $('#messageArea');
+    messageArea.append(constructMessageElement(type, message));
+  };
+
+  function constructMessageElement(type, message) {
+    var messageElement = document.createElement('div');
+    messageElement.className = type + ' callout';
+    messageElement.innerHTML = message;
+    messageElement.setAttribute('data-closable', 'slide-out-right');
+    var closeButton = constructMessageCloseButton();
+    messageElement.insertAdjacentElement('beforeend', closeButton);
+    $(closeButton).click(function() {
+      document.getElementById('messageArea').removeChild(messageElement).remove();
+    });
+    return messageElement;
+  }
+
+  function constructMessageCloseButton() {
+    var messageCloseButton = document.createElement('button');
+    messageCloseButton.className = 'close-button';
+    messageCloseButton.setAttribute('aria-label', 'Dismiss alert');
+    messageCloseButton.setAttribute('data-close', '');
+    messageCloseButton.setAttribute('type', 'button');
+    var decorator = document.createElement('span');
+    decorator.setAttribute('aria-hidden', 'true');
+    decorator.innerHTML = '&times;';
+    messageCloseButton.insertAdjacentElement('beforeend', decorator);
+    return messageCloseButton;
+  }
+
   self.displayError = function(jqXHR, requestInfo) {
-    var wrapper = $('.wrapper-generatedErrorInfo');
-    var statusCodeText = "[" + jqXHR.status + "] " + jqXHR.statusText;
     var statusMessage = JSON.parse(jqXHR.responseText).message;
-    wrapper.append(constructErrorInfo(statusCodeText, statusMessage, requestInfo));
+    self.displayMessage('alert', statusMessage);
   };
 
   self.displayErrorMessage = function(message) {
-    var wrapper = $('.wrapper-generatedErrorInfo');
-    wrapper.append(constructErrorInfo('', message, ''));
-  }
-
-  function constructErrorInfo(statusCodeText, statusMessage, requestInfo) {
-    var errorInfo = document.createElement('div');
-    errorInfo.className = 'errorInfo';
-    errorInfo.insertAdjacentElement('beforeend', constructErrorStatus(statusCodeText));
-    errorInfo.insertAdjacentElement('beforeend', constructStatusMessage(statusMessage));
-    errorInfo.insertAdjacentElement('beforeend', constructRequestInfo(requestInfo));
-    return errorInfo;
+    self.displayMessage('alert', message);
   };
-
-  function constructErrorStatus(statusCodeText) {
-    var statusCode = document.createElement('div');
-    statusCode.className = 'statusCode';
-    statusCode.innerHTML = statusCodeText;
-    return statusCode;
-  };
-
-  function constructStatusMessage(statusMessage) {
-    var statusMessageElement = document.createElement('div');
-    statusMessageElement.className = 'statusMessage';
-    statusMessageElement.innerHTML = statusMessage;
-    return statusMessageElement;
-  }
-
-  function constructRequestInfo(requestInfo) {
-    var requestInfoWrapper = document.createElement('div');
-    requestInfoWrapper.className = 'requestInfo';
-    TimesheetUtil.mapKeys(requestInfo).forEach(function(key) {
-      requestInfoWrapper.insertAdjacentElement('beforeend', constructKeyElement(key));
-      requestInfoWrapper.insertAdjacentElement('beforeend', constructValueElement(requestInfo[key]));
-    });
-    return requestInfoWrapper;
-  }
-
-  function constructKeyElement(key) {
-    var keyElement = document.createElement('div');
-    keyElement.className = 'requestInfo-key';
-    keyElement.innerHTML = key;
-    return keyElement;
-  }
-
-  function constructValueElement(value) {
-    var valueElement = document.createElement('div');
-    valueElement.className = 'requestInfo-value';
-    valueElement.innerHTML = value;
-    return valueElement;
-  }
 
   return self;
 })();
