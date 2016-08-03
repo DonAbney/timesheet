@@ -3,8 +3,9 @@ var TimesheetCommunication = (function() {
 
   self.fetchTimesheetInfo = function(date) {
     TimesheetView.clearOldInformation();
-    var username = TimesheetAuthentication.currentAuthenticatedUsername();
-    TimesheetApiWrapper.fetchTimesheetInfo(username, date).done(function(data) {
+    var userInfo = TimesheetAuthentication.currentAuthenticatedUserInfo();
+    TimesheetView.updateUsername(userInfo.fullName);
+    TimesheetApiWrapper.fetchTimesheetInfo(userInfo.username, date).done(function(data) {
       TimesheetView.displayTimesheetInfo(TimesheetAuthentication.currentAuthenticatedUserInfo(), data);
     });
   };
