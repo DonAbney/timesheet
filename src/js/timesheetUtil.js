@@ -158,8 +158,13 @@ var TimesheetUtil = (function() {
 
   self.formatDateYYYYMMDD = function(date) {
     var date = new Date(date);
-    return date.toJSON().split("T")[0];
+    return "" + date.getFullYear() + "-" + pad(date.getMonth() + 1, 2) + "-" + pad(date.getDate(), 2);
   };
+
+  function pad(number, minDigits) {
+    var numberAsString = "" + number;
+    return ("0000000000" + numberAsString).slice(-Math.max(numberAsString.length, minDigits));
+  }
 
   self.weekdayForDate = function(date) {
     var date = new Date(date);
