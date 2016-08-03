@@ -1,6 +1,8 @@
 var ResponseHandling = (function() {
   var self = {};
 
+  self.AUTO_CLOSE_DURATION = 5000;
+
   self.displayMessage = function(type, message) {
     var messageArea = $('#messageArea');
     messageArea.append(constructMessageElement(type, message));
@@ -13,10 +15,21 @@ var ResponseHandling = (function() {
     messageElement.setAttribute('data-closable', 'slide-out-right');
     var closeButton = constructMessageCloseButton();
     messageElement.insertAdjacentElement('beforeend', closeButton);
+    registerCloseEvents(closeButton, messageElement);
+    return messageElement;
+  }
+
+  function registerCloseEvents(closeButton, messageElement) {
     $(closeButton).click(function() {
       document.getElementById('messageArea').removeChild(messageElement).remove();
     });
-    return messageElement;
+    window.setTimeout(function() {
+      try {
+        $(closeButton).click();
+      } catch (e) {
+        // ignore, user likely closed the message prior to the auto-close for the message
+      }
+    }, self.AUTO_CLOSE_DURATION);
   }
 
   function constructMessageCloseButton() {
