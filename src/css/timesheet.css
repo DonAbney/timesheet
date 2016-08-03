@@ -170,6 +170,12 @@ h1 {
   padding: 0rem;
 }
 
+#messageArea .callout {
+  border-radius: 2em 1em 1em 2em;
+  margin-bottom: 0rem;
+  margin-top: 0.125rem;
+}
+
 /* Small only */
 @media screen and (max-width: 39.9375em) {
 }

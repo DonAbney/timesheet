@@ -1,7 +1,8 @@
 var ResponseHandling = (function() {
   var self = {};
 
-  self.AUTO_CLOSE_DURATION = 5000;
+  self.AUTO_CLOSE_DURATION = 3000;
+  self.WAIT_BEFORE_REMOVE = 2000;
 
   self.displayMessage = function(type, message) {
     var messageArea = $('#messageArea');
@@ -21,14 +22,14 @@ var ResponseHandling = (function() {
 
   function registerCloseEvents(closeButton, messageElement) {
     $(closeButton).click(function() {
-      document.getElementById('messageArea').removeChild(messageElement).remove();
+      window.setTimeout(function() {
+        try {
+          document.getElementById('messageArea').removeChild(messageElement).remove();
+        } catch (e) { /* safe to ignore */ }
+      }, self.WAIT_BEFORE_REMOVE);
     });
     window.setTimeout(function() {
-      try {
-        $(closeButton).click();
-      } catch (e) {
-        // ignore, user likely closed the message prior to the auto-close for the message
-      }
+      $(closeButton).click();
     }, self.AUTO_CLOSE_DURATION);
   }
 
