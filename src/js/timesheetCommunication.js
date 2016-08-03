@@ -2,6 +2,7 @@ var TimesheetCommunication = (function() {
   var self = {};
 
   self.fetchTimesheetInfo = function(date) {
+    TimesheetView.clearOldInformation();
     var username = TimesheetAuthentication.currentAuthenticatedUsername();
     TimesheetApiWrapper.fetchTimesheetInfo(username, date).done(function(data) {
       TimesheetView.displayTimesheetInfo(TimesheetAuthentication.currentAuthenticatedUserInfo(), data);
