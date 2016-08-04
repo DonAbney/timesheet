@@ -7,6 +7,8 @@ var TimesheetCommunication = (function() {
     TimesheetView.updateUsername(userInfo.fullName);
     TimesheetApiWrapper.fetchTimesheetInfo(userInfo.username, date).done(function(data) {
       TimesheetView.displayTimesheetInfo(TimesheetAuthentication.currentAuthenticatedUserInfo(), data);
+    }).fail(function(bundledResponse) {
+      ResponseHandling.displayError(bundledResponse.jqXHR, bundledResponse.valueMap);
     });
   };
 
@@ -16,6 +18,8 @@ var TimesheetCommunication = (function() {
     TimesheetApiWrapper.saveTimesheet(timesheetInfo.id, hoursForTimesheetEntries).done(function() {
       ResponseHandling.displaySuccessMessage('Changes saved');
       self.fetchTimesheetInfo(TimesheetUtil.formatDateYYYYMMDD(timesheetInfo.startDate));
+    }).fail(function(bundledResponse) {
+      ResponseHandling.displayError(bundledResponse.jqXHR, bundledResponse.valueMap);
     });
   };
 
@@ -24,6 +28,8 @@ var TimesheetCommunication = (function() {
     TimesheetApiWrapper.validateTimesheet(timesheetInfo.id).done(function() {
       ResponseHandling.displaySuccessMessage('Timesheet validated');
       self.fetchTimesheetInfo(TimesheetUtil.formatDateYYYYMMDD(timesheetInfo.startDate));
+    }).fail(function(bundledResponse) {
+      ResponseHandling.displayError(bundledResponse.jqXHR, bundledResponse.valueMap);
     });
   };
 

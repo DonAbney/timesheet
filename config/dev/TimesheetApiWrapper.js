@@ -25,8 +25,10 @@ var TimesheetApiWrapper = (function(){
       deferred.resolve();
     }).fail(function(jqXHR) {
       valueMap["{requestBody}"] = hoursForTimesheetEntries;
-      ResponseHandling.displayError(jqXHR, valueMap);
-      deferred.reject();
+      deferred.reject({
+        jqXHR: jqXHR,
+        valueMap: valueMap
+      });
     });
 
     return deferred.promise();
@@ -46,8 +48,10 @@ var TimesheetApiWrapper = (function(){
     }).done(function(data) {
       deferred.resolve();
     }).fail(function(jqXHR) {
-      ResponseHandling.displayError(jqXHR, valueMap);
-      deferred.reject();
+      deferred.reject({
+        jqXHR: jqXHR,
+        valueMap: valueMap
+      });
     });
 
     return deferred.promise();
@@ -67,8 +71,10 @@ var TimesheetApiWrapper = (function(){
     }).done(function(data) {
       deferred.resolve(data);
     }).fail(function(jqXHR) {
-      ResponseHandling.displayError(jqXHR, valueMap);
-      deferred.reject();
+      deferred.reject({
+        jqXHR: jqXHR,
+        valueMap: valueMap
+      });
     });
 
     return deferred.promise();
