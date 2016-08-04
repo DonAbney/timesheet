@@ -15,8 +15,8 @@ describe('the generic communication wrapper', function() {
   var fakeTimesheetInfo = { junk: "fake timesheet info", id: "fake id", startDate: "2016-05-09T04:00:00Z" };
   var fakeBundledErrorResponse = {jqXHR: {junk: "fake jqXHR"}, valueMap: {junk: "fake value map"}};
 
-  var futureDate = (function() { var date = new Date(); date.setDate(date.getDate() + 7); return accurateToDayOfMonth(date); })();
-  var moreThanOneWeekPastDate = (function() { var date = new Date(); date.setDate(date.getDate() - 8); return accurateToDayOfMonth(date); })();
+  var futureDate = (function() { var date = new Date(); date.setDate(date.getDate() + 1); return accurateToDayOfMonth(date); })();
+  var pastDate = (function() { var date = new Date(); date.setDate(date.getDate() - 1); return accurateToDayOfMonth(date); })();
   var sevenDaysBeforeToday = (function() { var date = new Date(); date.setDate(date.getDate() - 7); return accurateToDayOfMonth(date); })();
   var currentDate = accurateToDayOfMonth(new Date());
 
@@ -112,24 +112,24 @@ describe('the generic communication wrapper', function() {
 
       TimesheetCommunication.fetchTimesheetInfo(futureDate);
 
-      expect(TimesheetCommunication.fetchTimesheetInfo).toHaveBeenCalledWith(currentDate);
+      expect(TimesheetCommunication.fetchTimesheetInfo).toHaveBeenCalledWith(currentDate, true);
     });
 
-    it('should not display an error message when there was a failure to fetch a timesheet more than one week in the past', function() {
+    it('should not display an error message when there was a failure to fetch a timesheet in the past and it was not a retry attempt', function() {
       spyOn(TimesheetApiWrapper, 'fetchTimesheetInfo').and.returnValues(createPromise(false, fakeBundledErrorResponse), createPromise(true, fakeTimesheetInfo));
 
-      TimesheetCommunication.fetchTimesheetInfo(moreThanOneWeekPastDate);
+      TimesheetCommunication.fetchTimesheetInfo(pastDate);
 
       expect(ResponseHandling.displayError).not.toHaveBeenCalled();
     });
 
-    it('should try to fetch the timesheet for the current date when there was a failure to fetch a timesheet more than one week in the past', function() {
+    it('should try to fetch the timesheet for the current date when there was a failure to fetch a timesheet in the past and it was not a retry attempt', function() {
       spyOn(TimesheetApiWrapper, 'fetchTimesheetInfo').and.returnValues(createPromise(false, fakeBundledErrorResponse), createPromise(true, fakeTimesheetInfo));
       spyOn(TimesheetCommunication, 'fetchTimesheetInfo').and.callThrough();
 
-      TimesheetCommunication.fetchTimesheetInfo(moreThanOneWeekPastDate);
+      TimesheetCommunication.fetchTimesheetInfo(pastDate);
 
-      expect(TimesheetCommunication.fetchTimesheetInfo).toHaveBeenCalledWith(currentDate);
+      expect(TimesheetCommunication.fetchTimesheetInfo).toHaveBeenCalledWith(currentDate, true);
     });
 
     it('should not display an error message when there was a failure to fetch a timesheet for the current date', function() {
@@ -146,7 +146,7 @@ describe('the generic communication wrapper', function() {
 
       TimesheetCommunication.fetchTimesheetInfo(currentDate);
 
-      expect(TimesheetCommunication.fetchTimesheetInfo).toHaveBeenCalledWith(sevenDaysBeforeToday);
+      expect(TimesheetCommunication.fetchTimesheetInfo).toHaveBeenCalledWith(sevenDaysBeforeToday, true);
     });
 
     it('should display an error message with the bundled jqXHR information when fetching the timesheet info fails', function() {

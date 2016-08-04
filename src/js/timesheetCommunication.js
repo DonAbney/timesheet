@@ -1,22 +1,21 @@
 var TimesheetCommunication = (function() {
   var self = {};
 
-  var futureDate = (function() { var date = new Date(); date.setDate(date.getDate() + 7); return accurateToDayOfMonth(date); })();
-  var moreThanOneWeekPastDate = (function() { var date = new Date(); date.setDate(date.getDate() - 8); return accurateToDayOfMonth(date); })();
+  var futureDate = (function() { var date = new Date(); date.setDate(date.getDate() + 1); return accurateToDayOfMonth(date); })();
   var sevenDaysBeforeToday = (function() { var date = new Date(); date.setDate(date.getDate() - 7); return accurateToDayOfMonth(date); })();
   var currentDate = accurateToDayOfMonth(new Date());
 
-  self.fetchTimesheetInfo = function(date) {
+  self.fetchTimesheetInfo = function(date, isRetryAttempt) {
     TimesheetView.clearOldInformation();
     var userInfo = TimesheetAuthentication.currentAuthenticatedUserInfo();
     TimesheetView.updateUsername(userInfo.fullName);
     TimesheetApiWrapper.fetchTimesheetInfo(userInfo.username, date).done(function(data) {
       TimesheetView.displayTimesheetInfo(TimesheetAuthentication.currentAuthenticatedUserInfo(), data);
     }).fail(function(bundledResponse) {
-      if (isFutureDate(date) || isDateOlderThanOneWeek(date)) {
-        self.fetchTimesheetInfo(currentDate);
+      if (isFutureDate(date) || (isPastDate(date) && !isRetryAttempt)) {
+        self.fetchTimesheetInfo(currentDate, true);
       } else if (isToday(date)) {
-        self.fetchTimesheetInfo(sevenDaysBeforeToday);
+        self.fetchTimesheetInfo(sevenDaysBeforeToday, true);
       } else {
         ResponseHandling.displayError(bundledResponse.jqXHR, bundledResponse.valueMap);
       }
@@ -28,9 +27,9 @@ var TimesheetCommunication = (function() {
     return isDateBefore(currentDate, testDate);
   }
 
-  function isDateOlderThanOneWeek(date) {
+  function isPastDate(date) {
     var testDate = accurateToDayOfMonth(new Date(date));
-    return isDateBefore(testDate, sevenDaysBeforeToday);
+    return isDateBefore(testDate, currentDate);
   }
 
   function isToday(date) {
