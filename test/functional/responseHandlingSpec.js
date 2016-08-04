@@ -97,4 +97,20 @@ describe('Messaging', function() {
       });
     });
   });
+
+  describe('for showing info messages', function() {
+    describe('via displayInfoMessage()', function() {
+      it('should set the info message to the provided message', function() {
+        ResponseHandling.displayInfoMessage("some message");
+
+        expect(getMessageText()).toEqual("some message");
+      });
+
+      it('should have a class of primary', function() {
+        ResponseHandling.displayInfoMessage("some message");
+
+        expect($('#messageArea .primary').length).toEqual(1);
+      });
+    });
+  });
 });

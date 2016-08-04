@@ -59,5 +59,9 @@ var ResponseHandling = (function() {
     self.displayMessage('success', message);
   };
 
+  self.displayInfoMessage = function(message) {
+    self.displayMessage('primary', message);
+  };
+
   return self;
 })();

@@ -12,6 +12,9 @@ var TimesheetCommunication = (function() {
     TimesheetApiWrapper.fetchTimesheetInfo(userInfo.username, date).done(function(data) {
       TimesheetView.displayTimesheetInfo(TimesheetAuthentication.currentAuthenticatedUserInfo(), data);
     }).fail(function(bundledResponse) {
+      if (!isRetryAttempt) {
+        ResponseHandling.displayInfoMessage(TimesheetUtil.formatDateMDDYY(date) + " timesheet is not available.");
+      }
       if (isFutureDate(date) || (isPastDate(date) && !isRetryAttempt)) {
         self.fetchTimesheetInfo(currentDate, true);
       } else if (isToday(date)) {

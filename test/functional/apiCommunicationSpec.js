@@ -36,6 +36,7 @@ describe('the generic communication wrapper', function() {
     spyOn(TimesheetAuthentication, 'currentAuthenticatedUserInfo').and.returnValue(userInfo);
     spyOn(ResponseHandling, 'displayError');
     spyOn(ResponseHandling, 'displaySuccessMessage');
+    spyOn(ResponseHandling, 'displayInfoMessage');
   });
 
   function createPromise(isSuccess, promisedValue) {
@@ -96,6 +97,22 @@ describe('the generic communication wrapper', function() {
       TimesheetCommunication.fetchTimesheetInfo("2016-05-09");
 
       expect(TimesheetView.displayTimesheetInfo).toHaveBeenCalledWith(jasmine.any(Object), fakeTimesheetInfo);
+    });
+
+    it('should display an info message that the selected timesheet was not available', function() {
+      spyOn(TimesheetApiWrapper, 'fetchTimesheetInfo').and.returnValues(createPromise(false, fakeBundledErrorResponse), createPromise(true, fakeTimesheetInfo));
+
+      TimesheetCommunication.fetchTimesheetInfo(futureDate);
+
+      expect(ResponseHandling.displayInfoMessage).toHaveBeenCalledWith(TimesheetUtil.formatDateMDDYY(futureDate) + " timesheet is not available.");
+    });
+
+    it('should not display an info message that the selected timesheet was not available when it is a retry attempt', function() {
+      spyOn(TimesheetApiWrapper, 'fetchTimesheetInfo').and.returnValues(createPromise(false, fakeBundledErrorResponse), createPromise(true, fakeTimesheetInfo));
+
+      TimesheetCommunication.fetchTimesheetInfo(futureDate, true);
+
+      expect(ResponseHandling.displayInfoMessage).not.toHaveBeenCalled();
     });
 
     it('should not display an error message when there was a failure to fetch a timesheet in the future', function() {
