@@ -1,6 +1,11 @@
 var TimesheetCommunication = (function() {
   var self = {};
 
+  var futureDate = (function() { var date = new Date(); date.setDate(date.getDate() + 7); return accurateToDayOfMonth(date); })();
+  var moreThanOneWeekPastDate = (function() { var date = new Date(); date.setDate(date.getDate() - 8); return accurateToDayOfMonth(date); })();
+  var sevenDaysBeforeToday = (function() { var date = new Date(); date.setDate(date.getDate() - 7); return accurateToDayOfMonth(date); })();
+  var currentDate = accurateToDayOfMonth(new Date());
+
   self.fetchTimesheetInfo = function(date) {
     TimesheetView.clearOldInformation();
     var userInfo = TimesheetAuthentication.currentAuthenticatedUserInfo();
@@ -8,9 +13,38 @@ var TimesheetCommunication = (function() {
     TimesheetApiWrapper.fetchTimesheetInfo(userInfo.username, date).done(function(data) {
       TimesheetView.displayTimesheetInfo(TimesheetAuthentication.currentAuthenticatedUserInfo(), data);
     }).fail(function(bundledResponse) {
-      ResponseHandling.displayError(bundledResponse.jqXHR, bundledResponse.valueMap);
+      if (isFutureDate(date) || isDateOlderThanOneWeek(date)) {
+        self.fetchTimesheetInfo(currentDate);
+      } else if (isToday(date)) {
+        self.fetchTimesheetInfo(sevenDaysBeforeToday);
+      } else {
+        ResponseHandling.displayError(bundledResponse.jqXHR, bundledResponse.valueMap);
+      }
     });
   };
+
+  function isFutureDate(date) {
+    var testDate = accurateToDayOfMonth(new Date(date));
+    return isDateBefore(currentDate, testDate);
+  }
+
+  function isDateOlderThanOneWeek(date) {
+    var testDate = accurateToDayOfMonth(new Date(date));
+    return isDateBefore(testDate, sevenDaysBeforeToday);
+  }
+
+  function isToday(date) {
+    var testDate = accurateToDayOfMonth(new Date(date));
+    return accurateToDayOfMonth(testDate).getTime() === currentDate.getTime();
+  }
+
+  function isDateBefore(date1, date2) {
+    return date1.getTime() < date2.getTime();
+  }
+
+  function accurateToDayOfMonth(date) {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  }
 
   self.sendSaveTimesheet = function() {
     var hoursForTimesheetEntries = TimesheetUtil.convertToTimeEntries(TimesheetView.collectEnteredTime());

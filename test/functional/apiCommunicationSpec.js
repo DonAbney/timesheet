@@ -15,6 +15,15 @@ describe('the generic communication wrapper', function() {
   var fakeTimesheetInfo = { junk: "fake timesheet info", id: "fake id", startDate: "2016-05-09T04:00:00Z" };
   var fakeBundledErrorResponse = {jqXHR: {junk: "fake jqXHR"}, valueMap: {junk: "fake value map"}};
 
+  var futureDate = (function() { var date = new Date(); date.setDate(date.getDate() + 7); return accurateToDayOfMonth(date); })();
+  var moreThanOneWeekPastDate = (function() { var date = new Date(); date.setDate(date.getDate() - 8); return accurateToDayOfMonth(date); })();
+  var sevenDaysBeforeToday = (function() { var date = new Date(); date.setDate(date.getDate() - 7); return accurateToDayOfMonth(date); })();
+  var currentDate = accurateToDayOfMonth(new Date());
+
+  function accurateToDayOfMonth(date) {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  }
+
   beforeEach(function() {
     spyOn(TimesheetView, 'clearOldInformation');
     spyOn(TimesheetView, 'updateUsername');
@@ -89,10 +98,61 @@ describe('the generic communication wrapper', function() {
       expect(TimesheetView.displayTimesheetInfo).toHaveBeenCalledWith(jasmine.any(Object), fakeTimesheetInfo);
     });
 
+    it('should not display an error message when there was a failure to fetch a timesheet in the future', function() {
+      spyOn(TimesheetApiWrapper, 'fetchTimesheetInfo').and.returnValues(createPromise(false, fakeBundledErrorResponse), createPromise(true, fakeTimesheetInfo));
+
+      TimesheetCommunication.fetchTimesheetInfo(futureDate);
+
+      expect(ResponseHandling.displayError).not.toHaveBeenCalled();
+    });
+
+    it('should try to fetch the timesheet for the current date when there was a failure to fetch a timesheet in the future', function() {
+      spyOn(TimesheetApiWrapper, 'fetchTimesheetInfo').and.returnValues(createPromise(false, fakeBundledErrorResponse), createPromise(true, fakeTimesheetInfo));
+      spyOn(TimesheetCommunication, 'fetchTimesheetInfo').and.callThrough();
+
+      TimesheetCommunication.fetchTimesheetInfo(futureDate);
+
+      expect(TimesheetCommunication.fetchTimesheetInfo).toHaveBeenCalledWith(currentDate);
+    });
+
+    it('should not display an error message when there was a failure to fetch a timesheet more than one week in the past', function() {
+      spyOn(TimesheetApiWrapper, 'fetchTimesheetInfo').and.returnValues(createPromise(false, fakeBundledErrorResponse), createPromise(true, fakeTimesheetInfo));
+
+      TimesheetCommunication.fetchTimesheetInfo(moreThanOneWeekPastDate);
+
+      expect(ResponseHandling.displayError).not.toHaveBeenCalled();
+    });
+
+    it('should try to fetch the timesheet for the current date when there was a failure to fetch a timesheet more than one week in the past', function() {
+      spyOn(TimesheetApiWrapper, 'fetchTimesheetInfo').and.returnValues(createPromise(false, fakeBundledErrorResponse), createPromise(true, fakeTimesheetInfo));
+      spyOn(TimesheetCommunication, 'fetchTimesheetInfo').and.callThrough();
+
+      TimesheetCommunication.fetchTimesheetInfo(moreThanOneWeekPastDate);
+
+      expect(TimesheetCommunication.fetchTimesheetInfo).toHaveBeenCalledWith(currentDate);
+    });
+
+    it('should not display an error message when there was a failure to fetch a timesheet for the current date', function() {
+      spyOn(TimesheetApiWrapper, 'fetchTimesheetInfo').and.returnValues(createPromise(false, fakeBundledErrorResponse), createPromise(true, fakeTimesheetInfo));
+
+      TimesheetCommunication.fetchTimesheetInfo(currentDate);
+
+      expect(ResponseHandling.displayError).not.toHaveBeenCalled();
+    });
+
+    it('should try to fetch the timesheet for 7 days prior when there was a failure to fetch a timesheet for the current date', function() {
+      spyOn(TimesheetApiWrapper, 'fetchTimesheetInfo').and.returnValues(createPromise(false, fakeBundledErrorResponse), createPromise(true, fakeTimesheetInfo));
+      spyOn(TimesheetCommunication, 'fetchTimesheetInfo').and.callThrough();
+
+      TimesheetCommunication.fetchTimesheetInfo(currentDate);
+
+      expect(TimesheetCommunication.fetchTimesheetInfo).toHaveBeenCalledWith(sevenDaysBeforeToday);
+    });
+
     it('should display an error message with the bundled jqXHR information when fetching the timesheet info fails', function() {
       spyOn(TimesheetApiWrapper, 'fetchTimesheetInfo').and.returnValue(createPromise(false, fakeBundledErrorResponse));
 
-      TimesheetCommunication.fetchTimesheetInfo("2016-05-09");
+      TimesheetCommunication.fetchTimesheetInfo(sevenDaysBeforeToday);
 
       expect(ResponseHandling.displayError).toHaveBeenCalledWith(fakeBundledErrorResponse.jqXHR, jasmine.any(Object));
     });
@@ -100,7 +160,7 @@ describe('the generic communication wrapper', function() {
     it('should display an error message with the bundled value map when fetching the timesheet info fails', function() {
       spyOn(TimesheetApiWrapper, 'fetchTimesheetInfo').and.returnValue(createPromise(false, fakeBundledErrorResponse));
 
-      TimesheetCommunication.fetchTimesheetInfo("2016-05-09");
+      TimesheetCommunication.fetchTimesheetInfo(sevenDaysBeforeToday);
 
       expect(ResponseHandling.displayError).toHaveBeenCalledWith(jasmine.any(Object), fakeBundledErrorResponse.valueMap);
     });
