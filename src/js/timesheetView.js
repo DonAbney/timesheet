@@ -5,10 +5,12 @@ var TimesheetView = (function() {
     css: {
       classNames: {
         timesheetInfo: '',
-        days: 'row expanded small-up-1 medium-up-1 large-up-8 large-collapse',
-        positions: 'column',
+        tableArea: 'row expanded',
+        positions: 'large-3 columns',
         positionHeader: '',
         position: '',
+        daysArea: 'small-12 large-8 columns',
+        days: 'row expanded small-up-1 medium-up-1 large-up-7 large-collapse',
         day: 'column',
         dayHeader: '',
         dayName: '',
@@ -21,6 +23,9 @@ var TimesheetView = (function() {
         positionLabel: '',
         timeEntryField: '',
         placeholderTimeEntryField: '',
+        positionTotals: 'large-1 columns',
+        positionTotalsHeader: '',
+        positionTotal: '',
         buttonArea: 'row expanded',
         saveChanges: 'small-12 large-4 columns',
         validateTimesheet: 'small-12 large-4 columns'
@@ -321,6 +326,30 @@ var TimesheetView = (function() {
     return dayElement;
   }
 
+  function constructPositionTotalElement(position) {
+    var positionTotal = document.createElement('div');
+    construct.configureElementStyle('positionTotal', positionTotal);
+    positionTotal.setAttribute('data-position', position.id);
+    return positionTotal;
+  }
+
+  function constructPositionTotalsHeaderElement() {
+    var positionTotalsHeader = document.createElement('div');
+    construct.configureElementStyle('positionTotalsHeader', positionTotalsHeader);
+    positionTotalsHeader.innerHTML = "Totals";
+    return positionTotalsHeader;
+  }
+
+  function constructPositionTotalsElement(positions) {
+    var positionTotals = document.createElement('div');
+    construct.configureElementStyle('positionTotals', positionTotals);
+    positionTotals.insertAdjacentElement('afterbegin', constructPositionTotalsHeaderElement());
+    positions.forEach(function(position) {
+      positionTotals.insertAdjacentElement('beforeend', constructPositionTotalElement(position));
+    });
+    return positionTotals;
+  }
+
   function constructPositionElement(position) {
     var positionElement = document.createElement('div');
     construct.configureElementStyle('position', positionElement);
@@ -347,7 +376,6 @@ var TimesheetView = (function() {
   function constructDaysElement(daysEntries, positions) {
     var daysElement = document.createElement('div');
     construct.configureElementStyle("days", daysElement);
-    daysElement.insertAdjacentElement('afterbegin', constructPositionsElement(positions));
     var sortedDates = TimesheetUtil.sortDaysEntryDates(daysEntries);
     sortedDates.forEach(function(date) {
       daysElement.insertAdjacentElement('beforeend', constructDayElement(daysEntries[date], date, positions));
@@ -355,9 +383,26 @@ var TimesheetView = (function() {
     return daysElement;
   }
 
+  function constructDaysArea(daysEntries, positions) {
+    var daysArea = document.createElement('div');
+    construct.configureElementStyle('daysArea', daysArea);
+    daysArea.insertAdjacentElement('beforeend', constructDaysElement(daysEntries, positions));
+    return daysArea;
+  }
+
+  function constructTableArea(daysEntries, positions) {
+    var tableAreaElement = document.createElement('div');
+    construct.configureElementStyle('tableArea', tableAreaElement);
+    tableAreaElement.insertAdjacentElement('beforeend', constructPositionsElement(positions));
+    tableAreaElement.insertAdjacentElement('beforeend', constructDaysArea(daysEntries, positions));
+    tableAreaElement.insertAdjacentElement('beforeend', constructPositionTotalsElement(positions));
+    return tableAreaElement;
+  }
+
   function displayDaysAndPositions(daysEntries, positions) {
     var generatedWrapper = $('.wrapper-generatedView');
-    generatedWrapper.append(constructDaysElement(daysEntries, positions));
+    generatedWrapper.append(constructTableArea(daysEntries, positions));
+    // generatedWrapper.append(constructDaysElement(daysEntries, positions));
   }
 
   function constructTimesheetInfoEntry(userInfo, timesheetInstance) {

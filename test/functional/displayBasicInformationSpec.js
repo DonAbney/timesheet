@@ -8,6 +8,10 @@ describe('Displaying basic information', function() {
     imageUrl: 'http://some.url.com/images/myImage.png'
   };
 
+  function doesElementExist(selector) {
+    return $(selector).length !== 0
+  }
+
   describe('in the header', function() {
     beforeEach(function() {
       var fixture = "<div id='fixture'><span class='username'>unmodified</span><span class='validatedIndicator'>*</span><span class='timesheet-startDate'>unmodified</span><span class='timesheet-endDate'>unmodified</span></div>";
@@ -265,6 +269,66 @@ describe('Displaying basic information', function() {
     });
   });
 
+  describe('for the position totals', function() {
+    beforeEach(function() {
+      var fixture = "<div id='fixture' class='wrapper-generatedView'></div>";
+      document.body.insertAdjacentHTML('afterbegin', fixture);
+    });
+
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('fixture'));
+    });
+
+    describe('via displayTimesheetInfo()', function() {
+      it('should generate a position totals header with the base text being "Totals"', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z"}}),
+            generatePositionAndTimeEntryInfo({"id": "p2"}, {"te2": {date: "2016-05-31T04:00:00Z"}}),
+            generatePositionAndTimeEntryInfo({"id": "p3"}, {"te3": {date: "2016-05-31T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
+
+        expect($('.wrapper-generatedView .positionTotalsHeader').text()).toEqual("Totals");
+      });
+
+      it('should generate a totals entry for each of the positions', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z"}}),
+            generatePositionAndTimeEntryInfo({"id": "p2"}, {"te2": {date: "2016-05-31T04:00:00Z"}}),
+            generatePositionAndTimeEntryInfo({"id": "p3"}, {"te3": {date: "2016-05-31T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
+
+        expect($('.wrapper-generatedView .positionTotal').length).toEqual(3)
+      });
+
+      it('should also have the attribute data-position equal to the position id', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z"}}),
+            generatePositionAndTimeEntryInfo({"id": "p2"}, {"te2": {date: "2016-05-31T04:00:00Z"}}),
+            generatePositionAndTimeEntryInfo({"id": "p3"}, {"te3": {date: "2016-05-31T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
+
+        expect(doesElementExist('.wrapper-generatedView .positionTotal[data-position="p1"]')).toEqual(true);
+        expect(doesElementExist('.wrapper-generatedView .positionTotal[data-position="p2"]')).toEqual(true);
+        expect(doesElementExist('.wrapper-generatedView .positionTotal[data-position="p3"]')).toEqual(true);
+      });
+    });
+  });
+
   describe('for the days', function() {
     beforeEach(function() {
       var fixture = "<div id='fixture' class='wrapper-generatedView'></div>";
@@ -487,10 +551,6 @@ describe('Displaying basic information', function() {
 
         expect($('.wrapper-generatedView .timeEntries[data-date="2016-05-31T04:00:00Z"]').children().length).toEqual(2);
       });
-
-      function doesElementExist(selector) {
-        return $(selector).length !== 0
-      }
 
       it('should generate a total sum of hours worked element for the day', function() {
         var timesheetInfo = {
