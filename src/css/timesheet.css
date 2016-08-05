@@ -93,7 +93,12 @@ h1 {
   content: ' hrs)';
 }
 
-.dayHeader,.positionHeader {
+.daysArea {
+  padding-left: 0.15rem;
+  padding-right: 0.15rem;
+}
+
+.dayHeader,.positionHeader,.positionTotalsHeader {
   cursor: pointer;
   font-weight: bold;
   margin-bottom: 0.15rem;
@@ -108,12 +113,16 @@ h1 {
   border-color: white;
 }
 
+.positionTotals {
+  padding-left: 0.15rem;
+}
+
 .dayAbbreviation {
   display: inline;
   padding-right: 0.15rem;
 }
 
-.dayName,.dayShortAbbreviation,.positions {
+.dayName,.dayShortAbbreviation,.positions,.positionTotals {
   display: none;
   padding-right: 0.15rem;
 }
@@ -123,14 +132,17 @@ h1 {
   white-space: nowrap;
 }
 
-.position {
+.position,.positionTotal {
   box-sizing: border-box;
   width: 100%;
   height: 2.4375rem;
   padding: 0.125rem;
   border: 1px solid #cacaca;
   margin: 0 0 1rem;
-  font-size: 0.5rem;
+}
+
+.position {
+  font-size: 0.75rem;
 }
 
 .buttonArea {
@@ -250,7 +262,7 @@ h1 {
     display: block;
   }
 
-  .positions {
+  .positions,.positionTotals {
     display: block;
   }
 
@@ -260,6 +272,10 @@ h1 {
 
   .timeEntry .positionLabel {
     display: none;
+  }
+
+  .timeEntryField,.position,.positionTotal {
+    margin-bottom: 0.15rem;
   }
 
   #contentArea {

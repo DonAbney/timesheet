@@ -10,7 +10,7 @@ var TimesheetView = (function() {
         positionHeader: '',
         position: '',
         daysArea: 'small-12 large-8 columns',
-        days: 'row expanded small-up-1 medium-up-1 large-up-7 large-collapse',
+        days: 'row expanded small-up-1 medium-up-1 large-up-7 collapse',
         day: 'column',
         dayHeader: '',
         dayName: '',
