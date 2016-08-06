@@ -113,7 +113,7 @@ h1 {
   border-color: white;
 }
 
-.positionTotals {
+.positionTotals,.positions {
   padding-left: 0.15rem;
 }
 
@@ -143,6 +143,7 @@ h1 {
 
 .position {
   font-size: 0.75rem;
+  text-align: right;
 }
 
 .buttonArea {
