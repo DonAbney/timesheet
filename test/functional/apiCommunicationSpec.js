@@ -217,7 +217,7 @@ describe('the generic communication wrapper', function() {
 
       TimesheetCommunication.sendSaveTimesheet();
 
-      expect(TimesheetCommunication.fetchTimesheetInfo).toHaveBeenCalledWith("2016-05-09");
+      expect(TimesheetCommunication.fetchTimesheetInfo).toHaveBeenCalledWith("2016-05-09T04:00:00Z");
     });
 
     it('should display an error message with the bundled jqXHR information when saving the timesheet fails', function() {
@@ -263,7 +263,7 @@ describe('the generic communication wrapper', function() {
 
       TimesheetCommunication.sendValidateTimesheet();
 
-      expect(TimesheetCommunication.fetchTimesheetInfo).toHaveBeenCalledWith("2016-05-09");
+      expect(TimesheetCommunication.fetchTimesheetInfo).toHaveBeenCalledWith("2016-05-09T04:00:00Z");
     });
 
     it('should display an error message with the bundled jqXHR information when validating the timesheet fails', function() {
