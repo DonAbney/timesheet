@@ -612,6 +612,23 @@ describe('Displaying basic information', function() {
         expect($('#te4').attr('data-last-saved-value')).toEqual('5');
       });
 
+      it('should mark the position for each time entry', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z", hours: 1}, "te2": {date: "2016-05-30T04:00:00Z", hours: 2}}),
+            generatePositionAndTimeEntryInfo({"id": "p2"}, {"te3": {date: "2016-05-31T04:00:00Z", hours: 3}, "te4": {date: "2016-05-30T04:00:00Z", hours: 5}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
+
+        expect($('#te1').attr('data-position')).toEqual('p1');
+        expect($('#te2').attr('data-position')).toEqual('p1');
+        expect($('#te3').attr('data-position')).toEqual('p2');
+        expect($('#te4').attr('data-position')).toEqual('p2');
+      });
+
       it('should disable the time entry field if the timesheet is already validated so that changes are not permitted', function() {
         var timesheetInfo = {
           "timesheetInstance": generateBasicValidatedTimesheetInstanceData(),

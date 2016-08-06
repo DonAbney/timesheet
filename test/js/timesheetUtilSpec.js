@@ -39,10 +39,11 @@ describe('TimesheetUtil', function() {
   });
 
   describe('aggregateTime()', function() {
-    function setupEnteredTime(date, hours) {
+    function setupEnteredTime(date, hours, position) {
       return {
         "date": date,
-        "hours": hours
+        "hours": hours,
+        "position": position
       }
     }
 
@@ -56,8 +57,8 @@ describe('TimesheetUtil', function() {
 
     it('should sum all entered times when calculating the total time', function() {
       var enteredTimes = {
-        "1": setupEnteredTime("2016-02-02", 5),
-        "2": setupEnteredTime("2016-02-03", 1)
+        "1": setupEnteredTime("2016-02-02", 5, "p1"),
+        "2": setupEnteredTime("2016-02-03", 1, "p1")
       };
 
       var aggregatedTime = TimesheetUtil.aggregateTime(enteredTimes);
@@ -67,25 +68,48 @@ describe('TimesheetUtil', function() {
 
     it('should include aggregated times for each date in the entered times', function() {
       var enteredTimes = {
-        "1": setupEnteredTime("2016-02-02", 5),
-        "2": setupEnteredTime("2016-02-03", 1)
+        "1": setupEnteredTime("2016-02-02", 5, "p1"),
+        "2": setupEnteredTime("2016-02-03", 1, "p1")
       };
 
       var aggregatedTime = TimesheetUtil.aggregateTime(enteredTimes);
 
-      expect(aggregatedTime["2016-02-02"]).toEqual(5);
-      expect(aggregatedTime["2016-02-03"]).toEqual(1);
+      expect(aggregatedTime.days["2016-02-02"]).toEqual(5);
+      expect(aggregatedTime.days["2016-02-03"]).toEqual(1);
     });
 
     it('should sum times for each date in the entered times and aggregate under that date', function() {
       var enteredTimes = {
-        "1": setupEnteredTime("2016-02-02", 5),
-        "2": setupEnteredTime("2016-02-02", 1)
+        "1": setupEnteredTime("2016-02-02", 5, "p1"),
+        "2": setupEnteredTime("2016-02-02", 1, "p1")
       };
 
       var aggregatedTime = TimesheetUtil.aggregateTime(enteredTimes);
 
-      expect(aggregatedTime["2016-02-02"]).toEqual(6);
+      expect(aggregatedTime.days["2016-02-02"]).toEqual(6);
+    });
+
+    it('should include aggregated times for each position in the entered times', function() {
+      var enteredTimes = {
+        "1": setupEnteredTime("2016-02-02", 5, "p1"),
+        "2": setupEnteredTime("2016-02-02", 1, "p2")
+      };
+
+      var aggregatedTime = TimesheetUtil.aggregateTime(enteredTimes);
+
+      expect(aggregatedTime.positions["p1"]).toEqual(5);
+      expect(aggregatedTime.positions["p2"]).toEqual(1);
+    });
+
+    it('should include sum times for each position in the entered times and aggregate under that position', function() {
+      var enteredTimes = {
+        "1": setupEnteredTime("2016-02-02", 5, "p1"),
+        "2": setupEnteredTime("2016-02-03", 1, "p1")
+      };
+
+      var aggregatedTime = TimesheetUtil.aggregateTime(enteredTimes);
+
+      expect(aggregatedTime.positions["p1"]).toEqual(6);
     });
   });
 

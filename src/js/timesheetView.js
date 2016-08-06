@@ -100,7 +100,8 @@ var TimesheetView = (function() {
           id: element.id,
           date: element.getAttribute('data-date'),
           'last-saved-hours': lastSavedHours,
-          hours: enteredHours
+          hours: enteredHours,
+          position: element.getAttribute('data-position')
         };
       }
     });
@@ -158,12 +159,12 @@ var TimesheetView = (function() {
 
   function recalculateTotals(collectedEnteredTime) {
     var aggregatedTimes = TimesheetUtil.aggregateTime(collectedEnteredTime);
-    TimesheetUtil.mapKeys(aggregatedTimes).forEach(function(key) {
-      if (key === "totalTime") {
-        $(".weekTotal").text(aggregatedTimes.totalTime);
-      } else {
-        $(".dayTotal[data-date='" + key + "']").text(aggregatedTimes[key]);
-      }
+    $(".weekTotal").text(aggregatedTimes.totalTime);
+    TimesheetUtil.mapKeys(aggregatedTimes.days).forEach(function(key) {
+      $(".dayTotal[data-date='" + key + "']").text(aggregatedTimes.days[key]);
+    });
+    TimesheetUtil.mapKeys(aggregatedTimes.positions).forEach(function(key) {
+      $(".positionTotal[data-position='" + key + "']").text(aggregatedTimes.positions[key]);
     });
   }
 
@@ -277,6 +278,7 @@ var TimesheetView = (function() {
     }
     field.setAttribute('data-date', entry.date);
     field.setAttribute('data-last-saved-value', entry.hours);
+    field.setAttribute('data-position', entry.position.id);
     field.setAttribute('type', 'number');
     field.value = entry.hours;
     setupUpdatePageOnStateChangeTrigger(field);
@@ -402,7 +404,6 @@ var TimesheetView = (function() {
   function displayDaysAndPositions(daysEntries, positions) {
     var generatedWrapper = $('.wrapper-generatedView');
     generatedWrapper.append(constructTableArea(daysEntries, positions));
-    // generatedWrapper.append(constructDaysElement(daysEntries, positions));
   }
 
   function constructTimesheetInfoEntry(userInfo, timesheetInstance) {

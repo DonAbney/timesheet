@@ -182,12 +182,17 @@ var TimesheetUtil = (function() {
   };
 
   self.aggregateTime = function(enteredTimes) {
-    var aggregatedTimes = {};
+    var aggregatedTimes = {
+      days: {},
+      positions: {}
+    };
     var totalTime = 0.0;
     self.mapKeys(enteredTimes).forEach(function(key) {
       var entry = enteredTimes[key];
-      var aggregatedTime = aggregatedTimes[entry.date] ? aggregatedTimes[entry.date] : 0.0;
-      aggregatedTimes[entry.date] = aggregatedTime + entry.hours;
+      var aggregatedTimeForDay = aggregatedTimes.days[entry.date] ? aggregatedTimes.days[entry.date] : 0.0;
+      aggregatedTimes.days[entry.date] = aggregatedTimeForDay + entry.hours;
+      var aggregatedTimeForPosition = aggregatedTimes.positions[entry.position] ? aggregatedTimes.positions[entry.position] : 0.0;
+      aggregatedTimes.positions[entry.position] = aggregatedTimeForPosition + entry.hours;
       totalTime += entry.hours;
     });
     aggregatedTimes.totalTime = totalTime;
