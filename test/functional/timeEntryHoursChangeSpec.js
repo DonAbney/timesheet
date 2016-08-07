@@ -54,7 +54,7 @@ describe('On a time entry hours change', function() {
 
       enterHours('te1', 2);
 
-      expect($(".dayTotal[data-date='2016-05-31T04:00:00Z']").text()).toEqual("2");
+      expect($(".dayHeader .dayTotal[data-date='2016-05-31T04:00:00Z']").text()).toEqual("2");
     });
 
     it('should reflect the sum of all hours entered for all time entries for a day', function() {
@@ -63,7 +63,7 @@ describe('On a time entry hours change', function() {
       enterHours('te2', 6);
       enterHours('te4', 13);
 
-      expect($(".dayTotal[data-date='2016-05-30T04:00:00Z']").text()).toEqual("19");
+      expect($(".dayHeader .dayTotal[data-date='2016-05-30T04:00:00Z']").text()).toEqual("19");
     });
 
     it('should reflect the sum of all hours entered for all time entries for a day, but should not include time for other days', function() {
@@ -73,13 +73,13 @@ describe('On a time entry hours change', function() {
       enterHours('te3', 13);
       enterHours('te4', 5);
 
-      expect($(".dayTotal[data-date='2016-05-30T04:00:00Z']").text()).toEqual("11");
+      expect($(".dayHeader .dayTotal[data-date='2016-05-30T04:00:00Z']").text()).toEqual("11");
     });
 
     it('should reflect the sum of all hours previously entered for all time entries for a day, before any modifications', function() {
       TimesheetView.displayTimesheetInfo(userInfo, generateTimesheetInfoWithExistingHours());
 
-      expect($(".dayTotal[data-date='2016-05-31T04:00:00Z']").text()).toEqual("4");
+      expect($(".dayHeader .dayTotal[data-date='2016-05-31T04:00:00Z']").text()).toEqual("4");
     });
   });
 

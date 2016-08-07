@@ -504,6 +504,45 @@ describe('Displaying basic information', function() {
         expect($('.wrapper-generatedView .dayHeader.tuesday').length).toEqual(1);
       });
 
+      it('should generate a dayFooter entry', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
+
+        expect($('.wrapper-generatedView .dayFooter').length).toEqual(1);
+      });
+
+      it('should generate a dayFooter entry with the appropriate weekday class', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
+
+        expect($('.wrapper-generatedView .dayFooter.tuesday').length).toEqual(1);
+      });
+
+      it('should generate a dayFooter entry containing a dayTotal element', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
+
+        expect($('.wrapper-generatedView .dayFooter .dayTotal').length).toEqual(1);
+      });
+
       it('should generate a time entry within the day with the appropriate weekday class', function() {
         var timesheetInfo = {
           "timesheetInstance": generateBasicTimesheetInstanceData(),

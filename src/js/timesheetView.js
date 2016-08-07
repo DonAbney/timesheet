@@ -18,6 +18,7 @@ var TimesheetView = (function() {
         dayShortAbbreviation: '',
         dayAndMonth: '',
         dayTotal: '',
+        dayFooter: '',
         timeEntries: '',
         timeEntry: '',
         positionLabel: '',
@@ -266,6 +267,13 @@ var TimesheetView = (function() {
     return dayHeader;
   }
 
+  function constructDayFooter(date) {
+    var dayFooter = document.createElement('div');
+    construct.configureElementStyle('dayFooter', dayFooter, [cssClassForDayOfWeek(date)]);
+    dayFooter.insertAdjacentElement('beforeEnd', constructDayTotal(date));
+    return dayFooter;
+  }
+
   function constructPositionLabel(entry, position) {
     var positionLabel = document.createElement("label");
     construct.configureElementStyle('positionLabel', positionLabel, [cssClassForDayOfWeek(entry.date)]);
@@ -332,6 +340,7 @@ var TimesheetView = (function() {
     var dayElement = constructDayWrapper(date);
     dayElement.insertAdjacentElement('afterbegin', constructDayHeader(date));
     dayElement.insertAdjacentElement('beforeend', constructTimeEntries(dayEntries, date, positions));
+    dayElement.insertAdjacentElement('beforeend', constructDayFooter(date));
     return dayElement;
   }
 
