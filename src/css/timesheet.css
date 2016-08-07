@@ -275,6 +275,10 @@ h1 {
     padding: 0rem 0rem 0rem 0.15rem;
   }
 
+  .dayHeader {
+    border-bottom-color: black;
+  }
+
   .dayHeader .dayAbbreviation {
     display: none;
   }
@@ -295,11 +299,7 @@ h1 {
     display: none;
   }
 
-  .dayFooter {
-    display: block;
-  }
-
-  .positions,.positionTotals {
+  .positions,.positionTotals,.dayFooter {
     display: block;
   }
 
