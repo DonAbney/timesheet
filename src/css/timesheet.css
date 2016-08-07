@@ -109,6 +109,10 @@ h1 {
   border-width: 1px;
 }
 
+.dayHeader.sunday,.dayHeader.saturday,.positionLabel.sunday,.positionLabel.saturday,.timeEntryField.sunday,.timeEntryField.saturday {
+  background-color: #e6e6e6;
+}
+
 .positionHeader {
   border-color: white;
 }

@@ -41,13 +41,16 @@ var TimesheetView = (function() {
     }
   };
 
-  construct.css.classNamesForElement = function(elementName) {
+  construct.css.classNamesForElement = function(elementName, extraClasses) {
     var otherClassNames = construct.css.classNames[elementName] ? (' ' + construct.css.classNames[elementName]) : '';
+    if (extraClasses) {
+      extraClasses.forEach(function(extraClass) { otherClassNames += ' ' + extraClass; });
+    }
     return elementName + otherClassNames;
   };
 
-  construct.configureElementStyle = function(elementName, element) {
-    element.className = construct.css.classNamesForElement(elementName);
+  construct.configureElementStyle = function(elementName, element, extraClasses) {
+    element.className = construct.css.classNamesForElement(elementName, extraClasses);
     if (construct.css.styles[elementName]) {
       for (styleName in construct.css.styles[elementName]) {
         element.style[styleName] = construct.css.styles[elementName][styleName];
@@ -204,9 +207,13 @@ var TimesheetView = (function() {
     updatePositionHeaderHeight();
   }
 
+  function cssClassForDayOfWeek(date) {
+    return TimesheetUtil.weekdayForDate(date).toLowerCase();
+  }
+
   function constructDayWrapper(date) {
     var dayElement = document.createElement("div");
-    construct.configureElementStyle("day", dayElement);
+    construct.configureElementStyle("day", dayElement, [cssClassForDayOfWeek(date)]);
     dayElement.setAttribute('data-date', date);
     return dayElement;
   }
@@ -249,7 +256,7 @@ var TimesheetView = (function() {
 
   function constructDayHeader(date) {
     var dayHeader = document.createElement("div");
-    construct.configureElementStyle("dayHeader", dayHeader);
+    construct.configureElementStyle("dayHeader", dayHeader, [cssClassForDayOfWeek(date)]);
     dayHeader.insertAdjacentElement('beforeend', constructDayName(date));
     dayHeader.insertAdjacentElement('beforeend', constructDayAbbreviation(date));
     dayHeader.insertAdjacentElement('beforeend', constructDayShortAbbreviation(date));
@@ -261,7 +268,7 @@ var TimesheetView = (function() {
 
   function constructPositionLabel(entry, position) {
     var positionLabel = document.createElement("label");
-    construct.configureElementStyle('positionLabel', positionLabel);
+    construct.configureElementStyle('positionLabel', positionLabel, [cssClassForDayOfWeek(entry.date)]);
     positionLabel.setAttribute('for', entry.id);
     positionLabel.innerHTML = position.projectName.trim();
     return positionLabel;
@@ -272,9 +279,9 @@ var TimesheetView = (function() {
     field.id = entry.id;
     if (!$.isNumeric(entry.id) && entry.id.startsWith('placeholder')) {
       field.disabled = true;
-      construct.configureElementStyle('placeholderTimeEntryField', field);
+      construct.configureElementStyle('placeholderTimeEntryField', field, [cssClassForDayOfWeek(entry.date)]);
     } else {
-      construct.configureElementStyle("timeEntryField", field);
+      construct.configureElementStyle("timeEntryField", field, [cssClassForDayOfWeek(entry.date)]);
     }
     field.setAttribute('data-date', entry.date);
     field.setAttribute('data-last-saved-value', entry.hours);
@@ -287,7 +294,7 @@ var TimesheetView = (function() {
 
   function constructTimeEntry(entry, position) {
     var timeEntry = document.createElement("div");
-    construct.configureElementStyle("timeEntry", timeEntry);
+    construct.configureElementStyle("timeEntry", timeEntry, [cssClassForDayOfWeek(entry.date)]);
     timeEntry.setAttribute('data-date', entry.date);
     var positionLabel = constructPositionLabel(entry, position);
     var field = constructTimeEntryField(entry);
@@ -298,7 +305,7 @@ var TimesheetView = (function() {
 
   function constructTimeEntries(dayEntries, date, positions) {
     var timeEntriesWrapper = document.createElement("div");
-    construct.configureElementStyle("timeEntries", timeEntriesWrapper);
+    construct.configureElementStyle("timeEntries", timeEntriesWrapper, [cssClassForDayOfWeek(date)]);
     timeEntriesWrapper.setAttribute('data-date', date);
 
     var positionInfoLookup = {};

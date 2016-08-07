@@ -478,6 +478,45 @@ describe('Displaying basic information', function() {
         expect($('.wrapper-generatedView .day').length).toEqual(1);
       });
 
+      it('should generate a day entry with the appropriate weekday class', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
+
+        expect($('.wrapper-generatedView .day.tuesday').length).toEqual(1);
+      });
+
+      it('should generate a dayHeader entry with the appropriate weekday class', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
+
+        expect($('.wrapper-generatedView .dayHeader.tuesday').length).toEqual(1);
+      });
+
+      it('should generate a time entry within the day with the appropriate weekday class', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1", "name": "targetName", "note": null}, {"te1": {date: "2016-05-31T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
+
+        expect($('.wrapper-generatedView .timeEntry[data-date="2016-05-31T04:00:00Z"]:first.tuesday').length).toEqual(1);
+      });
+
       it('should generate a time entry within the day for the position containing the project name', function() {
         var timesheetInfo = {
           "timesheetInstance": generateBasicTimesheetInstanceData(),
@@ -489,6 +528,32 @@ describe('Displaying basic information', function() {
         TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
 
         expect($('.wrapper-generatedView .timeEntry[data-date="2016-05-31T04:00:00Z"]:first label').text()).toEqual("Project ABC");
+      });
+
+      it('should generate a time entry within the day for the position containing the project name with the appropriate weekday class', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1", "name": "targetName", "note": null}, {"te1": {date: "2016-05-31T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
+
+        expect($('.wrapper-generatedView .timeEntry[data-date="2016-05-31T04:00:00Z"]:first label.tuesday').length).toEqual(1);
+      });
+
+      it('should generate a time entry within the day with the appropriate weekday class', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1", "name": "targetName", "note": null}, {"te1": {date: "2016-05-31T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
+
+        expect($('.wrapper-generatedView .timeEntry[data-date="2016-05-31T04:00:00Z"] input.tuesday').length).toEqual(1);
       });
 
       it('should generate the time entries for a day in the same order as the positions', function() {
@@ -522,7 +587,7 @@ describe('Displaying basic information', function() {
 
         expect($('.wrapper-generatedView .timeEntry[data-date="2016-05-31T04:00:00Z"] input:eq(1)').prop('id')).toEqual("placeholder_p2_2016-05-31");
         expect($('.wrapper-generatedView .timeEntry[data-date="2016-05-31T04:00:00Z"] input:eq(1)').prop('disabled')).toEqual(true);
-        expect($('.wrapper-generatedView .timeEntry[data-date="2016-05-31T04:00:00Z"] input:eq(1)').attr('class')).toEqual('placeholderTimeEntryField');
+        expect($('.wrapper-generatedView .timeEntry[data-date="2016-05-31T04:00:00Z"] input:eq(1)').attr('class')).toEqual('placeholderTimeEntryField tuesday');
       });
 
       it('should generate a day entry for each day represented in the timesheet information', function() {
