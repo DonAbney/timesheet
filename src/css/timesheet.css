@@ -141,9 +141,21 @@ h1 {
   margin: 0 0 1rem;
 }
 
+.positionTotalsHeader,.positionTotal {
+  background-color: #000473;
+  color: white;
+  font-weight: bold;
+}
+
 .position {
   font-size: 0.75rem;
   text-align: right;
+  background-color: #fbffdb;
+}
+
+.positionTotal {
+  padding-left: 0.75rem;
+  padding-top: 0.4rem;
 }
 
 .buttonArea {
