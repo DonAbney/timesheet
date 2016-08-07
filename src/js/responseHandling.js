@@ -1,7 +1,6 @@
 var ResponseHandling = (function() {
   var self = {};
 
-  self.AUTO_CLOSE_DURATION = 60000;
   self.WAIT_BEFORE_REMOVE = 2000;
 
   self.displayMessage = function(type, message) {
@@ -28,9 +27,6 @@ var ResponseHandling = (function() {
         } catch (e) { /* safe to ignore */ }
       }, self.WAIT_BEFORE_REMOVE);
     });
-    window.setTimeout(function() {
-      $(closeButton).click();
-    }, self.AUTO_CLOSE_DURATION);
   }
 
   function constructMessageCloseButton() {
