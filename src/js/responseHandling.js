@@ -1,7 +1,7 @@
 var ResponseHandling = (function() {
   var self = {};
 
-  self.AUTO_CLOSE_DURATION = 3000;
+  self.AUTO_CLOSE_DURATION = 60000;
   self.WAIT_BEFORE_REMOVE = 2000;
 
   self.displayMessage = function(type, message) {
