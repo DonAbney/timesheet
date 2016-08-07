@@ -28,6 +28,8 @@ var TimesheetView = (function() {
         positionTotals: 'large-1 columns',
         positionTotalsHeader: '',
         positionTotal: '',
+        positionTotalsFooter: '',
+        weekTotal: '',
         buttonArea: 'row expanded',
         saveChanges: 'small-12 large-4 columns',
         validateTimesheet: 'small-12 large-4 columns'
@@ -359,6 +361,19 @@ var TimesheetView = (function() {
     return positionTotalsHeader;
   }
 
+  function constructWeekTotalElement() {
+    var weeklyTotal = document.createElement('div');
+    construct.configureElementStyle('weekTotal', weeklyTotal);
+    return weeklyTotal;
+  }
+
+  function constructPositionTotalsFooterElement() {
+    var positionTotalsFooter = document.createElement('div');
+    construct.configureElementStyle('positionTotalsFooter', positionTotalsFooter);
+    positionTotalsFooter.insertAdjacentElement('beforeend', constructWeekTotalElement());
+    return positionTotalsFooter;
+  }
+
   function constructPositionTotalsElement(positions) {
     var positionTotals = document.createElement('div');
     construct.configureElementStyle('positionTotals', positionTotals);
@@ -366,6 +381,7 @@ var TimesheetView = (function() {
     positions.forEach(function(position) {
       positionTotals.insertAdjacentElement('beforeend', constructPositionTotalElement(position));
     });
+    positionTotals.insertAdjacentElement('beforeend', constructPositionTotalsFooterElement());
     return positionTotals;
   }
 
@@ -490,14 +506,14 @@ var TimesheetView = (function() {
     $('#authentication').show();
     $('#authenticated').hide();
     $('#dateSelection').hide();
-    $('#summaryStatus').hide();
+    $('.summaryStatus').hide();
   }
 
   self.hideAuthenticationArea = function() {
     $('#authentication').hide();
     $('#authenticated').show();
     $('#dateSelection').show();
-    $('#summaryStatus').show();
+    $('.summaryStatus').show();
   }
 
   self.registerPageListeners = function() {

@@ -73,6 +73,18 @@ h1 {
   cursor: pointer;
 }
 
+.top-bar .menu-text {
+  padding-top: .45rem;
+  vertical-align: bottom;
+}
+
+.top-bar .summaryStatus {
+  font-weight: 200;
+  font-size: 0.9rem;
+  vertical-align: super;
+  padding-left: 0.125rem;
+}
+
 .top-bar .fa-calendar:hover {
   color: #9a9a9a;
 }
@@ -81,15 +93,15 @@ h1 {
   margin: 0.5rem 0rem;
 }
 
-.weekTotal {
+.title-bar .weekTotal,.top-bar .weekTotal {
   white-space: nowrap;
 }
 
-.weekTotal::before,.dayHeader .dayTotal::before {
+.title-bar .weekTotal::before,.top-bar .weekTotal::before,.dayHeader .dayTotal::before {
   content: ' (';
 }
 
-.weekTotal::after,.dayHeader .dayTotal::after {
+.title-bar .weekTotal::after,.top-bar .weekTotal::after,.dayHeader .dayTotal::after {
   content: ' hrs)';
 }
 
@@ -136,7 +148,7 @@ h1 {
   white-space: nowrap;
 }
 
-.position,.positionTotal,.dayFooter,.positionFooter {
+.position,.positionTotal,.dayFooter,.positionFooter,.positionTotalsFooter {
   box-sizing: border-box;
   width: 100%;
   height: 2.4375rem;
@@ -145,7 +157,7 @@ h1 {
   margin: 0 0 1rem;
 }
 
-.positionTotalsHeader,.positionTotal,.dayFooter,.positionFooter {
+.positionTotalsHeader,.positionTotal,.dayFooter,.positionFooter,.positionTotalsFooter {
   background-color: #0082de;
   color: white;
   font-weight: bold;
@@ -165,7 +177,7 @@ h1 {
   background-color: #fbffdb;
 }
 
-.positionTotal,.dayFooter,.positionFooter {
+.positionTotal,.dayFooter,.positionFooter,.positionTotalsFooter {
   padding-left: 0.5rem;
   padding-top: 0.4rem;
 }

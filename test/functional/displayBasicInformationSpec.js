@@ -308,6 +308,36 @@ describe('Displaying basic information', function() {
         expect($('.wrapper-generatedView .positionTotalsHeader').text()).toEqual("Totals");
       });
 
+      it('should generate a position totals footer', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z"}}),
+            generatePositionAndTimeEntryInfo({"id": "p2"}, {"te2": {date: "2016-05-31T04:00:00Z"}}),
+            generatePositionAndTimeEntryInfo({"id": "p3"}, {"te3": {date: "2016-05-31T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
+
+        expect($('.wrapper-generatedView .positionTotalsFooter').length).toEqual(1);
+      });
+
+      it('should generate a position totals footer with an included weeklyTotal element', function() {
+        var timesheetInfo = {
+          "timesheetInstance": generateBasicTimesheetInstanceData(),
+          "timeEntryPositionMapByDate": [
+            generatePositionAndTimeEntryInfo({"id": "p1"}, {"te1": {date: "2016-05-31T04:00:00Z"}}),
+            generatePositionAndTimeEntryInfo({"id": "p2"}, {"te2": {date: "2016-05-31T04:00:00Z"}}),
+            generatePositionAndTimeEntryInfo({"id": "p3"}, {"te3": {date: "2016-05-31T04:00:00Z"}})
+          ]
+        };
+
+        TimesheetView.displayTimesheetInfo(userInfo, timesheetInfo);
+
+        expect($('.wrapper-generatedView .positionTotalsFooter .weekTotal').length).toEqual(1);
+      });
+
       it('should generate a totals entry for each of the positions', function() {
         var timesheetInfo = {
           "timesheetInstance": generateBasicTimesheetInstanceData(),
@@ -778,7 +808,7 @@ describe('Displaying basic information', function() {
 
   describe('showing the authentication area', function() {
     beforeEach(function() {
-      var fixture = "<div id='fixture'><div id='authentication'></div><div id='authenticated'></div><div id='dateSelection'></div><div id='summaryStatus'></div></div>";
+      var fixture = "<div id='fixture'><div id='authentication'></div><div id='authenticated'></div><div id='dateSelection'></div><div class='summaryStatus'></div></div>";
       document.body.insertAdjacentHTML('afterbegin', fixture);
     });
 
@@ -809,13 +839,13 @@ describe('Displaying basic information', function() {
     it('should hide the summary status area', function() {
       TimesheetView.showAuthenticationArea();
 
-      expect($('#summaryStatus').is(':visible')).toEqual(false);
+      expect($('.summaryStatus').is(':visible')).toEqual(false);
     });
   });
 
   describe('hiding the authentication area', function() {
     beforeEach(function() {
-      var fixture = "<div id='fixture'><div id='authentication'></div><<div id='authenticated'></div><div id='dateSelection'></div><div id='summaryStatus'></div></div>";
+      var fixture = "<div id='fixture'><div id='authentication'></div><<div id='authenticated'></div><div id='dateSelection'></div><div class='summaryStatus'></div></div>";
       document.body.insertAdjacentHTML('afterbegin', fixture);
     });
 
@@ -846,11 +876,11 @@ describe('Displaying basic information', function() {
     });
 
     it('should show the summary status area', function() {
-      $('#summaryStatus').hide();
+      $('.summaryStatus').hide();
 
       TimesheetView.hideAuthenticationArea();
 
-      expect($('#summaryStatus').is(':visible')).toEqual(true);
+      expect($('.summaryStatus').is(':visible')).toEqual(true);
     });
   });
 });

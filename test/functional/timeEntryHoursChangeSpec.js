@@ -18,7 +18,7 @@ describe('On a time entry hours change', function() {
 
       enterHours('te1', 2);
 
-      expect($('.weekTotal').text()).toEqual("2");
+      expect($('#fixture>.weekTotal').text()).toEqual("2");
     });
 
     it('should reflect the total sum across all time entries for a day', function() {
@@ -27,7 +27,7 @@ describe('On a time entry hours change', function() {
       enterHours('te1', 6);
       enterHours('te2', 7);
 
-      expect($('.weekTotal').text()).toEqual("13");
+      expect($('#fixture>.weekTotal').text()).toEqual("13");
     });
 
     it('should reflect the total sum across all time entries for all days on the sheet', function() {
@@ -38,13 +38,13 @@ describe('On a time entry hours change', function() {
       enterHours('te3', 5);
       enterHours('te4', 12);
 
-      expect($('.weekTotal').text()).toEqual("27");
+      expect($('#fixture>.weekTotal').text()).toEqual("27");
     });
 
     it('should reflect the total sum across all time entries for all days on the sheet before any modifications, based on pre-existing hours entered', function() {
       TimesheetView.displayTimesheetInfo(userInfo, generateTimesheetInfoWithExistingHours());
 
-      expect($('.weekTotal').text()).toEqual("11");
+      expect($('#fixture>.weekTotal').text()).toEqual("11");
     });
   });
 
