@@ -136,7 +136,7 @@ h1 {
   white-space: nowrap;
 }
 
-.position,.positionTotal,.dayFooter {
+.position,.positionTotal,.dayFooter,.positionFooter {
   box-sizing: border-box;
   width: 100%;
   height: 2.4375rem;
@@ -145,10 +145,14 @@ h1 {
   margin: 0 0 1rem;
 }
 
-.positionTotalsHeader,.positionTotal,.dayFooter {
+.positionTotalsHeader,.positionTotal,.dayFooter,.positionFooter {
   background-color: #000473;
   color: white;
   font-weight: bold;
+}
+
+.positionFooter {
+  text-align: right;
 }
 
 .dayFooter {
@@ -161,7 +165,7 @@ h1 {
   background-color: #fbffdb;
 }
 
-.positionTotal,.dayFooter {
+.positionTotal,.dayFooter,.positionFooter {
   padding-left: 0.5rem;
   padding-top: 0.4rem;
 }

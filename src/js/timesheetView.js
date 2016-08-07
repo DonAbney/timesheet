@@ -9,6 +9,7 @@ var TimesheetView = (function() {
         positions: 'large-3 columns',
         positionHeader: '',
         position: '',
+        positionFooter: '',
         daysArea: 'small-12 large-8 columns',
         days: 'row expanded small-up-1 medium-up-1 large-up-7 collapse',
         day: 'column',
@@ -381,6 +382,13 @@ var TimesheetView = (function() {
     return positionHeaderElement;
   }
 
+  function constructPositionFooterElement() {
+    var positionFooterElement = document.createElement('div');
+    construct.configureElementStyle('positionFooter', positionFooterElement);
+    positionFooterElement.innerHTML = "Totals";
+    return positionFooterElement;
+  }
+
   function constructPositionsElement(positions) {
     var positionsElement = document.createElement('div');
     construct.configureElementStyle("positions", positionsElement);
@@ -388,6 +396,7 @@ var TimesheetView = (function() {
     positions.forEach(function(position) {
       positionsElement.insertAdjacentElement('beforeend', constructPositionElement(position));
     });
+    positionsElement.insertAdjacentElement('beforeend', constructPositionFooterElement());
     return positionsElement;
   }
 
