@@ -151,6 +151,10 @@ h1 {
   font-weight: bold;
 }
 
+.dayFooter {
+  display: none;
+}
+
 .position {
   font-size: 0.75rem;
   text-align: right;
@@ -267,15 +271,27 @@ h1 {
     padding: 0rem 0rem 0rem 0.15rem;
   }
 
-  .dayAbbreviation {
+  .dayHeader .dayAbbreviation {
     display: none;
   }
 
-  .dayShortAbbreviation {
+  .dayHeader .dayShortAbbreviation {
+    display: none;
+  }
+
+  .dayHeader .dayName {
     display: inline;
   }
 
-  .dayTotal {
+  .dayHeader .dayAndMonth {
+    display: block;
+  }
+
+  .dayHeader .dayTotal {
+    display: none;
+  }
+
+  .dayFooter {
     display: block;
   }
 
