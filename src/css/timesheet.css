@@ -324,7 +324,11 @@ h1 {
   }
 
   .timeEntryField,.position,.positionTotal {
-    margin-bottom: 0.15rem;
+    margin-bottom: 0rem;
+  }
+
+  .dayFooter,.positionFooter,.positionTotalsFooter {
+    margin-top: 0.15rem;
   }
 
   #contentArea {
