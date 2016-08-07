@@ -188,22 +188,26 @@ h1 {
 
 .validateTimesheet {
   background-color: #f3e1cb;
+  background-image: radial-gradient(ellipse, #f3e1cb 60%, #e4d4c0);
 }
 
 .saveChanges {
   background-color: #a0eca0;
+  background-image: radial-gradient(ellipse, #a0eca0 60%, #8ed08e);
 }
 
 .saveChanges,.validateTimesheet {
   height: 4rem;
-  border: 1px solid #000;
+  border: 1px solid #dedede;
   font-weight: bold;
+  border-radius: 1.5rem;
 }
 
 .saveChanges:disabled,.validateTimesheet:disabled {
   border-color: #e2e2e2;
   background-color: #f7f7f7;
   color: #e2e2e2;
+  background-image: none;
 }
 
 .large-status {
@@ -333,6 +337,10 @@ h1 {
 
   #contentArea {
     margin: 0 1rem;
+  }
+
+  .buttonArea {
+    margin-top: 0rem;
   }
 }
 
