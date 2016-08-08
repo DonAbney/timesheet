@@ -1,6 +1,46 @@
 var TimesheetUtil = (function() {
   var self = {};
 
+  function constructDayEntry(timeEntry, positionInfo) {
+    return {
+      id: timeEntry.id,
+      date: timeEntry.date,
+      hours: timeEntry.hours,
+      projectedHours: timeEntry.projectedHours,
+      position: {
+        id: positionInfo.id,
+        name: positionInfo.name,
+        note: positionInfo.note,
+        projectName: positionInfo.projectName
+      }
+    };
+  }
+
+  function collateDaysForPosition(positionInfo, timeEntryLookup, allDays, daysEntries) {
+    function fetchDayEntry(date) {
+      var dayEntry = daysEntries[date];
+      if (dayEntry === undefined) {
+        dayEntry = [];
+        daysEntries[date] = dayEntry;
+      }
+      return dayEntry;
+    }
+
+    var allTimeEntries = timeEntryLookup[positionInfo.id];
+    var processedDays = {};
+    allTimeEntries.forEach(function(timeEntry) {
+      processedDays[timeEntry.date] = 1;
+      fetchDayEntry(timeEntry.date).push(constructDayEntry(timeEntry, positionInfo));
+    });
+    allDays.forEach(function(day) {
+      if (!processedDays[day]) {
+        var timeEntry = { id: "placeholder_" + positionInfo.id + "_" + self.formatDateYYYYMMDD(day), date: day, hours: 0, projectedHours: 0 };
+        fetchDayEntry(day).push(constructDayEntry(timeEntry, positionInfo));
+      }
+    });
+    delete timeEntryLookup[positionInfo.id]; // remove processed time entries from lookup to facilitate placeholder processing
+  }
+
   self.collateDays = function(timeEntryPositionInfo, positionOrder) {
     var detectedDays = {};
     var timeEntryLookup = {};
@@ -14,89 +54,11 @@ var TimesheetUtil = (function() {
 
     var daysEntries = {};
 
-    function fetchDayEntry(date) {
-      var dayEntry = daysEntries[date];
-      if (dayEntry === undefined) {
-        dayEntry = [];
-        daysEntries[date] = dayEntry;
-      }
-      return dayEntry;
-    }
-
     positionOrder.forEach(function(positionInfo) {
-      var allTimeEntries = timeEntryLookup[positionInfo.id];
-      var processedDays = {};
-      allTimeEntries.forEach(function(timeEntry) {
-        processedDays[timeEntry.date] = 1;
-        var dayEntry = fetchDayEntry(timeEntry.date);
-        dayEntry.push({
-          id: timeEntry.id,
-          date: timeEntry.date,
-          hours: timeEntry.hours,
-          projectedHours: timeEntry.projectedHours,
-          position: {
-            id: positionInfo.id,
-            name: positionInfo.name,
-            note: positionInfo.note,
-            projectName: positionInfo.projectName
-          }
-        });
-      });
-      allDays.forEach(function(day) {
-        if (!processedDays[day]) {
-          var dayEntry = fetchDayEntry(day);
-          dayEntry.push({
-            id: "placeholder_" + positionInfo.id + "_" + self.formatDateYYYYMMDD(day),
-            date: day,
-            hours: 0,
-            projectedHours: 0,
-            position: {
-              id: positionInfo.id,
-              name: positionInfo.name,
-              note: positionInfo.note,
-              projectName: positionInfo.projectName
-            }
-          });
-        }
-      });
-      delete timeEntryLookup[positionInfo.id]; // remove processed time entries from lookup to facilitate placeholder processing
+      collateDaysForPosition(positionInfo, timeEntryLookup, allDays, daysEntries);
     });
     self.mapKeys(timeEntryLookup).forEach(function(positionId) {
-      var timeEntries = timeEntryLookup[positionId];
-      var processedDays = {};
-      timeEntries.forEach(function(timeEntry) {
-        processedDays[timeEntry.date] = 1;
-        var dayEntry = fetchDayEntry(timeEntry.date);
-        dayEntry.push({
-          id: timeEntry.id,
-          date: timeEntry.date,
-          hours: timeEntry.hours,
-          projectedHours: timeEntry.projectedHours,
-          position: {
-            id: positionId,
-            name: "(unrecognized)",
-            note: '',
-            projectName: "(unrecognized)"
-          }
-        });
-      });
-      allDays.forEach(function(day) {
-        if (!processedDays[day]) {
-          var dayEntry = fetchDayEntry(day);
-          dayEntry.push({
-            id: "placeholder_" + positionId + "_" + self.formatDateYYYYMMDD(day),
-            date: day,
-            hours: 0,
-            projectedHours: 0,
-            position: {
-              id: positionId,
-              name: "(unrecognized)",
-              note: '',
-              projectName: "(unrecognized)"
-            }
-          });
-        }
-      });
+      collateDaysForPosition({ id: positionId, name: "(unrecognized)", note: '', projectName: "(unrecognized)" }, timeEntryLookup, allDays, daysEntries);
     });
 
     return daysEntries;
