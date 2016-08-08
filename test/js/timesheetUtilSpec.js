@@ -699,9 +699,9 @@ describe('TimesheetUtil', function() {
         }
       ];
       var targetPositions = [
-        {id: 32 },
+        {id: 44 },
         {id: 11 },
-        {id: 44 }
+        {id: 32 }
       ];
 
       var collatedInfo = TimesheetUtil.collateDays(targetPositionInfo, targetPositions);
@@ -711,6 +711,17 @@ describe('TimesheetUtil', function() {
   });
 
   describe('collatePositions()', function() {
+    function constructPosition(id, name, note, projectName) {
+      return {
+        "position": {
+          "id": id,
+          "name": name,
+          "note": note,
+          "project": { "name": projectName }
+        }
+      };
+    }
+
     it('should return an empty array if there are no positions in the position info', function() {
       var targetPositionInfo = [];
 
@@ -721,16 +732,8 @@ describe('TimesheetUtil', function() {
 
     it('should return an element for each position in the position info', function() {
       var targetPositionInfo = [
-        {
-          "position": {
-            "id": 32
-          }
-        },
-        {
-          "position": {
-            "id": 11
-          }
-        }
+        constructPosition(32, "positionName", "positionNote", "projectName"),
+        constructPosition(11, "positionName", "positionNote", "projectName")
       ];
 
       var collatedInfo = TimesheetUtil.collatePositions(targetPositionInfo);
@@ -742,12 +745,7 @@ describe('TimesheetUtil', function() {
 
     it('should capture the position name', function() {
       var targetPositionInfo = [
-        {
-          "position": {
-            "id": 32,
-            "name": "joe"
-          }
-        }
+        constructPosition(32, "joe", "positionNote", "projectName")
       ];
 
       var collatedInfo = TimesheetUtil.collatePositions(targetPositionInfo);
@@ -757,12 +755,7 @@ describe('TimesheetUtil', function() {
 
     it('should capture the position note', function() {
       var targetPositionInfo = [
-        {
-          "position": {
-            "id": 32,
-            "note": "joe's note"
-          }
-        }
+        constructPosition(32, "positionName", "joe's note", "projectName")
       ];
 
       var collatedInfo = TimesheetUtil.collatePositions(targetPositionInfo);
@@ -772,19 +765,30 @@ describe('TimesheetUtil', function() {
 
     it('should capture the project name', function() {
       var targetPositionInfo = [
-        {
-          "position": {
-            "id": 32,
-            "project": {
-              "name": "Project ABC"
-            }
-          }
-        }
+        constructPosition(32, "positionName", "positionNote", "Project ABC")
       ];
 
       var collatedInfo = TimesheetUtil.collatePositions(targetPositionInfo);
 
       expect(collatedInfo[0].projectName).toEqual("Project ABC");
+    });
+
+    it('should sort the positions by project name and then position name and then position note', function() {
+      var targetPositionInfo = [
+        constructPosition(12, "don", "caden", "project c"),
+        constructPosition(32, "xander", "joe", "project a"),
+        constructPosition(41, "bobby", "alex", "project b"),
+        constructPosition(50, "don", "liam", "project c"),
+        constructPosition(52, "albert", "david", "project b")
+      ];
+
+      var collatedInfo = TimesheetUtil.collatePositions(targetPositionInfo);
+
+      expect(collatedInfo[0].id).toEqual(32);
+      expect(collatedInfo[1].id).toEqual(52);
+      expect(collatedInfo[2].id).toEqual(41);
+      expect(collatedInfo[3].id).toEqual(12);
+      expect(collatedInfo[4].id).toEqual(50);
     });
   });
 

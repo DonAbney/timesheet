@@ -1,34 +1,17 @@
 var TimesheetUtil = (function() {
   var self = {};
 
-  function addPlaceholdersForMissingPositions(dayEntries, positionOrder) {
-    var positionIndex = 0;
-    var newDayEntries = [];
-    dayEntries.forEach(function(dayEntry) {
-      if (dayEntry.position.id === positionOrder[positionIndex].id) {
-        newDayEntries.push(dayEntry);
-        positionIndex += 1;
-      } else {
-        while (dayEntry.position.id !== positionOrder[positionIndex].id) {
-          newDayEntries.push({
-            id: "placeholder_" + positionOrder[positionIndex].id + "_" + self.formatDateYYYYMMDD(dayEntry.date),
-            date: dayEntry.date,
-            hours: 0,
-            projectedHours: 0,
-            position: {
-              id: positionOrder[positionIndex].id,
-              name: positionOrder[positionIndex].name,
-              note: positionOrder[positionIndex].note
-            }
-          });
-          positionIndex += 1;
-        }
-      }
-    });
-    return newDayEntries;
-  }
-
   self.collateDays = function(timeEntryPositionInfo, positionOrder) {
+    var detectedDays = {};
+    var timeEntryLookup = {};
+    timeEntryPositionInfo.forEach(function(infoEntry) {
+      timeEntryLookup[infoEntry.position.id] = infoEntry.timeEntries;
+      infoEntry.timeEntries.forEach(function(timeEntry) {
+        detectedDays[timeEntry.date] = 1;
+      });
+    });
+    var allDays = self.mapKeys(detectedDays);
+
     var daysEntries = {};
 
     function fetchDayEntry(date) {
@@ -40,23 +23,11 @@ var TimesheetUtil = (function() {
       return dayEntry;
     }
 
-    var positionInfoLookup = {};
-    positionOrder.forEach(function(info) {
-      positionInfoLookup[info.id] = info;
-    });
-
-    function fetchPositionInfo(positionId) {
-      var unrecognizedValue = {
-        "id": positionId,
-        "name": "(unrecognized)",
-        "projectName": "(unrecognized)"
-      };
-      return positionInfoLookup[positionId] ? positionInfoLookup[positionId] : unrecognizedValue;
-    }
-
-    timeEntryPositionInfo.forEach(function(infoEntry) {
-      var positionInfo = fetchPositionInfo(infoEntry.position.id);
-      infoEntry.timeEntries.forEach(function(timeEntry) {
+    positionOrder.forEach(function(positionInfo) {
+      var allTimeEntries = timeEntryLookup[positionInfo.id];
+      var processedDays = {};
+      allTimeEntries.forEach(function(timeEntry) {
+        processedDays[timeEntry.date] = 1;
         var dayEntry = fetchDayEntry(timeEntry.date);
         dayEntry.push({
           id: timeEntry.id,
@@ -71,10 +42,61 @@ var TimesheetUtil = (function() {
           }
         });
       });
+      allDays.forEach(function(day) {
+        if (!processedDays[day]) {
+          var dayEntry = fetchDayEntry(day);
+          dayEntry.push({
+            id: "placeholder_" + positionInfo.id + "_" + self.formatDateYYYYMMDD(day),
+            date: day,
+            hours: 0,
+            projectedHours: 0,
+            position: {
+              id: positionInfo.id,
+              name: positionInfo.name,
+              note: positionInfo.note,
+              projectName: positionInfo.projectName
+            }
+          });
+        }
+      });
+      delete timeEntryLookup[positionInfo.id]; // remove processed time entries from lookup to facilitate placeholder processing
     });
-
-    self.mapKeys(daysEntries).forEach(function(date) {
-      daysEntries[date] = addPlaceholdersForMissingPositions(daysEntries[date], positionOrder);
+    self.mapKeys(timeEntryLookup).forEach(function(positionId) {
+      var timeEntries = timeEntryLookup[positionId];
+      var processedDays = {};
+      timeEntries.forEach(function(timeEntry) {
+        processedDays[timeEntry.date] = 1;
+        var dayEntry = fetchDayEntry(timeEntry.date);
+        dayEntry.push({
+          id: timeEntry.id,
+          date: timeEntry.date,
+          hours: timeEntry.hours,
+          projectedHours: timeEntry.projectedHours,
+          position: {
+            id: positionId,
+            name: "(unrecognized)",
+            note: '',
+            projectName: "(unrecognized)"
+          }
+        });
+      });
+      allDays.forEach(function(day) {
+        if (!processedDays[day]) {
+          var dayEntry = fetchDayEntry(day);
+          dayEntry.push({
+            id: "placeholder_" + positionId + "_" + self.formatDateYYYYMMDD(day),
+            date: day,
+            hours: 0,
+            projectedHours: 0,
+            position: {
+              id: positionId,
+              name: "(unrecognized)",
+              note: '',
+              projectName: "(unrecognized)"
+            }
+          });
+        }
+      });
     });
 
     return daysEntries;
@@ -92,8 +114,20 @@ var TimesheetUtil = (function() {
         projectName: project.name
       });
     });
+    positions.sort(positionComparator);
     return positions;
   };
+
+  function positionComparator(a, b) {
+    var sortOrder = ["projectName", "name", "note"];
+    for (var i = 0; i < sortOrder.length; i++) {
+      var result = a[sortOrder[i]].localeCompare(b[sortOrder[i]]);
+      if (result) {
+        return result;
+      }
+    }
+    return 0;
+  }
 
   self.sortDaysEntryDates = function(daysEntries) {
     var dates = self.mapKeys(daysEntries);
