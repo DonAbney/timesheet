@@ -90,7 +90,7 @@ gulp.task('deploy', ['build'], function() {
   util.log(" * Deploying artifacts from " + DEST + resolveEnvironment() + "/*");
   var deployHtmlStream = constructDeployStream(DEST + resolveEnvironment() + "/**/*.html", publishHeadersHtml);
   var deployCssJsStream = constructDeployStream([DEST + resolveEnvironment() + "/**/*.css", DEST + resolveEnvironment() + "/**/*.js"], publisherHeadersCssJs);
-  var deployImgStream = constructDeployStream([DEST + resolveEnvironment() + "/**/*.png", DEST + resolveEnvironment() + "/**/*.jpg", DEST + resolveEnvironment() + "/**/*.ico"], publishHeadersImg);
+  var deployImgStream = constructDeployStream([DEST + resolveEnvironment() + "/**/*.png", DEST + resolveEnvironment() + "/**/*.jpg", DEST + resolveEnvironment() + "/**/*.ico", DEST + resolveEnvironment() + "/**/*.svg"], publishHeadersImg);
 
   return eventStream.merge(deployHtmlStream, deployCssJsStream, deployImgStream)
     .pipe(publisher.sync("assets/" + resolveEnvironment()))
