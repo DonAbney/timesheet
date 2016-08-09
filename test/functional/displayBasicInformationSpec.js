@@ -808,7 +808,7 @@ describe('Displaying basic information', function() {
 
   describe('showing the authentication area', function() {
     beforeEach(function() {
-      var fixture = "<div id='fixture'><div id='authentication'></div><div id='authenticated'></div><div id='dateSelection'></div><div class='summaryStatus'></div></div>";
+      var fixture = "<div id='fixture'><div id='authentication'></div><div id='authenticated'></div><div id='dateSelection'></div><div class='summaryStatus'></div><div id='watermark'></div></div>";
       document.body.insertAdjacentHTML('afterbegin', fixture);
     });
 
@@ -841,11 +841,19 @@ describe('Displaying basic information', function() {
 
       expect($('.summaryStatus').is(':visible')).toEqual(false);
     });
+
+    it('should show the watermark when not authenticated', function() {
+      $('#watermark').hide();
+
+      TimesheetView.showAuthenticationArea();
+
+      expect($('#watermark').is(':visible')).toEqual(true);
+    });
   });
 
   describe('hiding the authentication area', function() {
     beforeEach(function() {
-      var fixture = "<div id='fixture'><div id='authentication'></div><<div id='authenticated'></div><div id='dateSelection'></div><div class='summaryStatus'></div></div>";
+      var fixture = "<div id='fixture'><div id='authentication'></div><<div id='authenticated'></div><div id='dateSelection'></div><div class='summaryStatus'></div><div id='watermark'></div></div>";
       document.body.insertAdjacentHTML('afterbegin', fixture);
     });
 
@@ -881,6 +889,12 @@ describe('Displaying basic information', function() {
       TimesheetView.hideAuthenticationArea();
 
       expect($('.summaryStatus').is(':visible')).toEqual(true);
+    });
+
+    it('should hide the watermark when authenticated', function() {
+      TimesheetView.hideAuthenticationArea();
+
+      expect($('#watermark').is(':visible')).toEqual(false);
     });
   });
 });

@@ -19,7 +19,7 @@ var BASE_HTML_FILE = "timesheet.html";
 var CSS_FILES = ['lib/css/*.css', 'src/css/*.css'];
 var JS_FILES = ['lib/js/jquery-*.js', 'lib/js/foundation-*.js', 'src/js/*.js'];
 var HTML_FILES = 'src/*.html';
-var IMG_FILES = ['lib/images/*.png', 'lib/images/*.jpg', 'lib/images/*.ico'];
+var IMG_FILES = ['lib/images/*.png', 'lib/images/*.jpg', 'lib/images/*.ico', 'lib/images/*.svg'];
 var CONFIG_SPECIFIC_FILES = {
   dev: ['config/dev/*.js'],
   mock: ['config/mock/*.js', 'config/nonDev/*.js'],

@@ -507,6 +507,7 @@ var TimesheetView = (function() {
     $('#authenticated').hide();
     $('#dateSelection').hide();
     $('.summaryStatus').hide();
+    $('#watermark').show();
   }
 
   self.hideAuthenticationArea = function() {
@@ -514,6 +515,7 @@ var TimesheetView = (function() {
     $('#authenticated').show();
     $('#dateSelection').show();
     $('.summaryStatus').show();
+    $('#watermark').hide();
   }
 
   self.registerPageListeners = function() {

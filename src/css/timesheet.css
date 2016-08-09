@@ -229,6 +229,15 @@ h1 {
   margin-top: 0.125rem;
 }
 
+#watermark {
+  height: 100%;
+  width: 100%;
+  background: url(images/pillar-logo.svg);
+  background-size: 50% 50%;
+  background-repeat: no-repeat;
+  background-position: 50%;
+}
+
 /* Small only */
 @media screen and (max-width: 39.9375em) {
 }
