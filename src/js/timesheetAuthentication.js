@@ -10,7 +10,7 @@ var TimesheetAuthentication = (function() {
   };
 
   self.onSignIn = function(googleUser) {
-    initializeForAuthenticatedUser(googleUser);
+    registerAuthentication();
   };
 
   self.onError = function(error) {
@@ -68,6 +68,10 @@ var TimesheetAuthentication = (function() {
   };
 
   function authenticationListener(state) {
+    registerAuthentication();
+  }
+
+  function registerAuthentication() {
     var authInstance = gapi.auth2.getAuthInstance();
     if (authInstance.isSignedIn.get()) {
       var currentUser = authInstance.currentUser.get();
@@ -75,6 +79,8 @@ var TimesheetAuthentication = (function() {
       var token = currentUser.getAuthResponse().id_token;
       TimesheetApiWrapper.registerCredentials(token, userInfo.username).done(function() {
         initializeForAuthenticatedUser(userInfo);
+      }).fail(function(bundledResponse) {
+        ResponseHandling.displayError(bundledResponse.jqXHR, bundledResponse.valueMap);
       });
     }
   }

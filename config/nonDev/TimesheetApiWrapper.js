@@ -4,6 +4,23 @@ var TimesheetApiWrapper = (function(){
   self.registerCredentials = function(token, username) {
     var deferred = $.Deferred();
 
+    if (username) {
+      registerWithSts(token, username, deferred);
+    } else {
+      deferred.reject({
+        jqXHR: {
+          status: '403',
+          statusText: 'Forbidden',
+          responseText: '{"message": "Access Denied.  Please ensure that you are logging in with your Pillar account."}'
+        },
+        valueMap: {}
+      });
+    }
+
+    return deferred.promise();
+  };
+
+  function registerWithSts(token, username, deferred) {
     $.ajax({
       url: "https://sts.amazonaws.com/",
       crossDomain: true,
@@ -29,9 +46,7 @@ var TimesheetApiWrapper = (function(){
         valueMap: valueMap
       });
     });
-
-    return deferred.promise();
-  };
+  }
 
   function wrapRequest(targetAPICall, params, body) {
     var deferred = $.Deferred();

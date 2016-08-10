@@ -3,7 +3,18 @@ var TimesheetApiWrapper = (function(){
 
   self.registerCredentials = function(token, username) {
     var deferred = $.Deferred();
-    deferred.resolve();
+    if (username) {
+      deferred.resolve();
+    } else {
+      deferred.reject({
+        jqXHR: {
+          status: '403',
+          statusText: 'Forbidden',
+          responseText: '{"message": "Access Denied.  Please ensure that you are logging in with your Pillar account."}'
+        },
+        valueMap: {}
+      });
+    }
     return deferred.promise();
   };
 
