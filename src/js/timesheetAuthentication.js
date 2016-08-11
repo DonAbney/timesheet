@@ -10,7 +10,6 @@ var TimesheetAuthentication = (function() {
   };
 
   self.onSignIn = function(googleUser) {
-    registerAuthentication();
   };
 
   self.onError = function(error) {
@@ -20,7 +19,7 @@ var TimesheetAuthentication = (function() {
   self.listenForAuthentication = function() {
     gapi.load('auth2', function() {
       var authInstance = gapi.auth2.init({});
-      authInstance.attachClickHandler(document.getElementById('customGoogleButton'), {}, self.onSignIn, self.onError);
+      authInstance.attachClickHandler(document.getElementById('customGoogleButton'), {prompt: 'select_account'}, self.onSignIn, self.onError);
       authInstance.isSignedIn.listen(authenticationListener);
     });
   };
@@ -67,8 +66,12 @@ var TimesheetAuthentication = (function() {
     }
   };
 
-  function authenticationListener(state) {
-    registerAuthentication();
+  function authenticationListener(isLoggingIn) {
+    if (isLoggingIn) {
+      registerAuthentication();
+    } else {
+      self.signOut();
+    }
   }
 
   function registerAuthentication() {
@@ -81,6 +84,7 @@ var TimesheetAuthentication = (function() {
         initializeForAuthenticatedUser(userInfo);
       }).fail(function(bundledResponse) {
         ResponseHandling.displayError(bundledResponse.jqXHR, bundledResponse.valueMap);
+        self.signOut();
       });
     }
   }
